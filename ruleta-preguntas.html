@@ -1,0 +1,801 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ruleta de Preguntas | Educa y Juega</title>
+    <meta name="description" content="Ruleta de preguntas aleatorias para repasar contenidos. Aprendizaje divertido con el azar." />
+    <meta name="keywords" content="ruleta de preguntas, preguntas aleatorias, repaso, evaluación, juego educativo" />
+    <link rel="canonical" href="https://educayjuega.com/ruleta-preguntas.html" />
+    <meta property="og:title" content="Ruleta de Preguntas | Educa y Juega" />
+    <meta property="og:description" content="Ruleta de preguntas aleatorias para repasar contenidos. Aprendizaje divertido con el azar." />
+    <meta property="og:url" content="https://educayjuega.com/ruleta-preguntas.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://educayjuega.com/favicon.svg" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Ruleta de Preguntas | Educa y Juega" />
+    <meta name="twitter:description" content="Ruleta de preguntas aleatorias para repasar contenidos. Aprendizaje divertido con el azar." />
+
+<link rel="stylesheet" href="css/styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+    <style>
+      :root {
+        --bg: #f9fafb;
+        --card: #ffffff;
+        --primary: #8b5cf6;
+        --primary-dark: #6d28d9;
+        --text-main: #1f2937;
+        --text-muted: #6b7280;
+        --border: #e5e7eb;
+        --shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        --radius: 20px;
+      }
+      body {
+        background-color: var(--bg);
+        background-image:
+          radial-gradient(
+            circle at 10% 20%,
+            rgba(139, 92, 246, 0.08) 0%,
+            transparent 40%
+          ),
+          radial-gradient(
+            circle at 90% 80%,
+            rgba(236, 72, 153, 0.08) 0%,
+            transparent 40%
+          );
+        min-height: 100vh;
+      }
+      .tool-header {
+        background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+        color: white;
+        padding: 2.5rem 1rem;
+        text-align: center;
+      }
+      .tool-header h1 {
+        color: white;
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+      }
+      .tool-header p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+      }
+      .main-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        max-width: 1200px;
+        margin: -2rem auto 4rem;
+        padding: 0 1rem;
+        position: relative;
+        z-index: 10;
+      }
+      /* Wheel Area */
+      .wheel-panel {
+        background: var(--card);
+        border-radius: var(--radius);
+        padding: 2rem;
+        box-shadow: var(--shadow);
+        flex: 1 1 500px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border: 1px solid var(--border);
+      }
+      .wheel-wrapper {
+        position: relative;
+        width: 100%;
+        max-width: 450px;
+        aspect-ratio: 1;
+        margin: 1rem auto 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .indicator {
+        position: absolute;
+        top: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 20;
+        width: 0;
+        height: 0;
+        border-left: 20px solid transparent;
+        border-right: 20px solid transparent;
+        border-top: 35px solid #ec4899;
+        filter: drop-shadow(0 4px 6px rgba(236, 72, 153, 0.4));
+        pointer-events: none;
+        transition: transform 0.1s;
+      }
+      .indicator::after {
+        content: "";
+        position: absolute;
+        top: -38px;
+        left: -8px;
+        width: 16px;
+        height: 16px;
+        background: white;
+        border-radius: 50%;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      }
+      canvas#wheelCanvas {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        box-shadow:
+          0 0 0 8px #f1f5f9,
+          0 0 0 16px #e2e8f0,
+          0 0 30px rgba(0, 0, 0, 0.15);
+        transition: filter 0.3s;
+      }
+      .btn-spin {
+        padding: 1.2rem 3rem;
+        font-size: 1.25rem;
+        font-weight: 800;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        background: linear-gradient(135deg, var(--primary), #ec4899);
+        color: #fff;
+        box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        transition: all 0.2s ease;
+      }
+      .btn-spin:hover:not(:disabled) {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(139, 92, 246, 0.6);
+      }
+      .btn-spin:disabled {
+        background: #cbd5e1;
+        cursor: not-allowed;
+        box-shadow: none;
+        color: #64748b;
+      }
+      /* Sidebar settings */
+      .side-panel {
+        background: var(--card);
+        border-radius: var(--radius);
+        padding: 2rem;
+        box-shadow: var(--shadow);
+        flex: 1 1 350px;
+        border: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        max-height: 800px;
+      }
+      .section-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-main);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 2px solid #f1f5f9;
+        padding-bottom: 0.5rem;
+      }
+      /* Toggle Switch */
+      .toggle-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #f8fafc;
+        padding: 1rem;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+      }
+      .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 26px;
+      }
+      .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #cbd5e1;
+        transition: 0.4s;
+        border-radius: 34px;
+      }
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: 0.4s;
+        border-radius: 50%;
+      }
+      input:checked + .slider {
+        background-color: var(--primary);
+      }
+      input:checked + .slider:before {
+        transform: translateX(24px);
+      }
+      /* Inputs */
+      .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      textarea#questionInput {
+        width: 100%;
+        height: 80px;
+        padding: 0.75rem 1rem;
+        border-radius: 12px;
+        border: 2px solid var(--border);
+        font-family: inherit;
+        font-size: 1rem;
+        resize: none;
+        outline: none;
+        transition: border-color 0.3s;
+      }
+      textarea#questionInput:focus {
+        border-color: var(--primary);
+      }
+      .btn-add {
+        padding: 0.75rem;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-add:hover {
+        background: var(--primary-dark);
+      }
+      /* Question List */
+      .question-list {
+        flex: 1;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding-right: 5px;
+      }
+      .question-list::-webkit-scrollbar {
+        width: 6px;
+      }
+      .question-list::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 10px;
+      }
+      .question-list::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+      }
+      .question-item {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.95rem;
+        transition: all 0.2s;
+      }
+      .question-item:hover {
+        border-color: #cbd5e1;
+        background: #f1f5f9;
+      }
+      .question-text {
+        flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-right: 10px;
+      }
+      .btn-del {
+        background: #ef4444;
+        color: white;
+        border: none;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        transition: transform 0.2s;
+      }
+      .btn-del:hover {
+        transform: scale(1.1);
+        background: #dc2626;
+      }
+      .btn-reset {
+        padding: 0.75rem;
+        background: transparent;
+        color: #ef4444;
+        border: 2px solid #ef4444;
+        border-radius: 10px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+      }
+      .btn-reset:hover {
+        background: #ef4444;
+        color: white;
+      }
+      /* Modal Premium */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(15, 23, 42, 0.8);
+        backdrop-filter: blur(8px);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+      }
+      .modal-overlay.show {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .modal-content {
+        background: white;
+        padding: 3rem 4rem;
+        border-radius: 24px;
+        text-align: center;
+        max-width: 800px;
+        width: 90%;
+        box-shadow:
+          0 25px 50px rgba(0, 0, 0, 0.5),
+          0 0 0 8px rgba(255, 255, 255, 0.1);
+        transform: scale(0.9) translateY(20px);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+      .modal-overlay.show .modal-content {
+        transform: scale(1) translateY(0);
+      }
+      .modal-label {
+        font-size: 1.2rem;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        color: var(--primary);
+        font-weight: 800;
+        margin-bottom: 1rem;
+      }
+      .modal-question {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--text-main);
+        line-height: 1.3;
+        margin-bottom: 2rem;
+      }
+      .btn-close-modal {
+        padding: 1rem 3rem;
+        border-radius: 50px;
+        border: none;
+        background: #1f2937;
+        color: white;
+        font-size: 1.1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      .btn-close-modal:hover {
+        background: #374151;
+        transform: translateY(-2px);
+      }
+      @media (max-width: 768px) {
+        .modal-question {
+          font-size: 1.8rem;
+        }
+        .modal-content {
+          padding: 2rem;
+        }
+        .wheel-panel {
+          padding: 1.5rem;
+        }
+      }
+    </style>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Ruleta de Preguntas | Educa y Juega",
+    "url": "https://educayjuega.com/ruleta-preguntas.html",
+    "description": "Ruleta de preguntas aleatorias para repasar contenidos. Aprendizaje divertido con el azar.",
+    "inLanguage": "es-ES"
+  }
+  </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-container">
+        <a href="index.html" class="logo">
+          <span class="logo-icon">📚</span> Educa y Juega
+        </a>
+        <button class="menu-toggle" aria-label="Menú">☰</button>
+                  <nav class="nav-menu">
+            <a href="index.html">🏠 Inicio</a>
+            <a href="hora-mundial.html">🕐 Hora Mundial</a>
+            <a href="dados.html">🎲 Dados</a>
+            <a href="ruleta.html">🎰 Ruleta</a>
+            <a href="ruleta-preguntas.html">❓ Ruleta Preguntas</a>
+            <a href="temporizador.html">⏱️ Temporizador</a>
+            <a href="cronometro.html">⏱ Cronómetro</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="vocabulario.html">📝 Vocabulario</a>
+            <a href="conjugador.html">📝 Conjugador</a>
+            <a href="ejercicios.html">➕ Ejercicios</a>
+            <a href="fracciones.html">🍕 Fracciones</a>
+            <a href="tablas.html">✖️ Tablas</a>
+            <a href="calculadora.html">🧮 Calculadora</a>
+            <a href="calculadora-areas.html">📐 Calcular Áreas</a>
+            <a href="geometria.html">📐 Geometría</a>
+            <a href="convertidor.html">🔄 Convertir</a>
+            <a href="recta-numerica.html">📏 Recta</a>
+            <a href="linea-tiempo.html">⏳ Línea Tiempo</a>
+            <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
+            <a href="sistema-solar.html">🌍 Sistema Solar</a>
+            <a href="ciclo-agua.html">💧 Ciclo Agua</a>
+            <a href="cuerpo-humano.html">🧍 Cuerpo Humano</a>
+            <a href="grupos.html">👥 Grupos</a>
+            <a href="selector.html">🎯 Selector</a>
+            <a href="asistencias.html">📋 Asistencias</a>
+            <a href="horario.html">📅 Horario</a>
+            <a href="normas-aula.html">📜 Normas</a>
+            <a href="pizarra.html">🖍️ Pizarra</a>
+            <a href="bolsa-premios.html">🎁 Premios</a>
+            <a href="puntos.html">🏆 Puntos</a>
+            <a href="aciertos.html">✅ Aciertos</a>
+            <a href="ajedrez.html">♟️ Ajedrez</a>
+            <a href="bingo.html">🎱 Bingo</a>
+            <a href="buscaminas.html">💣 Buscaminas</a>
+            <a href="crucigrama.html">✏️ Crucigrama</a>
+            <a href="damas.html">🟡 Damas</a>
+            <a href="laberinto.html">🌀 Laberinto</a>
+            <a href="memoria.html">🧠 Memoria</a>
+            <a href="piedra-papel.html">🪨 PPT</a>
+            <a href="sopa-letras.html">🔍 Sopa Letras</a>
+            <a href="sudoku.html">🔢 Sudoku</a>
+            <a href="tangram.html">🔺 Tangram</a>
+            <a href="tres-en-raya.html">⭕ Tres Raya</a>
+            <a href="contacto.html">📧 Contacto</a>
+            <a href="sobre-nosotros.html">ℹ️ Nosotros</a>
+            <a href="privacidad.html">🔒 Privacidad</a>
+          </nav>
+      </div>
+    </header>
+    <main>
+      <div class="tool-header">
+        <h1>❓ Ruleta de Preguntas</h1>
+        <p>
+          Añade tus propias preguntas, gira la ruleta y pon a prueba a tus
+          estudiantes.
+        </p>
+      </div>
+      <div class="main-container">
+        <!-- Rueda -->
+        <div class="wheel-panel">
+          <div class="wheel-wrapper">
+            <div class="indicator" id="indicator"></div>
+            <canvas id="wheelCanvas" width="600" height="600"></canvas>
+          </div>
+          <button class="btn-spin" id="btnSpin">🎯 Girar Ruleta</button>
+        </div>
+        <!-- Panel de Configuración -->
+        <div class="side-panel">
+          <div class="toggle-container">
+            <div>
+              <strong
+                style="display: block; color: var(--text-main); font-size: 1rem"
+                >Eliminar al salir</strong
+              >
+              <span style="font-size: 0.85rem; color: var(--text-muted)"
+                >Las preguntas no se repetirán</span
+              >
+            </div>
+            <label class="toggle-switch" style="margin-left: auto">
+              <input type="checkbox" id="removeOption" checked />
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="input-group">
+            <label style="font-weight: 700; color: var(--text-main)"
+              >Añadir Pregunta:</label
+            >
+            <textarea
+              id="questionInput"
+              placeholder="Ej: ¿Cuál es la capital de Francia?"
+            ></textarea>
+            <button class="btn-add" id="btnAdd">➕ Añadir a la ruleta</button>
+          </div>
+          <div class="section-title">
+            <span>Lista de Preguntas (<span id="qCount">0</span>)</span>
+          </div>
+          <div class="question-list" id="questionList">
+            <!-- Dinámico -->
+          </div>
+          <button class="btn-reset" id="btnReset">
+            🔄 Reiniciar / Borrar Todas
+          </button>
+        </div>
+      </div>
+    </main>
+    <!-- Modal Pregunta -->
+    <div class="modal-overlay" id="questionModal">
+      <div class="modal-content">
+        <div class="modal-label">PREGUNTA SELECCIONADA</div>
+        <div class="modal-question" id="modalQuestionText">¿Ser o no ser?</div>
+        <button class="btn-close-modal" id="btnCloseModal">¡Entendido!</button>
+      </div>
+    </div>
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-links">
+          <a href="contacto.html">📧 Contacto</a>
+          <a href="privacidad.html">🔒 Política de Privacidad</a>
+          <a href="sobre-nosotros.html">ℹ️ Sobre Nosotros</a>
+        </div>
+        <p class="footer-copy">
+          &copy; 2026 Educa y Juega. Herramientas educativas gratuitas
+          para profesores.
+        </p>
+      </div>
+    </footer>
+    <script src="js/main.js"></script>
+    <script>
+      // Elementos DOM
+      const canvas = document.getElementById("wheelCanvas");
+      const ctx = canvas.getContext("2d");
+      const btnSpin = document.getElementById("btnSpin");
+      const btnAdd = document.getElementById("btnAdd");
+      const btnReset = document.getElementById("btnReset");
+      const questionInput = document.getElementById("questionInput");
+      const questionList = document.getElementById("questionList");
+      const qCount = document.getElementById("qCount");
+      const removeOption = document.getElementById("removeOption");
+      const modal = document.getElementById("questionModal");
+      const modalText = document.getElementById("modalQuestionText");
+      const btnCloseModal = document.getElementById("btnCloseModal");
+      const indicator = document.getElementById("indicator");
+      // Paleta de colores vibrantes
+      const colors = [
+        "#ef4444",
+        "#f97316",
+        "#f59e0b",
+        "#84cc16",
+        "#10b981",
+        "#06b6d4",
+        "#3b82f6",
+        "#6366f1",
+        "#8b5cf6",
+        "#d946ef",
+        "#f43f5e",
+      ];
+      // Preguntas Precargadas
+      let questions = [
+        "¿Cuál es el planeta más cercano al Sol?",
+        "¿Cuántos lados tiene un hexágono?",
+        "¿En qué continente está Egipto?",
+        "Nombra un animal mamífero que vuele",
+        "¿Cuánto es 8 x 7?",
+        "¿Qué gas respiramos para vivir?",
+        "¿Quién pintó la Mona Lisa?",
+        "¿Cuál es el océano más grande del mundo?",
+        "Menciona 3 países de Europa",
+        "¿De qué color es la bandera de Japón?",
+      ];
+      // Variables de física de rotación
+      let currentRotation = 0;
+      let isSpinning = false;
+      let spinVelocity = 0;
+      let animationFrame;
+      let targetQuestionIndex = -1;
+      // Limpieza de Canvas
+      function drawWheel() {
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radius = Math.min(centerX, centerY) - 10;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (questions.length === 0) {
+          // Rueda vacía
+          ctx.beginPath();
+          ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+          ctx.fillStyle = "#e2e8f0";
+          ctx.fill();
+          ctx.fillStyle = "#64748b";
+          ctx.font = "bold 30px Arial";
+          ctx.textAlign = "center";
+          ctx.fillText("¡Añade preguntas!", centerX, centerY);
+          return;
+        }
+        const sliceAngle = (2 * Math.PI) / questions.length;
+        for (let i = 0; i < questions.length; i++) {
+          const startAngle = currentRotation + i * sliceAngle;
+          const endAngle = startAngle + sliceAngle;
+          // Dibujar trozo
+          ctx.beginPath();
+          ctx.moveTo(centerX, centerY);
+          ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+          ctx.fillStyle = colors[i % colors.length];
+          ctx.fill();
+          ctx.strokeRect = "#ffffff";
+          ctx.lineWidth = 3;
+          ctx.stroke();
+          // Dibujar texto (truncado si es muy largo)
+          ctx.save();
+          ctx.translate(centerX, centerY);
+          ctx.rotate(startAngle + sliceAngle / 2);
+          ctx.textAlign = "right";
+          ctx.fillStyle = "#ffffff";
+          ctx.font = 'bold 24px "Segoe UI", sans-serif';
+          ctx.shadowColor = "rgba(0,0,0,0.5)";
+          ctx.shadowBlur = 4;
+          ctx.shadowOffsetX = 1;
+          ctx.shadowOffsetY = 1;
+          let text = questions[i];
+          if (text.length > 25) text = text.substring(0, 22) + "...";
+          ctx.fillText(text, radius - 30, 8);
+          ctx.restore();
+        }
+        // Centro embellecedor
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, 35, 0, 2 * Math.PI);
+        ctx.fillStyle = "#ffffff";
+        ctx.fill();
+        ctx.lineWidth = 5;
+        ctx.strokeStyle = "#cbd5e1";
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, 15, 0, 2 * Math.PI);
+        ctx.fillStyle = "#8b5cf6";
+        ctx.fill();
+      }
+      function updateList() {
+        questionList.innerHTML = "";
+        qCount.textContent = questions.length;
+        if (questions.length === 0) {
+          btnSpin.disabled = true;
+          const empty = document.createElement("div");
+          empty.style.padding = "1rem";
+          empty.style.textAlign = "center";
+          empty.style.color = "#94a3b8";
+          empty.textContent = "No hay preguntas en la ruleta.";
+          questionList.appendChild(empty);
+          drawWheel();
+          return;
+        }
+        btnSpin.disabled = false;
+        questions.forEach((q, index) => {
+          const div = document.createElement("div");
+          div.className = "question-item";
+          const text = document.createElement("span");
+          text.className = "question-text";
+          text.textContent = q;
+          text.title = q; // tooltip for full text
+          const delBtn = document.createElement("button");
+          delBtn.className = "btn-del";
+          delBtn.innerHTML = "×";
+          delBtn.title = "Eliminar";
+          delBtn.onclick = () => {
+            if (!isSpinning) {
+              questions.splice(index, 1);
+              updateList();
+            }
+          };
+          div.appendChild(text);
+          div.appendChild(delBtn);
+          questionList.appendChild(div);
+        });
+        drawWheel();
+      }
+      // Logic
+      btnAdd.addEventListener("click", () => {
+        const val = questionInput.value.trim();
+        if (val && !isSpinning) {
+          questions.push(val);
+          questionInput.value = "";
+          updateList();
+        }
+      });
+      btnReset.addEventListener("click", () => {
+        if (
+          !isSpinning &&
+          confirm("¿Estás seguro de borrar todas las preguntas?")
+        ) {
+          questions = [];
+          updateList();
+        }
+      });
+      btnSpin.addEventListener("click", () => {
+        if (isSpinning || questions.length === 0) return;
+        isSpinning = true;
+        btnSpin.disabled = true;
+        // Friccion y velocidad
+        spinVelocity = Math.random() * 0.2 + 0.5; // rads per frame
+        // Sonido opcional (deshabilitado por si no hay audios)
+        spin();
+      });
+      function spin() {
+        currentRotation += spinVelocity;
+        spinVelocity *= 0.985; // Fricción
+        // Bote del indicador visual
+        const sliceAngle = (2 * Math.PI) / questions.length;
+        const normalizedRot = currentRotation % (2 * Math.PI);
+        const relativeAngle =
+          (Math.PI * 1.5 - normalizedRot + 2 * Math.PI) % (2 * Math.PI);
+        const index = Math.floor(relativeAngle / sliceAngle);
+        // Animacion basica del puntero
+        if (Math.abs((relativeAngle % sliceAngle) - sliceAngle / 2) < 0.1) {
+          indicator.style.transform = "translateX(-50%) translateY(-5px)";
+          setTimeout(() => {
+            indicator.style.transform = "translateX(-50%) translateY(0)";
+          }, 50);
+        }
+        drawWheel();
+        if (spinVelocity > 0.002) {
+          animationFrame = requestAnimationFrame(spin);
+        } else {
+          // Se detuvo
+          isSpinning = false;
+          btnSpin.disabled = false;
+          cancelAnimationFrame(animationFrame);
+          // Determinar el ganador (el puntero está en la parte superior, 270 grados o 1.5 PI)
+          const finalNormRot = currentRotation % (2 * Math.PI);
+          const finalRelative =
+            (Math.PI * 1.5 - finalNormRot + 2 * Math.PI) % (2 * Math.PI);
+          targetQuestionIndex = Math.floor(finalRelative / sliceAngle);
+          showResult(targetQuestionIndex);
+        }
+      }
+      function showResult(index) {
+        const selectedQ = questions[index];
+        modalText.textContent = selectedQ;
+        modal.classList.add("show");
+        // Confetti effect
+        confetti({
+          particleCount: 150,
+          spread: 80,
+          origin: { y: 0.4 },
+          zIndex: 2000,
+        });
+      }
+      btnCloseModal.addEventListener("click", () => {
+        modal.classList.remove("show");
+        // Handle removal if toggle is on
+        if (removeOption.checked && targetQuestionIndex !== -1) {
+          // Eliminar la pregunta
+          questions.splice(targetQuestionIndex, 1);
+          targetQuestionIndex = -1;
+          updateList();
+        }
+      });
+      // Init
+      updateList();
+    </script>
+  </body>
+</html>

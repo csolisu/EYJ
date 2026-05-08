@@ -1,0 +1,445 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cronómetro para Aula | Educa y Juega</title>
+    <meta name="description" content="Cronómetro online preciso para el aula. Mide tiempos con precisión de centésimas de segundo." />
+    <meta name="keywords" content="cronómetro online, medir tiempo, cronómetro aula, temporizador" />
+    <link rel="canonical" href="https://educayjuega.com/cronometro.html" />
+    <meta property="og:title" content="Cronómetro Online | Educa y Juega" />
+    <meta property="og:description" content="Cronómetro online preciso para el aula. Mide tiempos con precisión de centésimas de segundo." />
+    <meta property="og:url" content="https://educayjuega.com/cronometro.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://educayjuega.com/favicon.svg" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Cronómetro Online | Educa y Juega" />
+    <meta name="twitter:description" content="Cronómetro online preciso para el aula. Mide tiempos con precisión de centésimas de segundo." />
+
+<link rel="stylesheet" href="css/styles.css" />
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+    <style>
+      :root {
+        --timer-bg: #1f2937;
+        --timer-text: #f9fafb;
+        --accent-green: #10b981;
+        --accent-red: #ef4444;
+        --accent-yellow: #f59e0b;
+        --accent-blue: #3b82f6;
+      }
+      .tool-header {
+        background: linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%);
+        color: white;
+        padding: 2rem 1rem;
+        text-align: center;
+      }
+      .tool-header h1 {
+        color: white;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+      .tool-header p {
+        opacity: 0.9;
+      }
+      .tool-content {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+      }
+      .timer-display {
+        background: var(--timer-bg);
+        color: var(--timer-text);
+        font-size: 5rem;
+        font-weight: 700;
+        text-align: center;
+        padding: 2rem;
+        border-radius: 1rem;
+        font-family: "Courier New", monospace;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow-lg);
+      }
+      .timer-controls {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 2rem;
+      }
+      .timer-btn {
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+        border: none;
+        border-radius: 0.75rem;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.2s;
+      }
+      .timer-btn.start {
+        background: var(--accent-green);
+        color: white;
+      }
+      .timer-btn.start:hover {
+        background: #059669;
+      }
+      .timer-btn.pause {
+        background: var(--accent-yellow);
+        color: white;
+      }
+      .timer-btn.pause:hover {
+        background: #d97706;
+      }
+      .timer-btn.reset {
+        background: var(--accent-red);
+        color: white;
+      }
+      .timer-btn.reset:hover {
+        background: #dc2626;
+      }
+      .timer-btn.lap {
+        background: var(--accent-blue);
+        color: white;
+      }
+      .timer-btn.lap:hover {
+        background: #2563eb;
+      }
+      .laps-container {
+        background: white;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        box-shadow: var(--shadow);
+        margin-bottom: 2rem;
+      }
+      .laps-container h3 {
+        margin-bottom: 1rem;
+        color: var(--dark);
+      }
+      .laps-list {
+        list-style: none;
+        max-height: 300px;
+        overflow-y: auto;
+      }
+      .laps-list li {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      .laps-list li:nth-child(odd) {
+        background: #f9fafb;
+      }
+      .lap-number {
+        color: var(--gray);
+      }
+      .lap-time {
+        font-weight: 600;
+        font-family: "Courier New", monospace;
+      }
+      .competitive-section {
+        background: white;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        box-shadow: var(--shadow);
+      }
+      .competitive-section h3 {
+        margin-bottom: 1rem;
+        color: var(--dark);
+      }
+      .competitors-input {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+      .competitors-input input {
+        flex: 1;
+        padding: 0.75rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+      }
+      .competitor-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+      }
+      .competitor-tag {
+        background: var(--primary);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .competitor-tag button {
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        font-size: 1rem;
+        padding: 0;
+        line-height: 1;
+      }
+      .competitors-times {
+        display: grid;
+        gap: 1rem;
+      }
+      .competitor-time {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        background: #f9fafb;
+        border-radius: 0.5rem;
+      }
+      .competitor-time input {
+        width: 150px;
+        padding: 0.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.25rem;
+        font-family: "Courier New", monospace;
+        font-size: 1.25rem;
+        text-align: center;
+      }
+      .empty-message {
+        text-align: center;
+        color: var(--gray);
+        padding: 2rem;
+      }
+      @media (max-width: 600px) {
+        .timer-display {
+          font-size: 3rem;
+          padding: 1.5rem;
+        }
+        .timer-controls {
+          gap: 0.5rem;
+        }
+        .timer-btn {
+          padding: 0.75rem 1rem;
+          font-size: 0.9rem;
+        }
+      }
+    </style>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Cronómetro Online | Educa y Juega",
+    "url": "https://educayjuega.com/cronometro.html",
+    "description": "Cronómetro online preciso para el aula. Mide tiempos con precisión de centésimas de segundo.",
+    "inLanguage": "es-ES"
+  }
+  </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-container">
+        <a href="index.html" class="logo">
+          <span class="logo-icon">📚</span> Educa y Juega
+        </a>
+        <button class="menu-toggle" aria-label="Menú">☰</button>
+                  <nav class="nav-menu">
+            <a href="index.html">🏠 Inicio</a>
+            <a href="hora-mundial.html">🕐 Hora Mundial</a>
+            <a href="dados.html">🎲 Dados</a>
+            <a href="ruleta.html">🎰 Ruleta</a>
+            <a href="ruleta-preguntas.html">❓ Ruleta Preguntas</a>
+            <a href="temporizador.html">⏱️ Temporizador</a>
+            <a href="cronometro.html">⏱ Cronómetro</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="vocabulario.html">📝 Vocabulario</a>
+            <a href="conjugador.html">📝 Conjugador</a>
+            <a href="ejercicios.html">➕ Ejercicios</a>
+            <a href="fracciones.html">🍕 Fracciones</a>
+            <a href="tablas.html">✖️ Tablas</a>
+            <a href="calculadora.html">🧮 Calculadora</a>
+            <a href="calculadora-areas.html">📐 Calcular Áreas</a>
+            <a href="geometria.html">📐 Geometría</a>
+            <a href="convertidor.html">🔄 Convertir</a>
+            <a href="recta-numerica.html">📏 Recta</a>
+            <a href="linea-tiempo.html">⏳ Línea Tiempo</a>
+            <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
+            <a href="sistema-solar.html">🌍 Sistema Solar</a>
+            <a href="ciclo-agua.html">💧 Ciclo Agua</a>
+            <a href="cuerpo-humano.html">🧍 Cuerpo Humano</a>
+            <a href="grupos.html">👥 Grupos</a>
+            <a href="selector.html">🎯 Selector</a>
+            <a href="asistencias.html">📋 Asistencias</a>
+            <a href="horario.html">📅 Horario</a>
+            <a href="normas-aula.html">📜 Normas</a>
+            <a href="pizarra.html">🖍️ Pizarra</a>
+            <a href="bolsa-premios.html">🎁 Premios</a>
+            <a href="puntos.html">🏆 Puntos</a>
+            <a href="aciertos.html">✅ Aciertos</a>
+            <a href="ajedrez.html">♟️ Ajedrez</a>
+            <a href="bingo.html">🎱 Bingo</a>
+            <a href="buscaminas.html">💣 Buscaminas</a>
+            <a href="crucigrama.html">✏️ Crucigrama</a>
+            <a href="damas.html">🟡 Damas</a>
+            <a href="laberinto.html">🌀 Laberinto</a>
+            <a href="memoria.html">🧠 Memoria</a>
+            <a href="piedra-papel.html">🪨 PPT</a>
+            <a href="sopa-letras.html">🔍 Sopa Letras</a>
+            <a href="sudoku.html">🔢 Sudoku</a>
+            <a href="tangram.html">🔺 Tangram</a>
+            <a href="tres-en-raya.html">⭕ Tres Raya</a>
+            <a href="contacto.html">📧 Contacto</a>
+            <a href="sobre-nosotros.html">ℹ️ Nosotros</a>
+            <a href="privacidad.html">🔒 Privacidad</a>
+          </nav>
+      </div>
+    </header>
+    <main>
+      <div class="tool-header">
+        <h1>⏱️ Cronómetro</h1>
+        <p>
+          Cronómetro digital para competencias y gestión del tiempo en clase
+        </p>
+      </div>
+      <div class="tool-content">
+        <div class="timer-display" id="timerDisplay">00:00:00</div>
+        <div class="timer-controls">
+          <button class="timer-btn start" id="startBtn" onclick="startTimer()">
+            Iniciar
+          </button>
+          <button
+            class="timer-btn pause"
+            id="pauseBtn"
+            onclick="pauseTimer()"
+            disabled
+          >
+            Pausar
+          </button>
+          <button class="timer-btn reset" onclick="resetTimer()">
+            Reiniciar
+          </button>
+          <button class="timer-btn lap" onclick="recordLap()">Vuelta</button>
+        </div>
+        <div class="laps-container">
+          <h3>Vueltas Registradas</h3>
+          <ul class="laps-list" id="lapsList">
+            <li class="empty-message">Sin vueltas registradas</li>
+          </ul>
+        </div>
+        <div class="competitive-section">
+          <h3>🏆Modo Competitivo</h3>
+          <div class="competitors-input">
+            <input
+              type="text"
+              id="competitorName"
+              placeholder="Nombre del competidor"
+              onkeypress="if (event.key === 'Enter') addCompetitor();"
+            />
+            <button class="btn" onclick="addCompetitor()">Agregar</button>
+          </div>
+          <div class="competitor-list" id="competitorList"></div>
+          <div class="competitors-times" id="competitorsTimes"></div>
+        </div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-links">
+          <a href="contacto.html">📧 Contacto</a>
+          <a href="privacidad.html">🔒 Política de Privacidad</a>
+          <a href="sobre-nosotros.html">ℹ️ Sobre Nosotros</a>
+        </div>
+        <p class="footer-copy">
+          &copy; 2026 Educa y Juega. Herramientas educativas gratuitas
+          para profesores.
+        </p>
+      </div>
+    </footer>
+    <script>
+      let timerInterval;
+      let seconds = 0;
+      let isRunning = false;
+      let laps = [];
+      let competitors = [];
+      function formatTime(totalSeconds) {
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const secs = totalSeconds % 60;
+        return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+      }
+      function updateDisplay() {
+        document.getElementById("timerDisplay").textContent =
+          formatTime(seconds);
+      }
+      function startTimer() {
+        if (!isRunning) {
+          isRunning = true;
+          timerInterval = setInterval(() => {
+            seconds++;
+            updateDisplay();
+          }, 1000);
+          document.getElementById("startBtn").disabled = true;
+          document.getElementById("pauseBtn").disabled = false;
+        }
+      }
+      function pauseTimer() {
+        if (isRunning) {
+          isRunning = false;
+          clearInterval(timerInterval);
+          document.getElementById("startBtn").disabled = false;
+          document.getElementById("pauseBtn").disabled = true;
+        }
+      }
+      function resetTimer() {
+        pauseTimer();
+        seconds = 0;
+        laps = [];
+        updateDisplay();
+        document.getElementById("lapsList").innerHTML =
+          '<li class="empty-message">Sin vueltas registradas</li>';
+      }
+      function recordLap() {
+        if (seconds > 0) {
+          laps.push({ number: laps.length + 1, time: formatTime(seconds) });
+          const lapsList = document.getElementById("lapsList");
+          if (laps.length === 1) {
+            lapsList.innerHTML = "";
+          }
+          lapsList.innerHTML += `<li><span class="lap-number">Vuelta ${laps.length}</span><span class="lap-time">${formatTime(seconds)}</span></li>`;
+        }
+      }
+      function addCompetitor() {
+        const input = document.getElementById("competitorName");
+        const name = input.value.trim();
+        if (name) {
+          competitors.push(name);
+          input.value = "";
+          renderCompetitors();
+        }
+      }
+      function removeCompetitor(index) {
+        competitors.splice(index, 1);
+        renderCompetitors();
+      }
+      function renderCompetitors() {
+        const listContainer = document.getElementById("competitorList");
+        const timesContainer = document.getElementById("competitorsTimes");
+        listContainer.innerHTML = competitors
+          .map(
+            (c, i) =>
+              `<span class="competitor-tag">${c} <button onclick="removeCompetitor(${i})">×</button></span>`,
+          )
+          .join("");
+        timesContainer.innerHTML = competitors
+          .map(
+            (c, i) =>
+              `
+<div class="competitor-time">
+<span>${c}</span>
+<input type="text" placeholder="00:00:00" id="time-${i}">
+</div>
+`,
+          )
+          .join("");
+      }
+    </script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

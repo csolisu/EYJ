@@ -1,0 +1,703 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pizarra de Dibujo | Educa y Juega</title>
+    <meta name="description" content="Pizarra virtual interactiva con lápiz, formas geométricas y selector de color HSL." />
+    <meta name="keywords" content="pizarra virtual, dibujar online, pizarra interactiva, dibujo digital" />
+    <link rel="canonical" href="https://educayjuega.com/pizarra.html" />
+    <meta property="og:title" content="Pizarra Virtual para Dibujar | Educa y Juega" />
+    <meta property="og:description" content="Pizarra virtual interactiva con lápiz, formas geométricas y selector de color HSL." />
+    <meta property="og:url" content="https://educayjuega.com/pizarra.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://educayjuega.com/favicon.svg" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Pizarra Virtual para Dibujar | Educa y Juega" />
+    <meta name="twitter:description" content="Pizarra virtual interactiva con lápiz, formas geométricas y selector de color HSL." />
+
+    <link rel="stylesheet" href="css/styles.css" />
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+    <style>
+      :root {
+        --sidebar-bg: #ffffff;
+        --canvas-bg: #f1f5f9;
+        --accent: #06b6d4;
+        --accent-dark: #0891b2;
+        --border: #e2e8f0;
+        --text: #1e293b;
+      }
+
+      body {
+        background-color: var(--canvas-bg);
+      }
+
+      .tool-header {
+        background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+        color: white;
+        padding: 1.5rem 1rem;
+        text-align: center;
+      }
+
+      .tool-header h1 {
+        font-size: 2.2rem;
+        color: white;
+        margin: 0;
+      }
+
+      /* Layout */
+      .app-container {
+        display: flex;
+        height: calc(100vh - 180px); /* Adjusted for new header */
+        width: 100%;
+      }
+
+      /* Left side: Canvas Area */
+      .canvas-area {
+        flex: 1;
+        padding: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .pizarra-wrapper {
+        background: white;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #pizarra {
+        cursor: crosshair;
+        display: block;
+      }
+
+      /* Right side: Sidebar */
+      .sidebar {
+        width: 320px;
+        background: var(--sidebar-bg);
+        border-left: 1px solid var(--border);
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        overflow-y: auto;
+        z-index: 20;
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.02);
+      }
+
+      .section-title {
+        font-size: 0.9rem;
+        font-weight: 800;
+        color: var(--text);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 0.75rem;
+        display: block;
+      }
+
+      /* Tool Buttons Grid */
+      .tool-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+      }
+
+      .tool-btn {
+        padding: 0.75rem;
+        background: #f8fafc;
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 600;
+        color: var(--text);
+        transition: all 0.2s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.85rem;
+      }
+
+      .tool-btn i {
+        font-size: 1.2rem;
+      }
+
+      .tool-btn:hover {
+        border-color: var(--accent);
+        background: #f0f9ff;
+      }
+
+      .tool-btn.active {
+        background: var(--accent);
+        color: white;
+        border-color: var(--accent);
+      }
+
+      /* Colors Section */
+      .color-palette {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+      }
+
+      .color-circle {
+        width: 100%;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 3px solid transparent;
+        transition: transform 0.2s;
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+      }
+
+      .color-circle:hover {
+        transform: scale(1.1);
+      }
+      .color-circle.active {
+        border-color: var(--text);
+        transform: scale(1.1);
+      }
+
+      .custom-color-picker {
+        grid-column: span 5;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 5px;
+        background: #f8fafc;
+        padding: 5px 10px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+      }
+
+      input[type="color"] {
+        width: 30px;
+        height: 30px;
+        border: none;
+        background: none;
+        cursor: pointer;
+      }
+
+      /* Range Sliders */
+      .range-container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      input[type="range"] {
+        width: 100%;
+        accent-color: var(--accent);
+        cursor: pointer;
+      }
+
+      /* Action Buttons */
+      .action-btns {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: auto;
+      }
+
+      .btn-action {
+        padding: 0.8rem;
+        border-radius: 12px;
+        border: none;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        font-family: inherit;
+      }
+
+      .btn-clear {
+        background: #fef2f2;
+        color: #ef4444;
+        border: 1px solid #fee2e2;
+      }
+      .btn-clear:hover {
+        background: #fee2e2;
+      }
+      .btn-save {
+        background: #1f2937;
+        color: white;
+      }
+      .btn-save:hover {
+        background: #111827;
+      }
+
+      .undo-redo {
+        display: flex;
+        gap: 10px;
+      }
+      .undo-redo button {
+        flex: 1;
+        background: #f1f5f9;
+        color: var(--text);
+        border: 1px solid var(--border);
+        padding: 0.6rem;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+      .undo-redo button:hover:not(:disabled) {
+        background: #e2e8f0;
+      }
+      .undo-redo button:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      @media (max-width: 900px) {
+        .app-container {
+          flex-direction: column;
+          height: auto;
+        }
+        .sidebar {
+          width: 100%;
+          border-left: none;
+          border-top: 1px solid var(--border);
+        }
+        body {
+          overflow: auto;
+        }
+      }
+    </style>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Pizarra Virtual para Dibujar | Educa y Juega",
+    "url": "https://educayjuega.com/pizarra.html",
+    "description": "Pizarra virtual interactiva con lápiz, formas geométricas y selector de color HSL.",
+    "inLanguage": "es-ES"
+  }
+  </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-container">
+        <a href="index.html" class="logo"
+          ><span class="logo-icon">📚</span> Educa y Juega</a
+        >
+        <button class="menu-toggle" aria-label="Menú">☰</button>
+                  <nav class="nav-menu">
+            <a href="index.html">🏠 Inicio</a>
+            <a href="hora-mundial.html">🕐 Hora Mundial</a>
+            <a href="dados.html">🎲 Dados</a>
+            <a href="ruleta.html">🎰 Ruleta</a>
+            <a href="ruleta-preguntas.html">❓ Ruleta Preguntas</a>
+            <a href="temporizador.html">⏱️ Temporizador</a>
+            <a href="cronometro.html">⏱ Cronómetro</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="vocabulario.html">📝 Vocabulario</a>
+            <a href="conjugador.html">📝 Conjugador</a>
+            <a href="ejercicios.html">➕ Ejercicios</a>
+            <a href="fracciones.html">🍕 Fracciones</a>
+            <a href="tablas.html">✖️ Tablas</a>
+            <a href="calculadora.html">🧮 Calculadora</a>
+            <a href="calculadora-areas.html">📐 Calcular Áreas</a>
+            <a href="geometria.html">📐 Geometría</a>
+            <a href="convertidor.html">🔄 Convertir</a>
+            <a href="recta-numerica.html">📏 Recta</a>
+            <a href="linea-tiempo.html">⏳ Línea Tiempo</a>
+            <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
+            <a href="sistema-solar.html">🌍 Sistema Solar</a>
+            <a href="ciclo-agua.html">💧 Ciclo Agua</a>
+            <a href="cuerpo-humano.html">🧍 Cuerpo Humano</a>
+            <a href="grupos.html">👥 Grupos</a>
+            <a href="selector.html">🎯 Selector</a>
+            <a href="asistencias.html">📋 Asistencias</a>
+            <a href="horario.html">📅 Horario</a>
+            <a href="normas-aula.html">📜 Normas</a>
+            <a href="pizarra.html">🖍️ Pizarra</a>
+            <a href="bolsa-premios.html">🎁 Premios</a>
+            <a href="puntos.html">🏆 Puntos</a>
+            <a href="aciertos.html">✅ Aciertos</a>
+            <a href="ajedrez.html">♟️ Ajedrez</a>
+            <a href="bingo.html">🎱 Bingo</a>
+            <a href="buscaminas.html">💣 Buscaminas</a>
+            <a href="crucigrama.html">✏️ Crucigrama</a>
+            <a href="damas.html">🟡 Damas</a>
+            <a href="laberinto.html">🌀 Laberinto</a>
+            <a href="memoria.html">🧠 Memoria</a>
+            <a href="piedra-papel.html">🪨 PPT</a>
+            <a href="sopa-letras.html">🔍 Sopa Letras</a>
+            <a href="sudoku.html">🔢 Sudoku</a>
+            <a href="tangram.html">🔺 Tangram</a>
+            <a href="tres-en-raya.html">⭕ Tres Raya</a>
+            <a href="contacto.html">📧 Contacto</a>
+            <a href="sobre-nosotros.html">ℹ️ Nosotros</a>
+            <a href="privacidad.html">🔒 Privacidad</a>
+          </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="tool-header">
+        <h1>🎨 Pizarra de Dibujo</h1>
+        <p>Tu espacio creativo digital</p>
+      </div>
+
+      <div class="app-container">
+        <!-- Lienzo -->
+        <div class="canvas-area">
+          <div class="pizarra-wrapper">
+            <canvas id="pizarra"></canvas>
+          </div>
+        </div>
+
+        <!-- Barra Lateral -->
+        <div class="sidebar">
+          <div>
+            <span class="section-title">HERRAMIENTAS</span>
+            <div class="tool-grid">
+              <button class="tool-btn active" data-tool="pen">
+                <span>✏️ Lápiz</span>
+              </button>
+              <button class="tool-btn" data-tool="line">
+                <span>📏 Línea</span>
+              </button>
+              <button class="tool-btn" data-tool="rect">
+                <span>⬜ Rectángulo</span>
+              </button>
+              <button class="tool-btn" data-tool="circle">
+                <span>⭕ Círculo</span>
+              </button>
+              <button class="tool-btn" data-tool="eraser">
+                <span>🧹 Borrador</span>
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <span class="section-title">GROSOR TRAZO</span>
+            <div class="range-container">
+              <input type="range" id="sizeSlider" min="1" max="50" value="5" />
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  font-size: 0.75rem;
+                  color: var(--text-muted);
+                "
+              >
+                <span>Fino</span>
+                <span>Grueso</span>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <span class="section-title">PALETA DE COLORES</span>
+            <div class="color-palette" id="colorPalette">
+              <div
+                class="color-circle active"
+                style="background: #000000"
+                data-color="#000000"
+              ></div>
+              <div
+                class="color-circle"
+                style="background: #ef4444"
+                data-color="#ef4444"
+              ></div>
+              <div
+                class="color-circle"
+                style="background: #f97316"
+                data-color="#f97316"
+              ></div>
+              <div
+                class="color-circle"
+                style="background: #f59e0b"
+                data-color="#f59e0b"
+              ></div>
+              <div
+                class="color-circle"
+                style="background: #84cc16"
+                data-color="#84cc16"
+              ></div>
+              <div
+                class="color-circle"
+                style="background: #10b981"
+                data-color="#10b981"
+              ></div>
+              <div
+                class="color-circle"
+                style="background: #06b6d4"
+                data-color="#06b6d4"
+              ></div>
+              <div
+                class="color-circle"
+                style="background: #3b82f6"
+                data-color="#3b82f6"
+              ></div>
+              <div
+                class="color-circle"
+                style="background: #8b5cf6"
+                data-color="#8b5cf6"
+              ></div>
+              <div
+                class="color-circle"
+                style="background: #ec4899"
+                data-color="#ec4899"
+              ></div>
+
+              <div class="custom-color-picker">
+                <input type="color" id="customColor" />
+                <span style="font-size: 0.8rem; font-weight: 600"
+                  >Personalizado</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="undo-redo">
+            <button id="btnUndo">↩️ Deshacer</button>
+            <button id="btnRedo">↪️ Rehacer</button>
+          </div>
+
+          <div class="action-btns">
+            <button class="btn-action btn-clear" id="btnClear">
+              🗑️ Limpiar Todo
+            </button>
+            <button class="btn-action btn-save" id="btnSave">
+              💾 Guardar Imagen
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script>
+      const canvas = document.getElementById("pizarra");
+      const ctx = canvas.getContext("2d");
+      const sizeSlider = document.getElementById("sizeSlider");
+      const customColor = document.getElementById("customColor");
+      const colorPalette = document.getElementById("colorPalette");
+      const btnUndo = document.getElementById("btnUndo");
+      const btnRedo = document.getElementById("btnRedo");
+      const btnClear = document.getElementById("btnClear");
+      const btnSave = document.getElementById("btnSave");
+
+      let isDrawing = false;
+      let currentTool = "pen";
+      let currentColor = "#000000";
+      let currentSize = 5;
+      let startPos = { x: 0, y: 0 };
+
+      // Historial para deshacer/rehacer y previsualización
+      let history = [];
+      let historyStep = -1;
+      let snapshot = null; // Para la previsualización en tiempo real
+
+      function initCanvas() {
+        const area = document.querySelector(".canvas-area");
+        canvas.width = area.clientWidth * 0.9;
+        canvas.height = area.clientHeight * 0.9;
+
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        saveHistory();
+      }
+
+      function saveHistory() {
+        historyStep++;
+        if (historyStep < history.length) {
+          history.length = historyStep;
+        }
+        history.push(canvas.toDataURL());
+        updateUndoRedoButtons();
+      }
+
+      function updateUndoRedoButtons() {
+        btnUndo.disabled = historyStep <= 0;
+        btnRedo.disabled = historyStep >= history.length - 1;
+      }
+
+      function undo() {
+        if (historyStep > 0) {
+          historyStep--;
+          loadHistoryStep();
+        }
+      }
+
+      function redo() {
+        if (historyStep < history.length - 1) {
+          historyStep++;
+          loadHistoryStep();
+        }
+      }
+
+      function loadHistoryStep() {
+        const img = new Image();
+        img.src = history[historyStep];
+        img.onload = () => {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0);
+          updateUndoRedoButtons();
+        };
+      }
+
+      function getPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return {
+          x: clientX - rect.left,
+          y: clientY - rect.top,
+        };
+      }
+
+      // Eventos
+      canvas.addEventListener("mousedown", startDrawing);
+      canvas.addEventListener("touchstart", startDrawing, { passive: false });
+      window.addEventListener("mousemove", draw);
+      window.addEventListener("touchmove", draw, { passive: false });
+      window.addEventListener("mouseup", stopDrawing);
+      window.addEventListener("touchend", stopDrawing);
+
+      function startDrawing(e) {
+        e.preventDefault();
+        isDrawing = true;
+        startPos = getPos(e);
+
+        // Tomamos una captura del estado actual para la previsualización
+        snapshot = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+        ctx.lineWidth = currentSize;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.strokeStyle = currentTool === "eraser" ? "white" : currentColor;
+
+        if (currentTool === "pen" || currentTool === "eraser") {
+          ctx.beginPath();
+          ctx.moveTo(startPos.x, startPos.y);
+        }
+      }
+
+      function draw(e) {
+        if (!isDrawing) return;
+        e.preventDefault();
+        const currentPos = getPos(e);
+
+        if (currentTool === "pen" || currentTool === "eraser") {
+          ctx.lineTo(currentPos.x, currentPos.y);
+          ctx.stroke();
+        } else {
+          // Herramientas con previsualización
+          // 1. Restauramos el lienzo al estado inicial antes del drag
+          ctx.putImageData(snapshot, 0, 0);
+
+          // 2. Dibujamos la forma temporal
+          ctx.beginPath();
+          if (currentTool === "line") {
+            ctx.moveTo(startPos.x, startPos.y);
+            ctx.lineTo(currentPos.x, currentPos.y);
+          } else if (currentTool === "rect") {
+            ctx.rect(
+              startPos.x,
+              startPos.y,
+              currentPos.x - startPos.x,
+              currentPos.y - startPos.y,
+            );
+          } else if (currentTool === "circle") {
+            const radius = Math.sqrt(
+              Math.pow(currentPos.x - startPos.x, 2) +
+                Math.pow(currentPos.y - startPos.y, 2),
+            );
+            ctx.arc(startPos.x, startPos.y, radius, 0, 2 * Math.PI);
+          }
+          ctx.stroke();
+        }
+      }
+
+      function stopDrawing() {
+        if (isDrawing) {
+          isDrawing = false;
+          saveHistory();
+        }
+      }
+
+      // UI Listeners
+      document.querySelectorAll(".tool-btn").forEach((btn) => {
+        btn.onclick = () => {
+          document
+            .querySelectorAll(".tool-btn")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          currentTool = btn.dataset.tool;
+        };
+      });
+
+      document.querySelectorAll(".color-circle").forEach((btn) => {
+        btn.onclick = () => {
+          document
+            .querySelectorAll(".color-circle")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          currentColor = btn.dataset.color;
+          customColor.value = currentColor;
+          if (currentTool === "eraser") {
+            document.querySelector('[data-tool="pen"]').click();
+          }
+        };
+      });
+
+      customColor.oninput = (e) => {
+        currentColor = e.target.value;
+        document
+          .querySelectorAll(".color-circle")
+          .forEach((b) => b.classList.remove("active"));
+        if (currentTool === "eraser") {
+          document.querySelector('[data-tool="pen"]').click();
+        }
+      };
+
+      sizeSlider.oninput = (e) => {
+        currentSize = e.target.value;
+      };
+
+      btnUndo.onclick = undo;
+      btnRedo.onclick = redo;
+
+      btnClear.onclick = () => {
+        if (confirm("¿Limpiar toda la pizarra?")) {
+          ctx.fillStyle = "white";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          saveHistory();
+        }
+      };
+
+      btnSave.onclick = () => {
+        const link = document.createElement("a");
+        link.download = `dibujo-${Date.now()}.png`;
+        link.href = canvas.toDataURL();
+        link.click();
+      };
+
+      window.onload = initCanvas;
+      window.onresize = () => {
+        // Guardamos el contenido para restaurarlo tras el resize
+        const content = canvas.toDataURL();
+        initCanvas();
+        const img = new Image();
+        img.src = content;
+        img.onload = () => ctx.drawImage(img, 0, 0);
+      };
+    </script>
+  </body>
+</html>

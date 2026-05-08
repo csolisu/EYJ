@@ -1,0 +1,322 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sudoku | Educa y Juega</title>
+    <meta name="description" content="Sudoku interactivo con 3 niveles. Resuelve sudokus con pistas y verificación automática." />
+    <meta name="keywords" content="sudoku, juego de lógica, números, sudoku online, pasatiempos" />
+    <link rel="canonical" href="https://educayjuega.com/sudoku.html" />
+    <meta property="og:title" content="Sudoku Interactivo | Educa y Juega" />
+    <meta property="og:description" content="Sudoku interactivo con 3 niveles. Resuelve sudokus con pistas y verificación automática." />
+    <meta property="og:url" content="https://educayjuega.com/sudoku.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://educayjuega.com/favicon.svg" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Sudoku Interactivo | Educa y Juega" />
+    <meta name="twitter:description" content="Sudoku interactivo con 3 niveles. Resuelve sudokus con pistas y verificación automática." />
+
+<link rel="stylesheet" href="css/styles.css" />
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+    <style>
+      .tool-header h1 {
+        color: white;
+      }
+      .tool-header {
+        background: linear-gradient(135deg, #0f766e 0%, #115e59 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+      }
+      .tablero {
+        display: grid;
+        grid-template-columns: repeat(9, 40px);
+        gap: 1px;
+        width: fit-content;
+        margin: 0 auto;
+        background: #1f2937;
+        border: 3px solid #1f2937;
+      }
+      .celda {
+        width: 40px;
+        height: 40px;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        cursor: pointer;
+      }
+      .celda.fijo {
+        background: #d1d5db;
+        font-weight: 700;
+      }
+      .celda.error {
+        background: #fee2e2;
+        color: #ef4444;
+      }
+      .celda:hover:not(.fijo) {
+        background: #e0e7ff;
+      }
+      .celda:nth-child(3n) {
+        border-right: 2px solid #1f2937;
+      }
+      .celda:nth-child(9n) {
+        border-right: none;
+      }
+      .celda:nth-child(n + 19):nth-child(-n + 27),
+      .celda:nth-child(n + 46):nth-child(-n + 54) {
+        border-bottom: 2px solid #1f2937;
+      }
+      .celda input {
+        width: 100%;
+        height: 100%;
+        border: none;
+        background: transparent;
+        text-align: center;
+        font-size: 1.1rem;
+        cursor: pointer;
+        outline: none;
+      }
+      .celda input:focus {
+        background: #e0e7ff;
+      }
+      .celda.fijo input {
+        background: #d1d5db;
+        font-weight: 700;
+        pointer-events: none;
+        cursor: default;
+      }
+      .controls {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 1rem;
+        flex-wrap: wrap;
+      }
+    </style>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Sudoku Interactivo | Educa y Juega",
+    "url": "https://educayjuega.com/sudoku.html",
+    "description": "Sudoku interactivo con 3 niveles. Resuelve sudokus con pistas y verificación automática.",
+    "inLanguage": "es-ES"
+  }
+  </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-container">
+        <a href="index.html" class="logo">
+          <span class="logo-icon">📚</span> Educa y Juega
+        </a>
+        <button class="menu-toggle" aria-label="Menú">☰</button>
+                  <nav class="nav-menu">
+            <a href="index.html">🏠 Inicio</a>
+            <a href="hora-mundial.html">🕐 Hora Mundial</a>
+            <a href="dados.html">🎲 Dados</a>
+            <a href="ruleta.html">🎰 Ruleta</a>
+            <a href="ruleta-preguntas.html">❓ Ruleta Preguntas</a>
+            <a href="temporizador.html">⏱️ Temporizador</a>
+            <a href="cronometro.html">⏱ Cronómetro</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="vocabulario.html">📝 Vocabulario</a>
+            <a href="conjugador.html">📝 Conjugador</a>
+            <a href="ejercicios.html">➕ Ejercicios</a>
+            <a href="fracciones.html">🍕 Fracciones</a>
+            <a href="tablas.html">✖️ Tablas</a>
+            <a href="calculadora.html">🧮 Calculadora</a>
+            <a href="calculadora-areas.html">📐 Calcular Áreas</a>
+            <a href="geometria.html">📐 Geometría</a>
+            <a href="convertidor.html">🔄 Convertir</a>
+            <a href="recta-numerica.html">📏 Recta</a>
+            <a href="linea-tiempo.html">⏳ Línea Tiempo</a>
+            <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
+            <a href="sistema-solar.html">🌍 Sistema Solar</a>
+            <a href="ciclo-agua.html">💧 Ciclo Agua</a>
+            <a href="cuerpo-humano.html">🧍 Cuerpo Humano</a>
+            <a href="grupos.html">👥 Grupos</a>
+            <a href="selector.html">🎯 Selector</a>
+            <a href="asistencias.html">📋 Asistencias</a>
+            <a href="horario.html">📅 Horario</a>
+            <a href="normas-aula.html">📜 Normas</a>
+            <a href="pizarra.html">🖍️ Pizarra</a>
+            <a href="bolsa-premios.html">🎁 Premios</a>
+            <a href="puntos.html">🏆 Puntos</a>
+            <a href="aciertos.html">✅ Aciertos</a>
+            <a href="ajedrez.html">♟️ Ajedrez</a>
+            <a href="bingo.html">🎱 Bingo</a>
+            <a href="buscaminas.html">💣 Buscaminas</a>
+            <a href="crucigrama.html">✏️ Crucigrama</a>
+            <a href="damas.html">🟡 Damas</a>
+            <a href="laberinto.html">🌀 Laberinto</a>
+            <a href="memoria.html">🧠 Memoria</a>
+            <a href="piedra-papel.html">🪨 PPT</a>
+            <a href="sopa-letras.html">🔍 Sopa Letras</a>
+            <a href="sudoku.html">🔢 Sudoku</a>
+            <a href="tangram.html">🔺 Tangram</a>
+            <a href="tres-en-raya.html">⭕ Tres Raya</a>
+            <a href="contacto.html">📧 Contacto</a>
+            <a href="sobre-nosotros.html">ℹ️ Nosotros</a>
+            <a href="privacidad.html">🔒 Privacidad</a>
+          </nav>
+      </div>
+    </header>
+    <main>
+      <div class="tool-header">
+        <h1>🔢 Sudoku</h1>
+        <p>Completa el tablero siguiendo las reglas</p>
+      </div>
+      <div class="tool-content">
+        <div class="tablero" id="tablero"></div>
+        <div class="controls">
+          <button class="btn" onclick="nuevoSudoku()">🔄 Nuevo Sudoku</button>
+          <button class="btn btn-secondary" onclick="verificar()">
+            ✓ Verificar
+          </button>
+          <button class="btn btn-secondary" onclick="resolver()">
+            💡 Mostrar Solución
+          </button>
+        </div>
+        <div
+          id="mensaje"
+          style="
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+          "
+        ></div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-links">
+          <a href="contacto.html">📧 Contacto</a>
+          <a href="privacidad.html">🔒 Política de Privacidad</a>
+          <a href="sobre-nosotros.html">ℹ️ Sobre Nosotros</a>
+        </div>
+        <p class="footer-copy">
+          &copy; 2026 Educa y Juega. Herramientas educativas gratuitas
+          para profesores.
+        </p>
+      </div>
+    </footer>
+    <script>
+      let sudoku = [];
+      let solucion = [];
+      let inicial = [];
+      function esValido(tablero, fila, col, num) {
+        for (let i = 0; i < 9; i++) {
+          if (tablero[fila][i] === num && i !== col) return false;
+          if (tablero[i][col] === num && i !== fila) return false;
+        }
+        let cajaFila = Math.floor(fila / 3) * 3;
+        let cajaCol = Math.floor(col / 3) * 3;
+        for (let i = cajaFila; i < cajaFila + 3; i++) {
+          for (let j = cajaCol; j < cajaCol + 3; j++) {
+            if (tablero[i][j] === num && (i !== fila || j !== col))
+              return false;
+          }
+        }
+        return true;
+      }
+      function resolverSudoku(tablero) {
+        for (let i = 0; i < 9; i++) {
+          for (let j = 0; j < 9; j++) {
+            if (tablero[i][j] === 0) {
+              for (let num = 1; num <= 9; num++) {
+                if (esValido(tablero, i, j, num)) {
+                  tablero[i][j] = num;
+                  if (resolverSudoku(tablero)) return true;
+                  tablero[i][j] = 0;
+                }
+              }
+              return false;
+            }
+          }
+        }
+        return true;
+      }
+      function nuevoSudoku() {
+        let completo = Array(9)
+          .fill(null)
+          .map(() => Array(9).fill(0));
+        resolverSudoku(completo);
+        solucion = JSON.parse(JSON.stringify(completo));
+        let numEliminar = 40;
+        while (numEliminar > 0) {
+          let r = Math.floor(Math.random() * 9);
+          let c = Math.floor(Math.random() * 9);
+          if (completo[r][c] !== 0) {
+            completo[r][c] = 0;
+            numEliminar--;
+          }
+        }
+        sudoku = completo;
+        inicial = JSON.parse(JSON.stringify(completo));
+        document.getElementById("mensaje").textContent = "";
+        document.getElementById("mensaje").style.color = "";
+        renderizar();
+      }
+      function renderizar() {
+        let html = "";
+        for (let i = 0; i < 9; i++) {
+          for (let j = 0; j < 9; j++) {
+            let clase = inicial[i][j] ? "fijo" : "";
+            let valor = sudoku[i][j] || "";
+            let readonly = inicial[i][j] ? "readonly" : "";
+            html += `<div class="celda ${clase}" data-fila="${i}" data-col="${j}"><input type="text" value="${valor}" ${readonly} oninput="ingresar(${i},${j},this)" maxlength="1"></div>`;
+          }
+        }
+        document.getElementById("tablero").innerHTML = html;
+      }
+      function ingresar(fila, col, input) {
+        if (inicial[fila][col]) return;
+        let val = input.value.replace(/[^1-9]/g, "");
+        if (val === "") {
+          sudoku[fila][col] = 0;
+        } else {
+          sudoku[fila][col] = parseInt(val);
+        }
+        input.value = sudoku[fila][col] || "";
+      }
+      function verificar() {
+        let correcto = true;
+        let mensaje = "";
+        for (let i = 0; i < 9; i++) {
+          for (let j = 0; j < 9; j++) {
+            if (sudoku[i][j] !== 0 && sudoku[i][j] !== solucion[i][j]) {
+              correcto = false;
+            }
+          }
+        }
+        if (correcto && sudoku.flat().every((v) => v !== 0)) {
+          document.getElementById("mensaje").textContent =
+            "🎉 ¡Felicitaciones! Sudoku completado correctamente";
+          document.getElementById("mensaje").style.color = "#10b981";
+        } else if (!correcto) {
+          document.getElementById("mensaje").textContent =
+            "❌ Hay errores en el tablero";
+          document.getElementById("mensaje").style.color = "#ef4444";
+        } else {
+          document.getElementById("mensaje").textContent =
+            "✅ ¡Bien! Por ahora todo bien, continúa";
+          document.getElementById("mensaje").style.color = "#f59e0b";
+        }
+      }
+      function resolver() {
+        sudoku = JSON.parse(JSON.stringify(solucion));
+        renderizar();
+        document.getElementById("mensaje").textContent = "💡 Solución mostrada";
+        document.getElementById("mensaje").style.color = "#6b7280";
+      }
+      nuevoSudoku();
+    </script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

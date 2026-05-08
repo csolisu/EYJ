@@ -1,0 +1,436 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Generador de Ejercicios | Educa y Juega</title>
+    <meta name="description" content="Generador de ejercicios matemáticos online. Crea sumas, restas, multiplicaciones y divisiones." />
+    <meta name="keywords" content="ejercicios matemáticos, generador de ejercicios, sumas, restas, multiplicaciones" />
+    <link rel="canonical" href="https://educayjuega.com/ejercicios.html" />
+    <meta property="og:title" content="Generador de Ejercicios | Educa y Juega" />
+    <meta property="og:description" content="Generador de ejercicios matemáticos online. Crea sumas, restas, multiplicaciones y divisiones." />
+    <meta property="og:url" content="https://educayjuega.com/ejercicios.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://educayjuega.com/favicon.svg" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Generador de Ejercicios | Educa y Juega" />
+    <meta name="twitter:description" content="Generador de ejercicios matemáticos online. Crea sumas, restas, multiplicaciones y divisiones." />
+
+<link rel="stylesheet" href="css/styles.css" />
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+    <style>
+      .tool-header {
+        background: linear-gradient(135deg, #dc2626 0%, #f59e0b 100%);
+        color: white;
+        padding: 2rem 1rem;
+        text-align: center;
+      }
+      .tool-header h1 {
+        color: white;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+      .tool-content {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+      }
+      .config-panel {
+        background: white;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        box-shadow: var(--shadow);
+        margin-bottom: 2rem;
+      }
+      .config-panel h3 {
+        margin-bottom: 1rem;
+        color: var(--dark);
+      }
+      .config-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+      .config-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .config-item label {
+        font-weight: 500;
+        color: var(--dark);
+      }
+      .config-item input,
+      .config-item select {
+        padding: 0.75rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+      }
+      .config-item input:focus,
+      .config-item select:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+      .checkbox-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      .checkbox-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .checkbox-item input {
+        width: 20px;
+        height: 20px;
+      }
+      .generate-btn {
+        margin-top: 1rem;
+        width: 100%;
+        padding: 1rem;
+        font-size: 1.1rem;
+      }
+      .exercises-container {
+        background: white;
+        border-radius: 1rem;
+        padding: 2rem;
+        box-shadow: var(--shadow);
+      }
+      .exercises-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      .exercises-header h3 {
+        color: var(--dark);
+      }
+      .exercise-item {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 1rem;
+        align-items: center;
+        padding: 1rem;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      .exercise-item:last-child {
+        border-bottom: none;
+      }
+      .exercise-number {
+        background: var(--primary);
+        color: white;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+      }
+      .exercise-text {
+        font-size: 1.25rem;
+        font-weight: 500;
+        color: var(--dark);
+      }
+      .exercise-answer {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .exercise-answer input {
+        width: 80px;
+        padding: 0.5rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        text-align: center;
+      }
+      .exercise-answer.correct input {
+        border-color: #10b981;
+        background: #d1fae5;
+      }
+      .exercise-answer.incorrect input {
+        border-color: #ef4444;
+        background: #fee2e2;
+      }
+      .check-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+      .results-summary {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        border-radius: 0.75rem;
+        text-align: center;
+        font-weight: 600;
+      }
+      .results-summary.success {
+        background: #d1fae5;
+        color: #065f46;
+      }
+      .results-summary.partial {
+        background: #fef3c7;
+        color: #92400e;
+      }
+      .empty-state {
+        text-align: center;
+        padding: 2rem;
+        color: var(--gray);
+      }
+      .error-feedback {
+        background: #fee2e2;
+        color: #dc2626;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+        text-align: center;
+        font-weight: 500;
+      }
+      .print-btn {
+        background: #6b7280;
+      }
+      .print-btn:hover {
+        background: #4b5563;
+      }
+    </style>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Generador de Ejercicios | Educa y Juega",
+    "url": "https://educayjuega.com/ejercicios.html",
+    "description": "Generador de ejercicios matemáticos online. Crea sumas, restas, multiplicaciones y divisiones.",
+    "inLanguage": "es-ES"
+  }
+  </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-container">
+        <a href="index.html" class="logo">
+          <span class="logo-icon">📚</span> Educa y Juega
+        </a>
+        <button class="menu-toggle" aria-label="Menú">☰</button>
+                  <nav class="nav-menu">
+            <a href="index.html">🏠 Inicio</a>
+            <a href="hora-mundial.html">🕐 Hora Mundial</a>
+            <a href="dados.html">🎲 Dados</a>
+            <a href="ruleta.html">🎰 Ruleta</a>
+            <a href="ruleta-preguntas.html">❓ Ruleta Preguntas</a>
+            <a href="temporizador.html">⏱️ Temporizador</a>
+            <a href="cronometro.html">⏱ Cronómetro</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="vocabulario.html">📝 Vocabulario</a>
+            <a href="conjugador.html">📝 Conjugador</a>
+            <a href="ejercicios.html">➕ Ejercicios</a>
+            <a href="fracciones.html">🍕 Fracciones</a>
+            <a href="tablas.html">✖️ Tablas</a>
+            <a href="calculadora.html">🧮 Calculadora</a>
+            <a href="calculadora-areas.html">📐 Calcular Áreas</a>
+            <a href="geometria.html">📐 Geometría</a>
+            <a href="convertidor.html">🔄 Convertir</a>
+            <a href="recta-numerica.html">📏 Recta</a>
+            <a href="linea-tiempo.html">⏳ Línea Tiempo</a>
+            <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
+            <a href="sistema-solar.html">🌍 Sistema Solar</a>
+            <a href="ciclo-agua.html">💧 Ciclo Agua</a>
+            <a href="cuerpo-humano.html">🧍 Cuerpo Humano</a>
+            <a href="grupos.html">👥 Grupos</a>
+            <a href="selector.html">🎯 Selector</a>
+            <a href="asistencias.html">📋 Asistencias</a>
+            <a href="horario.html">📅 Horario</a>
+            <a href="normas-aula.html">📜 Normas</a>
+            <a href="pizarra.html">🖍️ Pizarra</a>
+            <a href="bolsa-premios.html">🎁 Premios</a>
+            <a href="puntos.html">🏆 Puntos</a>
+            <a href="aciertos.html">✅ Aciertos</a>
+            <a href="ajedrez.html">♟️ Ajedrez</a>
+            <a href="bingo.html">🎱 Bingo</a>
+            <a href="buscaminas.html">💣 Buscaminas</a>
+            <a href="crucigrama.html">✏️ Crucigrama</a>
+            <a href="damas.html">🟡 Damas</a>
+            <a href="laberinto.html">🌀 Laberinto</a>
+            <a href="memoria.html">🧠 Memoria</a>
+            <a href="piedra-papel.html">🪨 PPT</a>
+            <a href="sopa-letras.html">🔍 Sopa Letras</a>
+            <a href="sudoku.html">🔢 Sudoku</a>
+            <a href="tangram.html">🔺 Tangram</a>
+            <a href="tres-en-raya.html">⭕ Tres Raya</a>
+            <a href="contacto.html">📧 Contacto</a>
+            <a href="sobre-nosotros.html">ℹ️ Nosotros</a>
+            <a href="privacidad.html">🔒 Privacidad</a>
+          </nav>
+      </div>
+    </header>
+    <main>
+      <div class="tool-header">
+        <h1>➕➖ Generador de Ejercicios</h1>
+        <p>Genera ejercicios de matemáticas aleatorios para tus alumnos</p>
+      </div>
+      <div class="tool-content">
+        <div class="config-panel">
+          <h3>⚙️ Configuración</h3>
+          <div class="config-grid">
+            <div class="config-item">
+              <label>Tipo de operaciones</label>
+              <div class="checkbox-group">
+                <label class="checkbox-item"
+                  ><input type="checkbox" id="opSum" checked /> Suma</label
+                >
+                <label class="checkbox-item"
+                  ><input type="checkbox" id="opSub" checked /> Resta</label
+                >
+                <label class="checkbox-item"
+                  ><input type="checkbox" id="opMul" /> Multiplicación</label
+                >
+                <label class="checkbox-item"
+                  ><input type="checkbox" id="opDiv" /> División</label
+                >
+              </div>
+            </div>
+            <div class="config-item">
+              <label>Número mínimo</label>
+              <input type="number" id="minNum" value="1" min="0" />
+            </div>
+            <div class="config-item">
+              <label>Número máximo</label>
+              <input type="number" id="maxNum" value="100" min="1" />
+            </div>
+            <div class="config-item">
+              <label>Cantidad de ejercicios</label>
+              <input type="number" id="quantity" value="10" min="1" max="50" />
+            </div>
+            <div class="config-item">
+              <label>Incluir respuestas</label>
+              <select id="showAnswers">
+                <option value="no">Ocultas (para imprimir)</option>
+                <option value="yes">Visibles (para pantalla)</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn generate-btn" onclick="generateExercises()">
+            🎲 Generar Ejercicios
+          </button>
+        </div>
+        <div class="exercises-container" id="exercisesContainer">
+          <div class="empty-state">
+            Configure las opciones y presione "Generar Ejercicios"
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-links">
+          <a href="contacto.html">📧 Contacto</a>
+          <a href="privacidad.html">🔒 Política de Privacidad</a>
+          <a href="sobre-nosotros.html">ℹ️ Sobre Nosotros</a>
+        </div>
+        <p class="footer-copy">
+          &copy; 2026 Educa y Juega. Herramientas educativas gratuitas
+          para profesores.
+        </p>
+      </div>
+    </footer>
+    <script>
+      let exercises = [];
+      function randomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+      function generateExercises() {
+        const operations = [];
+        if (document.getElementById("opSum").checked) operations.push("+");
+        if (document.getElementById("opSub").checked) operations.push("-");
+        if (document.getElementById("opMul").checked) operations.push("×");
+        if (document.getElementById("opDiv").checked) operations.push("÷");
+        if (operations.length === 0) {
+          showError("Selecciona al menos una operación");
+          return;
+        }
+        const min = parseInt(document.getElementById("minNum").value);
+        const max = parseInt(document.getElementById("maxNum").value);
+        const quantity = parseInt(document.getElementById("quantity").value);
+        const showAnswers =
+          document.getElementById("showAnswers").value === "yes";
+        exercises = [];
+        for (let i = 0; i < quantity; i++) {
+          const op = operations[randomInt(0, operations.length - 1)];
+          let a, b, answer, text;
+          switch (op) {
+            case "+":
+              a = randomInt(min, max);
+              b = randomInt(min, max);
+              answer = a + b;
+              text = `${a} + ${b} = ?`;
+              break;
+            case "-":
+              a = randomInt(Math.max(min + 1, 1), max);
+              b = randomInt(min, a - 1);
+              answer = a - b;
+              text = `${a} - ${b} = ?`;
+              break;
+            case "×":
+              a = randomInt(min, Math.min(max, 12));
+              b = randomInt(min, Math.min(max, 12));
+              answer = a * b;
+              text = `${a} × ${b} = ?`;
+              break;
+            case "÷":
+              b = randomInt(Math.max(1, min), Math.min(12, max));
+              answer = randomInt(1, Math.min(12, max));
+              a = b * answer;
+              text = `${a} ÷ ${b} = ?`;
+              break;
+          }
+          exercises.push({ text, answer, userAnswer: null, checked: false });
+        }
+        renderExercises(showAnswers);
+      }
+      function renderExercises(showAnswers) {
+        const container = document.getElementById("exercisesContainer");
+        let html = `
+<div class="exercises-header">
+<h3>📝 Ejercicios Generados</h3>
+<div>
+<button class="btn print-btn" onclick="window.print()">🖨️ Imprimir</button>
+</div>
+</div>
+`;
+        exercises.forEach((ex, i) => {
+          const statusClass = ex.checked
+            ? ex.userAnswer === ex.answer
+              ? "correct"
+              : "incorrect"
+            : "";
+          html += `
+<div class="exercise-item">
+<div class="exercise-number">${i + 1}</div>
+<div class="exercise-text">${ex.text}</div>
+<div class="exercise-answer ${statusClass}">
+${
+  showAnswers
+    ? `<strong>${ex.answer}</strong>`
+    : `<input type="number" placeholder="?" id="answer-${i}" value="${ex.userAnswer || ""}" onchange="checkAnswer(${i})">
+<button class="btn check-btn" onclick="checkAnswer(${i})">✓</button>`
+}
+</div>
+</div>
+`;
+        });
+        container.innerHTML = html;
+      }
+      function showError(msg) {
+        const container = document.getElementById("exercisesContainer");
+        container.innerHTML =
+          `<div class="error-feedback">⚠️ ${msg}</div>` + container.innerHTML;
+      }
+    </script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

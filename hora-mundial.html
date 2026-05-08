@@ -1,0 +1,595 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reloj Mundial - Hora en Tiempo Real | Educa y Juega</title>
+    <meta name="description" content="Reloj mundial con hora exacta de más de 40 ciudades. Detecta automáticamente tu ubicación." />
+    <meta name="keywords" content="hora mundial, reloj mundial, hora internacional, husos horarios, tiempo real" />
+    <link rel="canonical" href="https://educayjuega.com/hora-mundial.html" />
+    <meta property="og:title" content="Hora Mundial - Reloj en Tiempo Real | Educa y Juega" />
+    <meta property="og:description" content="Reloj mundial con hora exacta de más de 40 ciudades. Detecta automáticamente tu ubicación." />
+    <meta property="og:url" content="https://educayjuega.com/hora-mundial.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://educayjuega.com/favicon.svg" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Hora Mundial - Reloj en Tiempo Real | Educa y Juega" />
+    <meta name="twitter:description" content="Reloj mundial con hora exacta de más de 40 ciudades. Detecta automáticamente tu ubicación." />
+
+    <link rel="stylesheet" href="css/styles.css">
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+    <style>
+        .tool-header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .tool-header::before {
+            content: '🕐🕑🕒🕓🕔🕕🕖🕗🕘🕙🕚🕛';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            font-size: 3rem;
+            opacity: 0.06;
+            letter-spacing: 0.5rem;
+            white-space: nowrap;
+            transform: rotate(-5deg) translateY(-10px);
+        }
+        .tool-header h1 { margin: 0 0 0.5rem 0; font-size: 2.5rem; }
+
+        .main-clock-wrapper {
+            position: relative;
+            margin: 1rem auto 2rem;
+            max-width: 500px;
+            z-index: 10;
+        }
+
+        .main-clock {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border-radius: 2rem;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            border: 2px solid #334155;
+            position: relative;
+            overflow: hidden;
+        }
+        .main-clock::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 2rem;
+            background: linear-gradient(135deg, #6366f1, #06b6d4, #6366f1);
+            z-index: -1;
+            opacity: 0.5;
+            animation: borderGlow 3s ease-in-out infinite;
+        }
+        @keyframes borderGlow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+
+        .main-clock .location {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+        .main-clock .country {
+            color: #e2e8f0;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .main-clock .time {
+            color: white;
+            font-size: 4rem;
+            font-weight: 900;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 4px;
+            text-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+            line-height: 1.1;
+        }
+        .main-clock .time .seconds {
+            font-size: 2rem;
+            color: #6366f1;
+            font-weight: 700;
+        }
+        .main-clock .date {
+            color: #64748b;
+            font-size: 1rem;
+            margin-top: 0.75rem;
+        }
+        .main-clock .offset {
+            display: inline-block;
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+            padding: 0.3rem 0.8rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 0.75rem;
+        }
+
+        .detected-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .search-bar {
+            max-width: 500px;
+            margin: 0 auto 1.5rem;
+            position: relative;
+        }
+        .search-bar input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            padding-left: 3rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 1rem;
+            font-size: 1rem;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .search-bar input:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.15);
+        }
+        .search-bar .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+        }
+
+        .world-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .clock-card {
+            background: white;
+            border-radius: 1.25rem;
+            padding: 1.25rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            border: 2px solid #f1f5f9;
+            transition: all 0.3s;
+            cursor: default;
+        }
+        .clock-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-color: #6366f1;
+        }
+        .clock-card .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        .clock-card .card-city {
+            font-weight: 700;
+            color: #1e293b;
+            font-size: 0.95rem;
+        }
+        .clock-card .card-flag {
+            font-size: 1.3rem;
+        }
+        .clock-card .card-country {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-bottom: 0.75rem;
+        }
+        .clock-card .card-time {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #0f172a;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+        }
+        .clock-card .card-date {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-top: 0.25rem;
+        }
+        .clock-card .card-offset {
+            display: inline-block;
+            background: #f1f5f9;
+            color: #64748b;
+            padding: 0.15rem 0.5rem;
+            border-radius: 0.5rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+        .clock-card.local {
+            border-color: #6366f1;
+            background: linear-gradient(135deg, #f8faff, #eef2ff);
+        }
+        .clock-card.local .card-time { color: #4f46e5; }
+
+        .stats-bar {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 1.5rem 0;
+        }
+        .stat-chip {
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.85rem;
+            color: #64748b;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .stat-chip strong { color: #1e293b; }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: #94a3b8;
+            font-size: 1.1rem;
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .main-clock .time { font-size: 2.5rem; }
+            .main-clock .time .seconds { font-size: 1.5rem; }
+            .main-clock-wrapper { margin-top: -2rem; }
+            .world-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 0.75rem; }
+        }
+    </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Hora Mundial - Reloj en Tiempo Real | Educa y Juega",
+    "url": "https://educayjuega.com/hora-mundial.html",
+    "description": "Reloj mundial con hora exacta de más de 40 ciudades. Detecta automáticamente tu ubicación.",
+    "inLanguage": "es-ES"
+  }
+  </script>
+  </head>
+<body>
+    <header class="site-header">
+        <div class="header-container">
+            <a href="index.html" class="logo"><span class="logo-icon">📚</span>Educa y Juega</a>
+            <button class="menu-toggle" aria-label="Menú">☰</button>
+                      <nav class="nav-menu">
+            <a href="index.html">🏠 Inicio</a>
+            <a href="hora-mundial.html">🕐 Hora Mundial</a>
+            <a href="dados.html">🎲 Dados</a>
+            <a href="ruleta.html">🎰 Ruleta</a>
+            <a href="ruleta-preguntas.html">❓ Ruleta Preguntas</a>
+            <a href="temporizador.html">⏱️ Temporizador</a>
+            <a href="cronometro.html">⏱ Cronómetro</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="vocabulario.html">📝 Vocabulario</a>
+            <a href="conjugador.html">📝 Conjugador</a>
+            <a href="ejercicios.html">➕ Ejercicios</a>
+            <a href="fracciones.html">🍕 Fracciones</a>
+            <a href="tablas.html">✖️ Tablas</a>
+            <a href="calculadora.html">🧮 Calculadora</a>
+            <a href="calculadora-areas.html">📐 Calcular Áreas</a>
+            <a href="geometria.html">📐 Geometría</a>
+            <a href="convertidor.html">🔄 Convertir</a>
+            <a href="recta-numerica.html">📏 Recta</a>
+            <a href="linea-tiempo.html">⏳ Línea Tiempo</a>
+            <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
+            <a href="sistema-solar.html">🌍 Sistema Solar</a>
+            <a href="ciclo-agua.html">💧 Ciclo Agua</a>
+            <a href="cuerpo-humano.html">🧍 Cuerpo Humano</a>
+            <a href="grupos.html">👥 Grupos</a>
+            <a href="selector.html">🎯 Selector</a>
+            <a href="asistencias.html">📋 Asistencias</a>
+            <a href="horario.html">📅 Horario</a>
+            <a href="normas-aula.html">📜 Normas</a>
+            <a href="pizarra.html">🖍️ Pizarra</a>
+            <a href="bolsa-premios.html">🎁 Premios</a>
+            <a href="puntos.html">🏆 Puntos</a>
+            <a href="aciertos.html">✅ Aciertos</a>
+            <a href="ajedrez.html">♟️ Ajedrez</a>
+            <a href="bingo.html">🎱 Bingo</a>
+            <a href="buscaminas.html">💣 Buscaminas</a>
+            <a href="crucigrama.html">✏️ Crucigrama</a>
+            <a href="damas.html">🟡 Damas</a>
+            <a href="laberinto.html">🌀 Laberinto</a>
+            <a href="memoria.html">🧠 Memoria</a>
+            <a href="piedra-papel.html">🪨 PPT</a>
+            <a href="sopa-letras.html">🔍 Sopa Letras</a>
+            <a href="sudoku.html">🔢 Sudoku</a>
+            <a href="tangram.html">🔺 Tangram</a>
+            <a href="tres-en-raya.html">⭕ Tres Raya</a>
+            <a href="contacto.html">📧 Contacto</a>
+            <a href="sobre-nosotros.html">ℹ️ Nosotros</a>
+            <a href="privacidad.html">🔒 Privacidad</a>
+          </nav>
+        </div>
+    </header>
+    <main>
+        <div class="tool-header">
+            <h1>🕐 Reloj Mundial</h1>
+            <p>Hora exacta en tiempo real para ciudades de todo el mundo</p>
+        </div>
+        <div class="tool-content">
+            <div class="main-clock-wrapper">
+                <div class="main-clock" id="mainClock">
+                    <div class="detected-badge" id="detectedBadge">📍 Detectando...</div>
+                    <div class="location" id="mainLocation">CARGANDO...</div>
+                    <div class="country" id="mainCountry"></div>
+                    <div class="time" id="mainTime">--:--:--</div>
+                    <div class="date" id="mainDate"></div>
+                    <div class="offset" id="mainOffset"></div>
+                </div>
+            </div>
+
+            <div class="search-bar">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchCities" placeholder="Buscar ciudad... ej: Lima, Madrid, Tokio" oninput="filtrarCiudades()">
+            </div>
+
+            <div class="stats-bar">
+                <span class="stat-chip">🌍 <strong id="totalCities">30</strong> ciudades</span>
+                <span class="stat-chip" id="detectedZone">🕐 Zona: <strong>--</strong></span>
+            </div>
+
+            <div class="world-grid" id="worldGrid"></div>
+            <div class="no-results" id="noResults">😔 No se encontraron ciudades</div>
+        </div>
+    </main>
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-links">
+                <a href="index.html">🏠 Inicio</a>
+                <a href="hora-mundial.html">🕐 Hora Mundial</a>
+                <a href="dados.html">🎲 Dados</a>
+                <a href="temporizador.html">⏱️ Temporizador</a>
+                <a href="ruleta.html">🎰 Ruleta</a>
+                <a href="grupos.html">👥 Grupos</a>
+                <a href="quiz.html">📝 Quiz</a>
+                <a href="contacto.html">📧 Contacto</a>
+            </div>
+            <p class="footer-copy">&copy; 2026 Educa y Juega. Datos horarios en tiempo real.</p>
+        </div>
+    </footer>
+    <script>
+        const ciudades = [
+            { nombre: 'Nueva York', pais: 'EE.UU.', zona: 'America/New_York', bandera: '🇺🇸' },
+            { nombre: 'Chicago', pais: 'EE.UU.', zona: 'America/Chicago', bandera: '🇺🇸' },
+            { nombre: 'Denver', pais: 'EE.UU.', zona: 'America/Denver', bandera: '🇺🇸' },
+            { nombre: 'Los Ángeles', pais: 'EE.UU.', zona: 'America/Los_Angeles', bandera: '🇺🇸' },
+            { nombre: 'Ciudad de México', pais: 'México', zona: 'America/Mexico_City', bandera: '🇲🇽' },
+            { nombre: 'Guatemala', pais: 'Guatemala', zona: 'America/Guatemala', bandera: '🇬🇹' },
+            { nombre: 'San José', pais: 'Costa Rica', zona: 'America/Costa_Rica', bandera: '🇨🇷' },
+            { nombre: 'Panamá', pais: 'Panamá', zona: 'America/Panama', bandera: '🇵🇦' },
+            { nombre: 'Bogotá', pais: 'Colombia', zona: 'America/Bogota', bandera: '🇨🇴' },
+            { nombre: 'Quito', pais: 'Ecuador', zona: 'America/Guayaquil', bandera: '🇪🇨' },
+            { nombre: 'Lima', pais: 'Perú', zona: 'America/Lima', bandera: '🇵🇪' },
+            { nombre: 'La Paz', pais: 'Bolivia', zona: 'America/La_Paz', bandera: '🇧🇴' },
+            { nombre: 'Santiago', pais: 'Chile', zona: 'America/Santiago', bandera: '🇨🇱' },
+            { nombre: 'Buenos Aires', pais: 'Argentina', zona: 'America/Argentina/Buenos_Aires', bandera: '🇦🇷' },
+            { nombre: 'São Paulo', pais: 'Brasil', zona: 'America/Sao_Paulo', bandera: '🇧🇷' },
+            { nombre: 'Caracas', pais: 'Venezuela', zona: 'America/Caracas', bandera: '🇻🇪' },
+            { nombre: 'Londres', pais: 'Reino Unido', zona: 'Europe/London', bandera: '🇬🇧' },
+            { nombre: 'París', pais: 'Francia', zona: 'Europe/Paris', bandera: '🇫🇷' },
+            { nombre: 'Madrid', pais: 'España', zona: 'Europe/Madrid', bandera: '🇪🇸' },
+            { nombre: 'Barcelona', pais: 'España', zona: 'Europe/Madrid', bandera: '🇪🇸' },
+            { nombre: 'Lisboa', pais: 'Portugal', zona: 'Europe/Lisbon', bandera: '🇵🇹' },
+            { nombre: 'Berlín', pais: 'Alemania', zona: 'Europe/Berlin', bandera: '🇩🇪' },
+            { nombre: 'Roma', pais: 'Italia', zona: 'Europe/Rome', bandera: '🇮🇹' },
+            { nombre: 'Ámsterdam', pais: 'Países Bajos', zona: 'Europe/Amsterdam', bandera: '🇳🇱' },
+            { nombre: 'Bruselas', pais: 'Bélgica', zona: 'Europe/Brussels', bandera: '🇧🇪' },
+            { nombre: 'Viena', pais: 'Austria', zona: 'Europe/Vienna', bandera: '🇦🇹' },
+            { nombre: 'Estocolmo', pais: 'Suecia', zona: 'Europe/Stockholm', bandera: '🇸🇪' },
+            { nombre: 'Copenhague', pais: 'Dinamarca', zona: 'Europe/Copenhagen', bandera: '🇩🇰' },
+            { nombre: 'Moscú', pais: 'Rusia', zona: 'Europe/Moscow', bandera: '🇷🇺' },
+            { nombre: 'Atenas', pais: 'Grecia', zona: 'Europe/Athens', bandera: '🇬🇷' },
+            { nombre: 'Estambul', pais: 'Turquía', zona: 'Europe/Istanbul', bandera: '🇹🇷' },
+            { nombre: 'Dubái', pais: 'EAU', zona: 'Asia/Dubai', bandera: '🇦🇪' },
+            { nombre: 'Mumbai', pais: 'India', zona: 'Asia/Kolkata', bandera: '🇮🇳' },
+            { nombre: 'Singapur', pais: 'Singapur', zona: 'Asia/Singapore', bandera: '🇸🇬' },
+            { nombre: 'Beijing', pais: 'China', zona: 'Asia/Shanghai', bandera: '🇨🇳' },
+            { nombre: 'Tokio', pais: 'Japón', zona: 'Asia/Tokyo', bandera: '🇯🇵' },
+            { nombre: 'Seúl', pais: 'Corea del Sur', zona: 'Asia/Seoul', bandera: '🇰🇷' },
+            { nombre: 'Bangkok', pais: 'Tailandia', zona: 'Asia/Bangkok', bandera: '🇹🇭' },
+            { nombre: 'El Cairo', pais: 'Egipto', zona: 'Africa/Cairo', bandera: '🇪🇬' },
+            { nombre: 'Lagos', pais: 'Nigeria', zona: 'Africa/Lagos', bandera: '🇳🇬' },
+            { nombre: 'Johannesburgo', pais: 'Sudáfrica', zona: 'Africa/Johannesburg', bandera: '🇿🇦' },
+            { nombre: 'Nairobi', pais: 'Kenia', zona: 'Africa/Nairobi', bandera: '🇰🇪' },
+            { nombre: 'Sídney', pais: 'Australia', zona: 'Australia/Sydney', bandera: '🇦🇺' },
+            { nombre: 'Auckland', pais: 'Nueva Zelanda', zona: 'Pacific/Auckland', bandera: '🇳🇿' },
+        ];
+
+        const zonaUsuario = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        let zonaPrincipal = zonaUsuario;
+        let ciudadPrincipal = null;
+
+        function extraerCiudad(zona) {
+            const partes = zona.split('/');
+            return partes[partes.length - 1].replace(/_/g, ' ');
+        }
+
+        function buscarCiudadPorZona(zona) {
+            return ciudades.find(c => c.zona === zona);
+        }
+
+        function formatearHora(zona, incluirSegundos = true) {
+            const ahora = new Date();
+            const opciones = {
+                timeZone: zona,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: incluirSegundos ? '2-digit' : undefined,
+                hour12: false,
+            };
+            const formato = new Intl.DateTimeFormat('es-ES', opciones);
+            const partes = formato.formatToParts(ahora);
+            const h = partes.find(p => p.type === 'hour')?.value || '00';
+            const m = partes.find(p => p.type === 'minute')?.value || '00';
+            const s = partes.find(p => p.type === 'second')?.value || '00';
+            return { h, m, s, texto: incluirSegundos ? `${h}:${m}:${s}` : `${h}:${m}` };
+        }
+
+        function formatearFecha(zona) {
+            const ahora = new Date();
+            return new Intl.DateTimeFormat('es-ES', {
+                timeZone: zona,
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+            }).format(ahora);
+        }
+
+        function obtenerOffset(zona) {
+            const ahora = new Date();
+            const format = new Intl.DateTimeFormat('en-CA', {
+                timeZone: zona,
+                year: 'numeric', month: '2-digit', day: '2-digit',
+                hour: '2-digit', minute: '2-digit', second: '2-digit',
+                hour12: false
+            });
+            const p = format.formatToParts(ahora);
+            const get = (t) => parseInt(p.find(x => x.type === t).value);
+            const ms = Date.UTC(get('year'), get('month') - 1, get('day'), get('hour'), get('minute'), get('second'));
+            const offset = Math.round((ms - ahora.getTime()) / 3600000 * 2) / 2;
+            const signo = offset >= 0 ? '+' : '';
+            return `${signo}${offset}`;
+        }
+
+        function ciudadDeZona(zona) {
+            const c = buscarCiudadPorZona(zona);
+            if (c) return c;
+            const nombre = extraerCiudad(zona);
+            return { nombre, pais: '', zona, bandera: '🌍' };
+        }
+
+        async function detectarUbicacion() {
+            try {
+                const resp = await fetch('https://worldtimeapi.org/api/ip');
+                if (resp.ok) {
+                    const datos = await resp.json();
+                    if (datos.timezone) zonaPrincipal = datos.timezone;
+                }
+            } catch { /* fallback a Intl */ }
+
+            ciudadPrincipal = buscarCiudadPorZona(zonaPrincipal) || ciudadDeZona(zonaPrincipal);
+            document.getElementById('detectedBadge').textContent = `🕐 Zona: ${zonaPrincipal}`;
+            document.getElementById('mainCountry').textContent = ciudadPrincipal.pais || extraerCiudad(zonaPrincipal);
+        }
+
+        function renderizarTarjetas(filtro = '') {
+            const grid = document.getElementById('worldGrid');
+            const noResults = document.getElementById('noResults');
+            const texto = filtro.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+            const filtradas = ciudades.filter(c => {
+                if (!texto) return true;
+                const nombre = c.nombre.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                const pais = c.pais.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                return nombre.includes(texto) || pais.includes(texto) || c.zona.toLowerCase().includes(texto);
+            });
+
+            if (filtradas.length === 0) {
+                grid.innerHTML = '';
+                noResults.style.display = 'block';
+                return;
+            }
+            noResults.style.display = 'none';
+
+            // Ordenar: la del usuario primero
+            const ordenadas = [...filtradas].sort((a, b) => {
+                if (a.zona === zonaPrincipal) return -1;
+                if (b.zona === zonaPrincipal) return 1;
+                return 0;
+            });
+
+            grid.innerHTML = ordenadas.map(c => {
+                const tiempo = formatearHora(c.zona, false);
+                const fecha = formatearFecha(c.zona);
+                const offset = obtenerOffset(c.zona);
+                const esLocal = c.zona === zonaPrincipal;
+                return `
+                    <div class="clock-card ${esLocal ? 'local' : ''}">
+                        <div class="card-header">
+                            <span class="card-city">${c.nombre}</span>
+                            <span class="card-flag">${c.bandera}</span>
+                        </div>
+                        <div class="card-country">${c.pais}</div>
+                        <div class="card-time">${tiempo.texto}</div>
+                        <div class="card-date">${fecha}</div>
+                        <div class="card-offset">UTC ${offset}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function actualizarRelojPrincipal() {
+            const tiempo = formatearHora(zonaPrincipal);
+            const fecha = formatearFecha(zonaPrincipal);
+            const offset = obtenerOffset(zonaPrincipal);
+            const c = ciudadPrincipal || ciudadDeZona(zonaPrincipal);
+
+            document.getElementById('mainTime').innerHTML = `${tiempo.h}:${tiempo.m}<span class="seconds">:${tiempo.s}</span>`;
+            document.getElementById('mainDate').textContent = fecha;
+            document.getElementById('mainOffset').textContent = `UTC ${offset}`;
+            document.getElementById('mainLocation').textContent = c.bandera + ' ' + c.nombre;
+            document.getElementById('mainCountry').textContent = c.pais || extraerCiudad(zonaPrincipal);
+            document.getElementById('detectedZone').innerHTML = `🕐 Zona: <strong>${zonaPrincipal}</strong>`;
+        }
+
+        function actualizarTarjetas() {
+            document.querySelectorAll('.clock-card').forEach((card, i) => {
+                // Actualizar solo los tiempos sin recrear todo
+                // Mejor: recrear tarjetas cada minuto para evitar desincronización
+            });
+        }
+
+        function filtrarCiudades() {
+            const texto = document.getElementById('searchCities').value;
+            renderizarTarjetas(texto);
+        }
+
+        async function iniciar() {
+            await detectarUbicacion();
+            document.getElementById('totalCities').textContent = ciudades.length;
+            renderizarTarjetas();
+            actualizarRelojPrincipal();
+
+            setInterval(() => {
+                actualizarRelojPrincipal();
+                renderizarTarjetas(document.getElementById('searchCities').value);
+            }, 1000);
+        }
+
+        iniciar();
+    </script>
+</body>
+</html>

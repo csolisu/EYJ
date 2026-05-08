@@ -1,0 +1,816 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Creador de Grupos - Herramienta para el Aula | Educa y Juega
+    </title>
+    <meta name="description" content="Divide tu clase en equipos aleatorios de forma rápida y justa. Creador de grupos para el aula." />
+    <meta name="keywords" content="creador de grupos, grupos aleatorios, formar equipos, trabajo en grupo" />
+    <link rel="canonical" href="https://educayjuega.com/grupos.html" />
+    <meta property="og:title" content="Creador de Grupos Aleatorios | Educa y Juega" />
+    <meta property="og:description" content="Divide tu clase en equipos aleatorios de forma rápida y justa. Creador de grupos para el aula." />
+    <meta property="og:url" content="https://educayjuega.com/grupos.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://educayjuega.com/favicon.svg" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Creador de Grupos Aleatorios | Educa y Juega" />
+    <meta name="twitter:description" content="Divide tu clase en equipos aleatorios de forma rápida y justa. Creador de grupos para el aula." />
+
+<link rel="stylesheet" href="css/styles.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+    <style>
+      :root {
+        --primary: #4f46e5;
+        --primary-light: #818cf8;
+        --primary-dark: #3730a3;
+        --accent: #f59e0b;
+        --bg: #f9fafb;
+        --surface: #ffffff;
+        --text: #1f2937;
+        --text-muted: #6b7280;
+        --border: #e5e7eb;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: var(--bg);
+        min-height: 100vh;
+      }
+      .tool-page {
+        padding: 2rem 1.5rem;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .tool-header {
+        background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+      }
+      .tool-header h1 {
+        font-size: 2rem;
+        color: white;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+      }
+      .tool-header p {
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 1rem;
+      }
+      .main-content {
+        display: grid;
+        grid-template-columns: 1fr 1.5fr;
+        gap: 2rem;
+        align-items: start;
+      }
+      @media (max-width: 900px) {
+        .main-content {
+          grid-template-columns: 1fr;
+        }
+      }
+      .panel {
+        background: var(--surface);
+        border-radius: 1.5rem;
+        padding: 1.5rem;
+        box-shadow: var(--shadow-lg);
+        border: 1px solid var(--border);
+      }
+      .panel-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .form-group {
+        margin-bottom: 1rem;
+      }
+      .form-group label {
+        display: block;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+      }
+      .form-group input[type="number"] {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid var(--border);
+        border-radius: 0.75rem;
+        font-size: 1rem;
+        transition: border-color 0.2s;
+      }
+      .form-group input[type="number"]:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+      .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+      .checkbox-group input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        accent-color: var(--primary);
+      }
+      .checkbox-group label {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        cursor: pointer;
+      }
+      .btn-crear {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(135deg, var(--primary), #7c3aed);
+        color: white;
+        border: none;
+        border-radius: 0.75rem;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+      }
+      .btn-crear:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(79, 70, 229, 0.5);
+      }
+      .btn-crear:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      .input-group {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+      .input-group input {
+        flex: 1;
+        padding: 0.75rem 1rem;
+        border: 2px solid var(--border);
+        border-radius: 0.75rem;
+        font-size: 0.95rem;
+      }
+      .input-group input:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+      .btn-add {
+        padding: 0.75rem 1.25rem;
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        border: none;
+        border-radius: 0.75rem;
+        font-size: 1.2rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 3px 10px rgba(16, 185, 129, 0.3);
+      }
+      .btn-add:hover {
+        transform: scale(1.05);
+      }
+      .btn-row {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+      }
+      .btn-sm {
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        border: 1px solid var(--border);
+        background: white;
+        color: var(--text-muted);
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-sm:hover {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: white;
+      }
+      .btn-sm.danger {
+        border-color: #fca5a5;
+        color: #dc2626;
+      }
+      .btn-sm.danger:hover {
+        background: #dc2626;
+        border-color: #dc2626;
+        color: white;
+      }
+      .students-list {
+        max-height: 300px;
+        overflow-y: auto;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        background: var(--bg);
+        border-radius: 0.75rem;
+      }
+      .student-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.4rem 0.75rem;
+        background: var(--primary);
+        color: white;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .student-chip:hover {
+        background: var(--primary-dark);
+        transform: scale(1.05);
+      }
+      .student-chip .remove {
+        font-size: 0.7rem;
+        opacity: 0.7;
+      }
+      .student-chip .remove:hover {
+        opacity: 1;
+      }
+      .empty-msg {
+        color: #9ca3af;
+        font-style: italic;
+        font-size: 0.9rem;
+        text-align: center;
+        padding: 1rem;
+      }
+      .count-badge {
+        background: var(--primary);
+        color: white;
+        padding: 0.2rem 0.5rem;
+        border-radius: 10px;
+        font-size: 0.75rem;
+        margin-left: 0.5rem;
+      }
+      .results-section {
+        display: none;
+        margin-top: 2rem;
+      }
+      .results-section.show {
+        display: block;
+      }
+      .grupos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .grupo-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 1rem;
+        padding: 1rem;
+        box-shadow: var(--shadow);
+      }
+      .grupo-card h4 {
+        color: var(--primary);
+        font-size: 1.1rem;
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--primary);
+      }
+      .grupo-card .member {
+        padding: 0.4rem 0.75rem;
+        background: var(--bg);
+        border-radius: 0.5rem;
+        margin-bottom: 0.4rem;
+        font-size: 0.9rem;
+      }
+      .unassigned-warning {
+        background: #fef3c7;
+        border: 1px solid #f59e0b;
+        border-radius: 0.75rem;
+        padding: 0.75rem 1rem;
+        color: #92400e;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+        display: none;
+      }
+      .unassigned-warning.show {
+        display: block;
+      }
+      .actions-row {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .btn-action {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 0.75rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s;
+      }
+      .btn-regenerar {
+        background: var(--accent);
+        color: white;
+      }
+      .btn-regenerar:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+      }
+      .btn-export {
+        background: #ef4444;
+        color: white;
+      }
+      .btn-export:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+      }
+      .sound-toggle {
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        background: white;
+        border: 2px solid var(--border);
+        border-radius: 50%;
+        width: 44px;
+        height: 44px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.2s;
+        z-index: 50;
+      }
+      .sound-toggle:hover {
+        transform: scale(1.05);
+        border-color: var(--primary);
+      }
+      .sound-toggle .sound-off {
+        display: none;
+      }
+      .sound-toggle.muted .sound-on {
+        display: none;
+      }
+      .sound-toggle.muted .sound-off {
+        display: inline;
+      }
+    </style>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Creador de Grupos Aleatorios | Educa y Juega",
+    "url": "https://educayjuega.com/grupos.html",
+    "description": "Divide tu clase en equipos aleatorios de forma rápida y justa. Creador de grupos para el aula.",
+    "inLanguage": "es-ES"
+  }
+  </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-container">
+        <a href="index.html" class="logo">
+          <span class="logo-icon">📚</span> Educa y Juega
+        </a>
+        <button class="menu-toggle" aria-label="Menú">☰</button>
+                  <nav class="nav-menu">
+            <a href="index.html">🏠 Inicio</a>
+            <a href="hora-mundial.html">🕐 Hora Mundial</a>
+            <a href="dados.html">🎲 Dados</a>
+            <a href="ruleta.html">🎰 Ruleta</a>
+            <a href="ruleta-preguntas.html">❓ Ruleta Preguntas</a>
+            <a href="temporizador.html">⏱️ Temporizador</a>
+            <a href="cronometro.html">⏱ Cronómetro</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="vocabulario.html">📝 Vocabulario</a>
+            <a href="conjugador.html">📝 Conjugador</a>
+            <a href="ejercicios.html">➕ Ejercicios</a>
+            <a href="fracciones.html">🍕 Fracciones</a>
+            <a href="tablas.html">✖️ Tablas</a>
+            <a href="calculadora.html">🧮 Calculadora</a>
+            <a href="calculadora-areas.html">📐 Calcular Áreas</a>
+            <a href="geometria.html">📐 Geometría</a>
+            <a href="convertidor.html">🔄 Convertir</a>
+            <a href="recta-numerica.html">📏 Recta</a>
+            <a href="linea-tiempo.html">⏳ Línea Tiempo</a>
+            <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
+            <a href="sistema-solar.html">🌍 Sistema Solar</a>
+            <a href="ciclo-agua.html">💧 Ciclo Agua</a>
+            <a href="cuerpo-humano.html">🧍 Cuerpo Humano</a>
+            <a href="grupos.html">👥 Grupos</a>
+            <a href="selector.html">🎯 Selector</a>
+            <a href="asistencias.html">📋 Asistencias</a>
+            <a href="horario.html">📅 Horario</a>
+            <a href="normas-aula.html">📜 Normas</a>
+            <a href="pizarra.html">🖍️ Pizarra</a>
+            <a href="bolsa-premios.html">🎁 Premios</a>
+            <a href="puntos.html">🏆 Puntos</a>
+            <a href="aciertos.html">✅ Aciertos</a>
+            <a href="ajedrez.html">♟️ Ajedrez</a>
+            <a href="bingo.html">🎱 Bingo</a>
+            <a href="buscaminas.html">💣 Buscaminas</a>
+            <a href="crucigrama.html">✏️ Crucigrama</a>
+            <a href="damas.html">🟡 Damas</a>
+            <a href="laberinto.html">🌀 Laberinto</a>
+            <a href="memoria.html">🧠 Memoria</a>
+            <a href="piedra-papel.html">🪨 PPT</a>
+            <a href="sopa-letras.html">🔍 Sopa Letras</a>
+            <a href="sudoku.html">🔢 Sudoku</a>
+            <a href="tangram.html">🔺 Tangram</a>
+            <a href="tres-en-raya.html">⭕ Tres Raya</a>
+            <a href="contacto.html">📧 Contacto</a>
+            <a href="sobre-nosotros.html">ℹ️ Nosotros</a>
+            <a href="privacidad.html">🔒 Privacidad</a>
+          </nav>
+      </div>
+    </header>
+    <button
+      class="sound-toggle"
+      id="soundToggle"
+      aria-label="Activar/desactivar sonido"
+    >
+      <span class="sound-on">🔊</span> <span class="sound-off">🔇</span>
+    </button>
+    <main>
+      <div class="tool-header">
+        <h1>👥 Creador de Grupos</h1>
+        <p>Crea grupos aleatorios para actividades colaborativas en el aula</p>
+      </div>
+      <div class="tool-page">
+        <div class="main-content">
+          <!-- Panel de configuración -->
+          <div class="panel">
+            <div class="panel-title">
+              📋 Participantes
+              <span class="count-badge" id="studentCount">0</span>
+            </div>
+            <div class="input-group">
+              <input
+                type="text"
+                id="studentInput"
+                placeholder="Escribe un nombre..."
+                maxlength="30"
+              />
+              <button class="btn-add" id="btnAddStudent" title="Añadir">
+                +
+              </button>
+            </div>
+            <div class="btn-row">
+              <button class="btn-sm" id="btnLoadDemo">📋 Cargar ejemplo</button>
+              <button class="btn-sm danger" id="btnClearAll">
+                🗑️ Limpiar todo
+              </button>
+            </div>
+            <div class="students-list" id="studentsList">
+              <span class="empty-msg"
+                >Añade participantes para crear grupos</span
+              >
+            </div>
+            <hr
+              style="
+                margin: 1.5rem 0;
+                border: none;
+                border-top: 1px solid var(--border);
+              "
+            />
+            <div class="panel-title">⚙️ Configuración</div>
+            <div class="form-group">
+              <label for="numGrupos">Número de grupos:</label>
+              <input type="number" id="numGrupos" value="4" min="2" max="10" />
+            </div>
+            <div class="checkbox-group">
+              <input type="checkbox" id="equilibrar" checked />
+              <label for="equilibrar"
+                >Equilibrar grupos (mismo número de estudiantes)</label
+              >
+            </div>
+            <button class="btn-crear" id="btnCrearGrupos" disabled>
+              ✨ Crear Grupos
+            </button>
+          </div>
+          <!-- Panel de resultados -->
+          <div class="panel">
+            <div class="panel-title">📊 Resultados</div>
+            <div id="emptyState">
+              <span class="empty-msg">Los grupos aparecerán aquí</span>
+            </div>
+            <div id="resultsSection" class="results-section">
+              <div class="unassigned-warning" id="unassignedWarning">
+                ⚠️ Algunos estudiantes no fueron asignados equitativamente
+              </div>
+              <div class="grupos-grid" id="gruposGrid"></div>
+              <div class="actions-row">
+                <button class="btn-action btn-regenerar" id="btnRegenerar">
+                  🔄 Regenerar Grupos
+                </button>
+                <button class="btn-action btn-export" id="btnExportPDF">
+                  📄 Exportar PDF
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-links">
+          <a href="contacto.html">📧 Contacto</a>
+          <a href="privacidad.html">🔒 Política de Privacidad</a>
+          <a href="sobre-nosotros.html">ℹ️ Sobre Nosotros</a>
+        </div>
+        <p class="footer-copy">
+          &copy; 2026 Educa y Juega. Herramientas educativas gratuitas
+          para profesores.
+        </p>
+      </div>
+    </footer>
+    <script src="js/main.js"></script>
+    <script>
+      // Sistema de sonido
+      let soundEnabled =
+        localStorage.getItem("Educa y Juega_sound") !== "false";
+      const soundToggle = document.getElementById("soundToggle");
+      if (soundEnabled) {
+        soundToggle.classList.remove("muted");
+      } else {
+        soundToggle.classList.add("muted");
+      }
+      soundToggle.addEventListener("click", () => {
+        soundEnabled = !soundEnabled;
+        localStorage.setItem("Educa y Juega_sound", soundEnabled);
+        soundToggle.classList.toggle("muted", !soundEnabled);
+      });
+      // Audio
+      let audioCtx = null;
+      function initAudio() {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === "suspended") {
+          audioCtx.resume();
+        }
+      }
+      function playSound(type) {
+        if (!soundEnabled) return;
+        initAudio();
+        try {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          if (type === "click") {
+            osc.frequency.value = 600;
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(
+              0.01,
+              audioCtx.currentTime + 0.1,
+            );
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.1);
+          } else if (type === "success") {
+            const notes = [523.25, 659.25, 783.99, 1046.5];
+            notes.forEach((freq, i) => {
+              const o = audioCtx.createOscillator();
+              const g = audioCtx.createGain();
+              o.connect(g);
+              g.connect(audioCtx.destination);
+              o.frequency.value = freq;
+              g.gain.setValueAtTime(0.15, audioCtx.currentTime + i * 0.1);
+              g.gain.exponentialRampToValueAtTime(
+                0.01,
+                audioCtx.currentTime + i * 0.1 + 0.3,
+              );
+              o.start(audioCtx.currentTime + i * 0.1);
+              o.stop(audioCtx.currentTime + i * 0.1 + 0.3);
+            });
+          }
+        } catch (e) {}
+      }
+      // Estado
+      let students = [];
+      let gruposCreados = [];
+      // Elementos DOM
+      const studentInput = document.getElementById("studentInput");
+      const btnAddStudent = document.getElementById("btnAddStudent");
+      const studentsList = document.getElementById("studentsList");
+      const studentCount = document.getElementById("studentCount");
+      const btnLoadDemo = document.getElementById("btnLoadDemo");
+      const btnClearAll = document.getElementById("btnClearAll");
+      const numGruposInput = document.getElementById("numGrupos");
+      const equilibrarCheckbox = document.getElementById("equilibrar");
+      const btnCrearGrupos = document.getElementById("btnCrearGrupos");
+      const btnRegenerar = document.getElementById("btnRegenerar");
+      const btnExportPDF = document.getElementById("btnExportPDF");
+      const emptyState = document.getElementById("emptyState");
+      const resultsSection = document.getElementById("resultsSection");
+      const gruposGrid = document.getElementById("gruposGrid");
+      const unassignedWarning = document.getElementById("unassignedWarning");
+      // Funciones
+      function renderStudents() {
+        if (students.length === 0) {
+          studentsList.innerHTML =
+            '<span class="empty-msg">Añade participantes para crear grupos</span>';
+          studentCount.textContent = "0";
+          btnCrearGrupos.disabled = true;
+          return;
+        }
+        studentCount.textContent = students.length;
+        btnCrearGrupos.disabled = students.length < 2;
+        studentsList.innerHTML = students
+          .map(
+            (name, i) => `
+<div class="student-chip" onclick="removeStudent(${i})">
+${escapeHtml(name)}
+<span class="remove">✕</span>
+</div>
+`,
+          )
+          .join("");
+      }
+      function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
+      }
+      function addStudent(name) {
+        const trimmed = name.trim();
+        if (!trimmed) return;
+        if (students.includes(trimmed)) {
+          studentInput.style.borderColor = "#ef4444";
+          setTimeout(() => (studentInput.style.borderColor = ""), 500);
+          return;
+        }
+        students.push(trimmed);
+        studentInput.value = "";
+        renderStudents();
+        playSound("click");
+      }
+      function removeStudent(index) {
+        students.splice(index, 1);
+        renderStudents();
+      }
+      function loadDemo() {
+        const demoNames = [
+          "María",
+          "Juan",
+          "Sofía",
+          "Pedro",
+          "Diego",
+          "Valentina",
+          "Mateo",
+          "Isabella",
+          "Gabriel",
+          "Camila",
+          "Alejandro",
+          "Lucía",
+          "Sergio",
+          "Emma",
+          "Daniel",
+          "Olivia",
+        ];
+        students = [...demoNames];
+        renderStudents();
+        playSound("click");
+      }
+      function clearAll() {
+        students = [];
+        renderStudents();
+        resultsSection.classList.remove("show");
+        emptyState.style.display = "block";
+        playSound("click");
+      }
+      // Fisher-Yates shuffle
+      function shuffleArray(array) {
+        const arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+      }
+      function crearGrupos() {
+        if (students.length < 2) return;
+        playSound("click");
+        const numGrupos = parseInt(numGruposInput.value) || 4;
+        const equilibrar = equilibrarCheckbox.checked;
+        let shuffled = shuffleArray(students);
+        let grupos = [];
+        if (equilibrar) {
+          const porGrupo = Math.floor(shuffled.length / numGrupos);
+          const resto = shuffled.length % numGrupos;
+          for (let i = 0; i < numGrupos; i++) {
+            const inicio = i * porGrupo;
+            const fin = inicio + porGrupo + (i < resto ? 1 : 0);
+            grupos.push(shuffled.slice(inicio, fin));
+          }
+        } else {
+          for (let i = 0; i < numGrupos; i++) {
+            grupos.push([]);
+          }
+          shuffled.forEach((est, i) => {
+            grupos[i % numGrupos].push(est);
+          });
+        }
+        gruposCreados = grupos;
+        // Mostrar resultados
+        emptyState.style.display = "none";
+        resultsSection.classList.add("show");
+        // Render grupos
+        gruposGrid.innerHTML = grupos
+          .map(
+            (grupo, i) => `
+<div class="grupo-card">
+<h4>Grupo ${i + 1} <span style="font-size:0.8em;opacity:0.7">(${grupo.length})</span></h4>
+${grupo.map((miembro) => `<div class="member">${escapeHtml(miembro)}</div>`).join("")}
+</div>
+`,
+          )
+          .join("");
+        // Verificar desbalance
+        const sizes = grupos.map((g) => g.length);
+        const maxSize = Math.max(...sizes);
+        const minSize = Math.min(...sizes);
+        unassignedWarning.classList.toggle("show", maxSize - minSize > 1);
+        playSound("success");
+      }
+      // Exportar PDF
+      btnExportPDF.addEventListener("click", () => {
+        if (gruposCreados.length === 0) return;
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.setFontSize(20);
+        doc.setTextColor(79, 70, 229);
+        doc.text("Grupos de Clase", 105, 20, { align: "center" });
+        doc.setFontSize(10);
+        doc.setTextColor(107, 114, 128);
+        doc.text(`Fecha: ${new Date().toLocaleDateString("es-ES")}`, 105, 28, {
+          align: "center",
+        });
+        let yPos = 40;
+        gruposCreados.forEach((grupo, i) => {
+          if (yPos > 260) {
+            doc.addPage();
+            yPos = 20;
+          }
+          doc.setFontSize(14);
+          doc.setTextColor(79, 70, 229);
+          doc.text(`Grupo ${i + 1} (${grupo.length} miembros)`, 20, yPos);
+          yPos += 8;
+          doc.setFontSize(11);
+          doc.setTextColor(31, 41, 55);
+          grupo.forEach((miembro) => {
+            if (yPos > 280) {
+              doc.addPage();
+              yPos = 20;
+            }
+            doc.text(`• ${miembro}`, 25, yPos);
+            yPos += 7;
+          });
+          yPos += 8;
+        });
+        doc.save("grupos-clase.pdf");
+      });
+      // Event listeners
+      btnAddStudent.addEventListener("click", () =>
+        addStudent(studentInput.value),
+      );
+      studentInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") addStudent(studentInput.value);
+      });
+      btnLoadDemo.addEventListener("click", loadDemo);
+      btnClearAll.addEventListener("click", clearAll);
+      btnCrearGrupos.addEventListener("click", crearGrupos);
+      btnRegenerar.addEventListener("click", crearGrupos);
+      // Inicializar
+      renderStudents();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://educayjuega.com/sitemap.xml

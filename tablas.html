@@ -1,0 +1,228 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tablas de Multiplicar | Educa y Juega</title>
+    <meta name="description" content="Tablas de multiplicar interactivas del 1 al 12. Aprende y practica con ejercicios y juegos." />
+    <meta name="keywords" content="tablas de multiplicar, multiplicación, aprender a multiplicar, matemáticas" />
+    <link rel="canonical" href="https://educayjuega.com/tablas.html" />
+    <meta property="og:title" content="Tablas de Multiplicar | Educa y Juega" />
+    <meta property="og:description" content="Tablas de multiplicar interactivas del 1 al 12. Aprende y practica con ejercicios y juegos." />
+    <meta property="og:url" content="https://educayjuega.com/tablas.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://educayjuega.com/favicon.svg" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Tablas de Multiplicar | Educa y Juega" />
+    <meta name="twitter:description" content="Tablas de multiplicar interactivas del 1 al 12. Aprende y practica con ejercicios y juegos." />
+
+    <link rel="stylesheet" href="css/styles.css" />
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+    <style>
+      .tool-header h1 {
+        color: white;
+      }
+      .tool-header {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+      }
+      .tool-content {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+      .selector-tabla {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+      .selector-tabla button {
+        width: 50px;
+        height: 50px;
+        margin: 0.25rem;
+        font-size: 1.25rem;
+        border: 2px solid #e5e7eb;
+        background: white;
+        border-radius: 0.5rem;
+        cursor: pointer;
+      }
+      .selector-tabla button.active {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+      }
+      .tabla-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+      }
+      .tabla-item {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 1rem;
+        text-align: center;
+        box-shadow: var(--shadow);
+        cursor: pointer;
+      }
+      .tabla-item:hover {
+        transform: scale(1.05);
+      }
+      .tabla-item .num {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary);
+      }
+      .tabla-item .res {
+        font-size: 1.5rem;
+        color: var(--gray);
+      }
+      .resultado-feedback {
+        position: fixed;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--primary);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 1rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        box-shadow: var(--shadow);
+        opacity: 0;
+        transition: opacity 0.3s;
+        pointer-events: none;
+        z-index: 100;
+      }
+      .resultado-feedback.show {
+        opacity: 1;
+      }
+    </style>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Tablas de Multiplicar | Educa y Juega",
+    "url": "https://educayjuega.com/tablas.html",
+    "description": "Tablas de multiplicar interactivas del 1 al 12. Aprende y practica con ejercicios y juegos.",
+    "inLanguage": "es-ES"
+  }
+  </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-container">
+        <a href="index.html" class="logo">
+          <span class="logo-icon">📚</span> Educa y Juega
+        </a>
+        <button class="menu-toggle" aria-label="Menú">☰</button>
+                  <nav class="nav-menu">
+            <a href="index.html">🏠 Inicio</a>
+            <a href="hora-mundial.html">🕐 Hora Mundial</a>
+            <a href="dados.html">🎲 Dados</a>
+            <a href="ruleta.html">🎰 Ruleta</a>
+            <a href="ruleta-preguntas.html">❓ Ruleta Preguntas</a>
+            <a href="temporizador.html">⏱️ Temporizador</a>
+            <a href="cronometro.html">⏱ Cronómetro</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="vocabulario.html">📝 Vocabulario</a>
+            <a href="conjugador.html">📝 Conjugador</a>
+            <a href="ejercicios.html">➕ Ejercicios</a>
+            <a href="fracciones.html">🍕 Fracciones</a>
+            <a href="tablas.html">✖️ Tablas</a>
+            <a href="calculadora.html">🧮 Calculadora</a>
+            <a href="calculadora-areas.html">📐 Calcular Áreas</a>
+            <a href="geometria.html">📐 Geometría</a>
+            <a href="convertidor.html">🔄 Convertir</a>
+            <a href="recta-numerica.html">📏 Recta</a>
+            <a href="linea-tiempo.html">⏳ Línea Tiempo</a>
+            <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
+            <a href="sistema-solar.html">🌍 Sistema Solar</a>
+            <a href="ciclo-agua.html">💧 Ciclo Agua</a>
+            <a href="cuerpo-humano.html">🧍 Cuerpo Humano</a>
+            <a href="grupos.html">👥 Grupos</a>
+            <a href="selector.html">🎯 Selector</a>
+            <a href="asistencias.html">📋 Asistencias</a>
+            <a href="horario.html">📅 Horario</a>
+            <a href="normas-aula.html">📜 Normas</a>
+            <a href="pizarra.html">🖍️ Pizarra</a>
+            <a href="bolsa-premios.html">🎁 Premios</a>
+            <a href="puntos.html">🏆 Puntos</a>
+            <a href="aciertos.html">✅ Aciertos</a>
+            <a href="ajedrez.html">♟️ Ajedrez</a>
+            <a href="bingo.html">🎱 Bingo</a>
+            <a href="buscaminas.html">💣 Buscaminas</a>
+            <a href="crucigrama.html">✏️ Crucigrama</a>
+            <a href="damas.html">🟡 Damas</a>
+            <a href="laberinto.html">🌀 Laberinto</a>
+            <a href="memoria.html">🧠 Memoria</a>
+            <a href="piedra-papel.html">🪨 PPT</a>
+            <a href="sopa-letras.html">🔍 Sopa Letras</a>
+            <a href="sudoku.html">🔢 Sudoku</a>
+            <a href="tangram.html">🔺 Tangram</a>
+            <a href="tres-en-raya.html">⭕ Tres Raya</a>
+            <a href="contacto.html">📧 Contacto</a>
+            <a href="sobre-nosotros.html">ℹ️ Nosotros</a>
+            <a href="privacidad.html">🔒 Privacidad</a>
+          </nav>
+      </div>
+    </header>
+    <main>
+      <div class="tool-header">
+        <h1>✖️ Tablas de Multiplicar</h1>
+        <p>Selecciona una tabla para practicar</p>
+      </div>
+      <div class="tool-content">
+        <div class="selector-tabla" id="selector"></div>
+        <div class="tabla-grid" id="tabla"></div>
+        <div class="resultado-feedback" id="resultado"></div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-links">
+          <a href="contacto.html">📧 Contacto</a>
+          <a href="privacidad.html">🔒 Política de Privacidad</a>
+          <a href="sobre-nosotros.html">ℹ️ Sobre Nosotros</a>
+        </div>
+        <p class="footer-copy">
+          &copy; 2026 Educa y Juega. Herramientas educativas gratuitas
+          para profesores.
+        </p>
+      </div>
+    </footer>
+    <script>
+      let tablaActual = 1;
+      function renderSelector() {
+        let html = "";
+        for (let i = 1; i <= 10; i++) {
+          html += `<button class="${i === tablaActual ? "active" : ""}" onclick="setTabla(${i})">${i}</button>`;
+        }
+        document.getElementById("selector").innerHTML = html;
+      }
+      function setTabla(n) {
+        tablaActual = n;
+        renderSelector();
+        renderTabla();
+      }
+      function renderTabla() {
+        let html = "";
+        for (let i = 1; i <= 10; i++) {
+          html += `<div class="tabla-item" onclick="mostrar(${i})"><div class="num">${tablaActual} × ${i}</div><div class="res">= ${tablaActual * i}</div></div>`;
+        }
+        document.getElementById("tabla").innerHTML = html;
+      }
+      function mostrar(i) {
+        const el = document.getElementById("resultado");
+        el.textContent = `${tablaActual} × ${i} = ${tablaActual * i}`;
+        el.classList.add("show");
+        setTimeout(() => el.classList.remove("show"), 1500);
+      }
+      renderSelector();
+      renderTabla();
+    </script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,375 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contador de Puntos | Educa y Juega</title>
+    <meta name="description" content="Contador de puntos interactivo para el aula. Lleva el marcador de juegos y competiciones." />
+    <meta name="keywords" content="contador de puntos, marcador, puntuaciones, juegos competitivos" />
+    <link rel="canonical" href="https://educayjuega.com/puntos.html" />
+    <meta property="og:title" content="Contador de Puntos | Educa y Juega" />
+    <meta property="og:description" content="Contador de puntos interactivo para el aula. Lleva el marcador de juegos y competiciones." />
+    <meta property="og:url" content="https://educayjuega.com/puntos.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://educayjuega.com/favicon.svg" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Contador de Puntos | Educa y Juega" />
+    <meta name="twitter:description" content="Contador de puntos interactivo para el aula. Lleva el marcador de juegos y competiciones." />
+
+<link rel="stylesheet" href="css/styles.css" />
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+    <style>
+      .tool-header {
+        background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+        color: white;
+        padding: 2rem 1rem;
+        text-align: center;
+      }
+      .tool-header h1 {
+        color: white;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+      .tool-content {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+      }
+      .teams-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+      .team-card {
+        background: white;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        box-shadow: var(--shadow);
+        text-align: center;
+      }
+      .team-name-input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+      .team-name-input:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+      .score-display {
+        font-size: 4rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin: 1rem 0;
+      }
+      .score-controls {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+      .score-btn {
+        width: 50px;
+        height: 50px;
+        border: none;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .score-btn.minus {
+        background: #ef4444;
+        color: white;
+      }
+      .score-btn.plus {
+        background: #10b981;
+        color: white;
+      }
+      .score-btn:hover {
+        transform: scale(1.1);
+      }
+      .delete-team-btn {
+        background: #6b7280;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        margin-top: 1rem;
+      }
+      .add-team-section {
+        text-align: center;
+        padding: 2rem;
+        background: white;
+        border-radius: 1rem;
+        box-shadow: var(--shadow);
+      }
+      .game-controls {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 2rem;
+      }
+      .winner-display {
+        background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        text-align: center;
+        margin-top: 2rem;
+        display: none;
+      }
+      .winner-display.show {
+        display: block;
+      }
+      .winner-name {
+        font-size: 2rem;
+        font-weight: 700;
+      }
+      .message-toast {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #10b981;
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+        display: none;
+        animation: fadeInUp 0.3s ease;
+      }
+      .message-toast.error {
+        background: #ef4444;
+      }
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateX(-50%) translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(-50%) translateY(0);
+        }
+      }
+      .clear-data-btn {
+        background: #ef4444;
+      }
+      @media (max-width: 600px) {
+        .score-display {
+          font-size: 3rem;
+        }
+      }
+    </style>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Contador de Puntos | Educa y Juega",
+    "url": "https://educayjuega.com/puntos.html",
+    "description": "Contador de puntos interactivo para el aula. Lleva el marcador de juegos y competiciones.",
+    "inLanguage": "es-ES"
+  }
+  </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-container">
+        <a href="index.html" class="logo">
+          <span class="logo-icon">📚</span> Educa y Juega
+        </a>
+        <button class="menu-toggle" aria-label="Menú">☰</button>
+                  <nav class="nav-menu">
+            <a href="index.html">🏠 Inicio</a>
+            <a href="hora-mundial.html">🕐 Hora Mundial</a>
+            <a href="dados.html">🎲 Dados</a>
+            <a href="ruleta.html">🎰 Ruleta</a>
+            <a href="ruleta-preguntas.html">❓ Ruleta Preguntas</a>
+            <a href="temporizador.html">⏱️ Temporizador</a>
+            <a href="cronometro.html">⏱ Cronómetro</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="vocabulario.html">📝 Vocabulario</a>
+            <a href="conjugador.html">📝 Conjugador</a>
+            <a href="ejercicios.html">➕ Ejercicios</a>
+            <a href="fracciones.html">🍕 Fracciones</a>
+            <a href="tablas.html">✖️ Tablas</a>
+            <a href="calculadora.html">🧮 Calculadora</a>
+            <a href="calculadora-areas.html">📐 Calcular Áreas</a>
+            <a href="geometria.html">📐 Geometría</a>
+            <a href="convertidor.html">🔄 Convertir</a>
+            <a href="recta-numerica.html">📏 Recta</a>
+            <a href="linea-tiempo.html">⏳ Línea Tiempo</a>
+            <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
+            <a href="sistema-solar.html">🌍 Sistema Solar</a>
+            <a href="ciclo-agua.html">💧 Ciclo Agua</a>
+            <a href="cuerpo-humano.html">🧍 Cuerpo Humano</a>
+            <a href="grupos.html">👥 Grupos</a>
+            <a href="selector.html">🎯 Selector</a>
+            <a href="asistencias.html">📋 Asistencias</a>
+            <a href="horario.html">📅 Horario</a>
+            <a href="normas-aula.html">📜 Normas</a>
+            <a href="pizarra.html">🖍️ Pizarra</a>
+            <a href="bolsa-premios.html">🎁 Premios</a>
+            <a href="puntos.html">🏆 Puntos</a>
+            <a href="aciertos.html">✅ Aciertos</a>
+            <a href="ajedrez.html">♟️ Ajedrez</a>
+            <a href="bingo.html">🎱 Bingo</a>
+            <a href="buscaminas.html">💣 Buscaminas</a>
+            <a href="crucigrama.html">✏️ Crucigrama</a>
+            <a href="damas.html">🟡 Damas</a>
+            <a href="laberinto.html">🌀 Laberinto</a>
+            <a href="memoria.html">🧠 Memoria</a>
+            <a href="piedra-papel.html">🪨 PPT</a>
+            <a href="sopa-letras.html">🔍 Sopa Letras</a>
+            <a href="sudoku.html">🔢 Sudoku</a>
+            <a href="tangram.html">🔺 Tangram</a>
+            <a href="tres-en-raya.html">⭕ Tres Raya</a>
+            <a href="contacto.html">📧 Contacto</a>
+            <a href="sobre-nosotros.html">ℹ️ Nosotros</a>
+            <a href="privacidad.html">🔒 Privacidad</a>
+          </nav>
+      </div>
+    </header>
+    <main>
+      <div class="tool-header">
+        <h1>🏆 Contador de Puntos</h1>
+        <p>Marcador digital para competencias y juegos</p>
+      </div>
+      <div class="tool-content">
+        <div class="game-controls">
+          <button class="btn" onclick="addTeam()">➕ Agregar Equipo</button>
+          <button class="btn btn-secondary" onclick="resetAllScores()">
+            🔄 Reiniciar Puntos
+          </button>
+          <button class="btn btn-secondary" onclick="showWinner()">
+            👑 Declarar Ganador
+          </button>
+          <button class="btn clear-data-btn" onclick="clearAllData()">
+            🗑️ Limpiar Todo
+          </button>
+        </div>
+        <div class="message-toast" id="messageToast"></div>
+        <div class="teams-container" id="teamsContainer"></div>
+        <div class="winner-display" id="winnerDisplay">
+          <div class="winner-name" id="winnerName"></div>
+        </div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-links">
+          <a href="contacto.html">📧 Contacto</a>
+          <a href="privacidad.html">🔒 Política de Privacidad</a>
+          <a href="sobre-nosotros.html">ℹ️ Sobre Nosotros</a>
+        </div>
+        <p class="footer-copy">
+          &copy; 2026 Educa y Juega. Herramientas educativas gratuitas
+          para profesores.
+        </p>
+      </div>
+    </footer>
+    <script>
+      const STORAGE_KEY = "recursos_puntos_equipos";
+      function loadFromStorage() {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        return saved
+          ? JSON.parse(saved)
+          : [
+              { name: "Equipo 1", score: 0 },
+              { name: "Equipo 2", score: 0 },
+            ];
+      }
+      function saveToStorage() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(teams));
+      }
+      function showToast(message, isError = false) {
+        const toast = document.getElementById("messageToast");
+        toast.textContent = message;
+        toast.className = "message-toast" + (isError ? " error" : "");
+        toast.style.display = "block";
+        setTimeout(() => {
+          toast.style.display = "none";
+        }, 3000);
+      }
+      let teams = loadFromStorage();
+      function renderTeams() {
+        const container = document.getElementById("teamsContainer");
+        container.innerHTML = teams
+          .map(
+            (team, i) =>
+              `
+<div class="team-card">
+<input type="text" class="team-name-input" value="${team.name}"
+onchange="updateTeamName(${i}, this.value)" placeholder="Nombre del equipo">
+<div class="score-display">${team.score}</div>
+<div class="score-controls">
+<button class="score-btn minus" onclick="updateScore(${i}, -1)">-</button>
+<button class="score-btn plus" onclick="updateScore(${i}, 1)">+</button>
+</div>
+${teams.length > 2 ? `<button class="delete-team-btn" onclick="removeTeam(${i})">🗑️ Eliminar</button>` : ""}
+</div>
+`,
+          )
+          .join("");
+      }
+      function addTeam() {
+        teams.push({ name: `Equipo ${teams.length + 1}`, score: 0 });
+        saveToStorage();
+        renderTeams();
+        showToast("Equipo agregado");
+      }
+      function removeTeam(index) {
+        if (teams.length > 2) {
+          teams.splice(index, 1);
+          saveToStorage();
+          renderTeams();
+        }
+      }
+      function updateTeamName(index, name) {
+        teams[index].name = name;
+        saveToStorage();
+      }
+      function updateScore(index, delta) {
+        teams[index].score += delta;
+        if (teams[index].score < 0) teams[index].score = 0;
+        saveToStorage();
+        renderTeams();
+      }
+      function resetAllScores() {
+        teams.forEach((t) => (t.score = 0));
+        saveToStorage();
+        document.getElementById("winnerDisplay").classList.remove("show");
+        renderTeams();
+        showToast("Puntos reiniciados");
+      }
+      function showWinner() {
+        if (teams.length === 0) return;
+        const winner = teams.reduce((a, b) => (a.score > b.score ? a : b));
+        const display = document.getElementById("winnerDisplay");
+        const name = document.getElementById("winnerName");
+        display.classList.add("show");
+        name.textContent = `🏆 ${winner.name} gana con ${winner.score} puntos!`;
+      }
+      function clearAllData() {
+        localStorage.removeItem(STORAGE_KEY);
+        teams = [
+          { name: "Equipo 1", score: 0 },
+          { name: "Equipo 2", score: 0 },
+        ];
+        document.getElementById("winnerDisplay").classList.remove("show");
+        renderTeams();
+        showToast("Datos eliminados");
+      }
+      renderTeams();
+    </script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

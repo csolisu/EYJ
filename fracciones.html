@@ -1,0 +1,383 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fracciones Interactivas | Educa y Juega</title>
+    <meta name="description" content="Aprende fracciones de forma visual e interactiva. Compara y opera con fracciones usando gráficos." />
+    <meta name="keywords" content="fracciones, aprender fracciones, matemáticas interactivas, fracciones visuales" />
+    <link rel="canonical" href="https://educayjuega.com/fracciones.html" />
+    <meta property="og:title" content="Fracciones Interactivas | Educa y Juega" />
+    <meta property="og:description" content="Aprende fracciones de forma visual e interactiva. Compara y opera con fracciones usando gráficos." />
+    <meta property="og:url" content="https://educayjuega.com/fracciones.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://educayjuega.com/favicon.svg" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Fracciones Interactivas | Educa y Juega" />
+    <meta name="twitter:description" content="Aprende fracciones de forma visual e interactiva. Compara y opera con fracciones usando gráficos." />
+
+<link rel="stylesheet" href="css/styles.css" />
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+    <style>
+      .tool-header {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+        padding: 2rem 1rem;
+        text-align: center;
+      }
+      .tool-header h1 {
+        color: white;
+        font-size: 2rem;
+      }
+      .tool-content {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+      }
+      .fraccion-visual {
+        display: flex;
+        gap: 2rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 2rem;
+        align-items: center;
+      }
+      .fraccion {
+        text-align: center;
+      }
+      .fraccion-bar {
+        width: 100px;
+        height: 8px;
+        background: var(--primary);
+        margin: 5px 0;
+      }
+      .fraccion-num,
+      .fraccion-den {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary);
+        background: white;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+      }
+      .operacion {
+        font-size: 2rem;
+        font-weight: bold;
+      }
+      .operaciones {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin: 2rem 0;
+        flex-wrap: wrap;
+      }
+      .op-btn {
+        padding: 1rem 2rem;
+        font-size: 1.5rem;
+        border: none;
+        background: white;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        box-shadow: var(--shadow);
+        transition: all 0.2s;
+      }
+      .op-btn:hover {
+        background: var(--primary);
+        color: white;
+      }
+      .op-btn.active {
+        background: var(--primary);
+        color: white;
+      }
+      .resultado {
+        text-align: center;
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary);
+        padding: 1rem;
+        background: white;
+        border-radius: 1rem;
+        box-shadow: var(--shadow);
+      }
+      .visual-container {
+        display: flex;
+        gap: 2rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 2rem;
+      }
+      .circulo {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        border: 4px solid var(--primary);
+        position: relative;
+        overflow: hidden;
+      }
+      .circulo-parte {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--primary);
+        clip-path: polygon(
+          50% 50%,
+          50% 0%,
+          100% 0%,
+          100% 100%,
+          0% 100%,
+          0% 0%,
+          50% 0%
+        );
+      }
+    </style>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Fracciones Interactivas | Educa y Juega",
+    "url": "https://educayjuega.com/fracciones.html",
+    "description": "Aprende fracciones de forma visual e interactiva. Compara y opera con fracciones usando gráficos.",
+    "inLanguage": "es-ES"
+  }
+  </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-container">
+        <a href="index.html" class="logo">
+          <span class="logo-icon">📚</span> Educa y Juega
+        </a>
+        <button class="menu-toggle" aria-label="Menú">☰</button>
+                  <nav class="nav-menu">
+            <a href="index.html">🏠 Inicio</a>
+            <a href="hora-mundial.html">🕐 Hora Mundial</a>
+            <a href="dados.html">🎲 Dados</a>
+            <a href="ruleta.html">🎰 Ruleta</a>
+            <a href="ruleta-preguntas.html">❓ Ruleta Preguntas</a>
+            <a href="temporizador.html">⏱️ Temporizador</a>
+            <a href="cronometro.html">⏱ Cronómetro</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="vocabulario.html">📝 Vocabulario</a>
+            <a href="conjugador.html">📝 Conjugador</a>
+            <a href="ejercicios.html">➕ Ejercicios</a>
+            <a href="fracciones.html">🍕 Fracciones</a>
+            <a href="tablas.html">✖️ Tablas</a>
+            <a href="calculadora.html">🧮 Calculadora</a>
+            <a href="calculadora-areas.html">📐 Calcular Áreas</a>
+            <a href="geometria.html">📐 Geometría</a>
+            <a href="convertidor.html">🔄 Convertir</a>
+            <a href="recta-numerica.html">📏 Recta</a>
+            <a href="linea-tiempo.html">⏳ Línea Tiempo</a>
+            <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
+            <a href="sistema-solar.html">🌍 Sistema Solar</a>
+            <a href="ciclo-agua.html">💧 Ciclo Agua</a>
+            <a href="cuerpo-humano.html">🧍 Cuerpo Humano</a>
+            <a href="grupos.html">👥 Grupos</a>
+            <a href="selector.html">🎯 Selector</a>
+            <a href="asistencias.html">📋 Asistencias</a>
+            <a href="horario.html">📅 Horario</a>
+            <a href="normas-aula.html">📜 Normas</a>
+            <a href="pizarra.html">🖍️ Pizarra</a>
+            <a href="bolsa-premios.html">🎁 Premios</a>
+            <a href="puntos.html">🏆 Puntos</a>
+            <a href="aciertos.html">✅ Aciertos</a>
+            <a href="ajedrez.html">♟️ Ajedrez</a>
+            <a href="bingo.html">🎱 Bingo</a>
+            <a href="buscaminas.html">💣 Buscaminas</a>
+            <a href="crucigrama.html">✏️ Crucigrama</a>
+            <a href="damas.html">🟡 Damas</a>
+            <a href="laberinto.html">🌀 Laberinto</a>
+            <a href="memoria.html">🧠 Memoria</a>
+            <a href="piedra-papel.html">🪨 PPT</a>
+            <a href="sopa-letras.html">🔍 Sopa Letras</a>
+            <a href="sudoku.html">🔢 Sudoku</a>
+            <a href="tangram.html">🔺 Tangram</a>
+            <a href="tres-en-raya.html">⭕ Tres Raya</a>
+            <a href="contacto.html">📧 Contacto</a>
+            <a href="sobre-nosotros.html">ℹ️ Nosotros</a>
+            <a href="privacidad.html">🔒 Privacidad</a>
+          </nav>
+      </div>
+    </header>
+    <main>
+      <div class="tool-header">
+        <h1>🍕 Fracciones Interactivas</h1>
+        <p>Aprende fracciones con representaciones visuales</p>
+      </div>
+      <div class="tool-content">
+        <div class="fraccion-visual">
+          <div class="fraccion">
+            <div class="fraccion-num" id="num1">1</div>
+            <div class="fraccion-bar"></div>
+            <div class="fraccion-den" id="den1">2</div>
+          </div>
+          <div class="operacion" id="opSigno">+</div>
+          <div class="fraccion">
+            <div class="fraccion-num" id="num2">1</div>
+            <div class="fraccion-bar"></div>
+            <div class="fraccion-den" id="den2">4</div>
+          </div>
+          <div class="operacion">=</div>
+          <div class="fraccion">
+            <div class="fraccion-num" id="resNum">?</div>
+            <div class="fraccion-bar"></div>
+            <div class="fraccion-den" id="resDen">?</div>
+          </div>
+        </div>
+        <div class="operaciones">
+          <button class="op-btn active" onclick="setOp('+')">+</button>
+          <button class="op-btn" onclick="setOp('-')">−</button>
+          <button class="op-btn" onclick="setOp('×')">×</button>
+          <button class="op-btn" onclick="setOp('÷')">÷</button>
+        </div>
+        <div style="text-align: center">
+          <button class="btn" onclick="nuevaFraccion()">
+            🎲 Nuevas Fracciones
+          </button>
+          <button class="btn btn-secondary" onclick="calcular()">
+            = Calcular
+          </button>
+        </div>
+        <div class="resultado" id="resultado">Resultado: ?</div>
+        <div class="visual-container">
+          <div style="text-align: center">
+            <h3>Fracción 1</h3>
+            <div class="circulo" id="circulo1"></div>
+          </div>
+          <div style="text-align: center">
+            <h3>Fracción 2</h3>
+            <div class="circulo" id="circulo2"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-links">
+          <a href="contacto.html">📧 Contacto</a>
+          <a href="privacidad.html">🔒 Política de Privacidad</a>
+          <a href="sobre-nosotros.html">ℹ️ Sobre Nosotros</a>
+        </div>
+        <p class="footer-copy">
+          &copy; 2026 Educa y Juega. Herramientas educativas gratuitas
+          para profesores.
+        </p>
+      </div>
+    </footer>
+    <script>
+      let n1 = 1,
+        d1 = 2,
+        n2 = 1,
+        d2 = 4,
+        op = "+";
+      function rand(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+      function nova() {
+        d1 = rand(2, 8);
+        n1 = rand(1, d1 - 1);
+        d2 = rand(2, 8);
+        n2 = rand(1, d2 - 1);
+        render();
+      }
+      function nuevaFraccion() {
+        nova();
+      }
+      function render() {
+        document.getElementById("num1").textContent = n1;
+        document.getElementById("den1").textContent = d1;
+        document.getElementById("num2").textContent = n2;
+        document.getElementById("den2").textContent = d2;
+        document.getElementById("opSigno").textContent = op;
+        document.getElementById("resNum").textContent = "?";
+        document.getElementById("resDen").textContent = "?";
+        document.getElementById("resultado").textContent = "Resultado: ?";
+        actualizarVisualCirculo("circulo1", n1, d1);
+        actualizarVisualCirculo("circulo2", n2, d2);
+      }
+      function actualizarVisualCirculo(id, num, den) {
+        const contenedor = document.getElementById(id);
+        contenedor.innerHTML = "";
+        contenedor.style.background = "#fff";
+        const radio = 45;
+        const cx = 50,
+          cy = 50;
+        const sectores = [];
+        const anguloSector = 360 / den;
+        for (let i = 0; i < num; i++) {
+          const anguloInicio = i * anguloSector;
+          const anguloFin = (i + 1) * anguloSector;
+          const radInicio = ((anguloInicio - 90) * Math.PI) / 180;
+          const radFin = ((anguloFin - 90) * Math.PI) / 180;
+          const x1 = cx + radio * Math.cos(radInicio);
+          const y1 = cy + radio * Math.sin(radInicio);
+          const x2 = cx + radio * Math.cos(radFin);
+          const y2 = cy + radio * Math.sin(radFin);
+          const path = `M ${cx} ${cy} L ${x1} ${y1} A ${radio} ${radio} 0 ${anguloFin - anguloSector > 180 ? 1 : 0} 1 ${x2} ${y2} Z`;
+          sectores.push(
+            `<path d="${path}" fill="#f59e0b" stroke="white" stroke-width="2"/>`,
+          );
+        }
+        if (sectores.length > 0) {
+          contenedor.innerHTML = `<svg viewBox="0 0 100 100" style="width:100%;height:100%;">${sectores.join("")}</svg>`;
+        }
+      }
+      function setOp(operacion) {
+        op = operacion;
+        document
+          .querySelectorAll(".op-btn")
+          .forEach((btn) => btn.classList.remove("active"));
+        event.target.classList.add("active");
+        document.getElementById("opSigno").textContent = op;
+        document.getElementById("resNum").textContent = "?";
+        document.getElementById("resDen").textContent = "?";
+        document.getElementById("resultado").textContent = "Resultado: ?";
+      }
+      function gcd(a, b) {
+        return b === 0 ? a : gcd(b, a % b);
+      }
+      function calcular() {
+        let numRes, denRes;
+        const operador = op === "−" ? "-" : op;
+        if (operador === "+") {
+          numRes = n1 * d2 + n2 * d1;
+          denRes = d1 * d2;
+        } else if (operador === "-") {
+          numRes = n1 * d2 - n2 * d1;
+          denRes = d1 * d2;
+        } else if (operador === "×") {
+          numRes = n1 * n2;
+          denRes = d1 * d2;
+        } else if (operador === "÷") {
+          numRes = n1 * d2;
+          denRes = d1 * n2;
+        }
+        if (denRes === 0) {
+          document.getElementById("resultado").textContent =
+            "Error: División por cero";
+          return;
+        }
+        if (numRes < 0 || denRes < 0) {
+          numRes = Math.abs(numRes);
+          denRes = Math.abs(denRes);
+          document.getElementById("resultado").textContent =
+            "Resultado: -" + numRes + "/" + denRes;
+        } else {
+          const g = gcd(numRes, denRes);
+          numRes = numRes / g;
+          denRes = denRes / g;
+          document.getElementById("resultado").textContent =
+            "Resultado: " + numRes + "/" + denRes;
+        }
+        document.getElementById("resNum").textContent = numRes;
+        document.getElementById("resDen").textContent = denRes;
+      }
+      nova();
+    </script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

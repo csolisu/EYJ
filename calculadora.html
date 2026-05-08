@@ -1,0 +1,231 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculadora Científica | Educa y Juega</title>
+    <meta name="description" content="Calculadora científica online gratuita. Realiza operaciones matemáticas avanzadas desde tu navegador." />
+    <meta name="keywords" content="calculadora científica, calculadora online, matemáticas, operaciones avanzadas" />
+    <link rel="canonical" href="https://educayjuega.com/calculadora.html" />
+    <meta property="og:title" content="Calculadora Científica | Educa y Juega" />
+    <meta property="og:description" content="Calculadora científica online gratuita. Realiza operaciones matemáticas avanzadas desde tu navegador." />
+    <meta property="og:url" content="https://educayjuega.com/calculadora.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://educayjuega.com/favicon.svg" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Calculadora Científica | Educa y Juega" />
+    <meta name="twitter:description" content="Calculadora científica online gratuita. Realiza operaciones matemáticas avanzadas desde tu navegador." />
+
+    <link rel="stylesheet" href="css/styles.css" />
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+    <style>
+      .tool-header h1 {
+        color: white;
+      }
+      .tool-header {
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+      }
+      .calc-container {
+        max-width: 400px;
+        margin: 2rem auto;
+        background: #1f2937;
+        padding: 1.5rem;
+        border-radius: 1rem;
+        box-shadow: var(--shadow-lg);
+      }
+      .calc-display {
+        background: #f3f4f6;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        text-align: right;
+        font-size: 1.5rem;
+        font-family: monospace;
+        margin-bottom: 1rem;
+      }
+      .calc-buttons {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.5rem;
+      }
+      .calc-btn {
+        padding: 1rem;
+        font-size: 1.1rem;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        background: #374151;
+        color: white;
+      }
+      .calc-btn:hover {
+        background: #4b5563;
+      }
+      .calc-btn.op {
+        background: #f59e0b;
+      }
+      .calc-btn.op:hover {
+        background: #d97706;
+      }
+      .calc-btn.eq {
+        background: #10b981;
+      }
+      .calc-btn.clear {
+        background: #ef4444;
+      }
+    </style>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Calculadora Científica | Educa y Juega",
+    "url": "https://educayjuega.com/calculadora.html",
+    "description": "Calculadora científica online gratuita. Realiza operaciones matemáticas avanzadas desde tu navegador.",
+    "inLanguage": "es-ES"
+  }
+  </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-container">
+        <a href="index.html" class="logo">
+          <span class="logo-icon">📚</span> Educa y Juega
+        </a>
+        <button class="menu-toggle" aria-label="Menú">☰</button>
+                  <nav class="nav-menu">
+            <a href="index.html">🏠 Inicio</a>
+            <a href="hora-mundial.html">🕐 Hora Mundial</a>
+            <a href="dados.html">🎲 Dados</a>
+            <a href="ruleta.html">🎰 Ruleta</a>
+            <a href="ruleta-preguntas.html">❓ Ruleta Preguntas</a>
+            <a href="temporizador.html">⏱️ Temporizador</a>
+            <a href="cronometro.html">⏱ Cronómetro</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="vocabulario.html">📝 Vocabulario</a>
+            <a href="conjugador.html">📝 Conjugador</a>
+            <a href="ejercicios.html">➕ Ejercicios</a>
+            <a href="fracciones.html">🍕 Fracciones</a>
+            <a href="tablas.html">✖️ Tablas</a>
+            <a href="calculadora.html">🧮 Calculadora</a>
+            <a href="calculadora-areas.html">📐 Calcular Áreas</a>
+            <a href="geometria.html">📐 Geometría</a>
+            <a href="convertidor.html">🔄 Convertir</a>
+            <a href="recta-numerica.html">📏 Recta</a>
+            <a href="linea-tiempo.html">⏳ Línea Tiempo</a>
+            <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
+            <a href="sistema-solar.html">🌍 Sistema Solar</a>
+            <a href="ciclo-agua.html">💧 Ciclo Agua</a>
+            <a href="cuerpo-humano.html">🧍 Cuerpo Humano</a>
+            <a href="grupos.html">👥 Grupos</a>
+            <a href="selector.html">🎯 Selector</a>
+            <a href="asistencias.html">📋 Asistencias</a>
+            <a href="horario.html">📅 Horario</a>
+            <a href="normas-aula.html">📜 Normas</a>
+            <a href="pizarra.html">🖍️ Pizarra</a>
+            <a href="bolsa-premios.html">🎁 Premios</a>
+            <a href="puntos.html">🏆 Puntos</a>
+            <a href="aciertos.html">✅ Aciertos</a>
+            <a href="ajedrez.html">♟️ Ajedrez</a>
+            <a href="bingo.html">🎱 Bingo</a>
+            <a href="buscaminas.html">💣 Buscaminas</a>
+            <a href="crucigrama.html">✏️ Crucigrama</a>
+            <a href="damas.html">🟡 Damas</a>
+            <a href="laberinto.html">🌀 Laberinto</a>
+            <a href="memoria.html">🧠 Memoria</a>
+            <a href="piedra-papel.html">🪨 PPT</a>
+            <a href="sopa-letras.html">🔍 Sopa Letras</a>
+            <a href="sudoku.html">🔢 Sudoku</a>
+            <a href="tangram.html">🔺 Tangram</a>
+            <a href="tres-en-raya.html">⭕ Tres Raya</a>
+            <a href="contacto.html">📧 Contacto</a>
+            <a href="sobre-nosotros.html">ℹ️ Nosotros</a>
+            <a href="privacidad.html">🔒 Privacidad</a>
+          </nav>
+      </div>
+    </header>
+    <main>
+      <div class="tool-header"><h1>🧮 Calculadora Científica</h1></div>
+      <div class="calc-container">
+        <div class="calc-display" id="display">0</div>
+        <div class="calc-buttons">
+          <button class="calc-btn" onclick="add('sin(')">sin</button>
+          <button class="calc-btn" onclick="add('cos(')">cos</button>
+          <button class="calc-btn" onclick="add('tan(')">tan</button>
+          <button class="calc-btn" onclick="add('sqrt(')">√</button>
+          <button class="calc-btn" onclick="add('7')">7</button>
+          <button class="calc-btn" onclick="add('8')">8</button>
+          <button class="calc-btn" onclick="add('9')">9</button>
+          <button class="calc-btn op" onclick="add('/')">÷</button>
+          <button class="calc-btn" onclick="add('4')">4</button>
+          <button class="calc-btn" onclick="add('5')">5</button>
+          <button class="calc-btn" onclick="add('6')">6</button>
+          <button class="calc-btn op" onclick="add('*')">×</button>
+          <button class="calc-btn" onclick="add('1')">1</button>
+          <button class="calc-btn" onclick="add('2')">2</button>
+          <button class="calc-btn" onclick="add('3')">3</button>
+          <button class="calc-btn op" onclick="add('-')">−</button>
+          <button class="calc-btn" onclick="add('0')">0</button>
+          <button class="calc-btn" onclick="add('.')">.</button>
+          <button class="calc-btn" onclick="add('^')">^</button>
+          <button class="calc-btn op" onclick="add('+')">+</button>
+          <button class="calc-btn clear" onclick="clearDisplay()">C</button>
+          <button class="calc-btn" onclick="add('(')">(</button>
+          <button class="calc-btn" onclick="add(')')">)</button>
+          <button class="calc-btn eq" onclick="calculate()">=</button>
+        </div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-links">
+          <a href="contacto.html">📧 Contacto</a>
+          <a href="privacidad.html">🔒 Política de Privacidad</a>
+          <a href="sobre-nosotros.html">ℹ️ Sobre Nosotros</a>
+        </div>
+        <p class="footer-copy">
+          &copy; 2026 Educa y Juega. Herramientas educativas gratuitas
+          para profesores.
+        </p>
+      </div>
+    </footer>
+    <script>
+      let expr = "";
+      function add(c) {
+        expr += c;
+        document.getElementById("display").textContent = expr;
+      }
+      function clearDisplay() {
+        expr = "";
+        document.getElementById("display").textContent = "0";
+      }
+      function calculate() {
+        try {
+          let processed = expr
+            .replace(/sin\(/g, "Math.sin(")
+            .replace(/cos\(/g, "Math.cos(")
+            .replace(/tan\(/g, "Math.tan(")
+            .replace(/sqrt\(/g, "Math.sqrt(")
+            .replace(/\^/g, "**");
+          if (/[^0-9+\-*/.()Mathsqrtinssincostan\s]/.test(processed)) {
+            document.getElementById("display").textContent = "Error";
+            return;
+          }
+          let r = Function('"use strict"; return (' + processed + ")")();
+          if (!isFinite(r) || isNaN(r)) {
+            document.getElementById("display").textContent = "Error";
+          } else {
+            document.getElementById("display").textContent = r;
+            expr = "" + r;
+          }
+        } catch (e) {
+          document.getElementById("display").textContent = "Error";
+          expr = "";
+        }
+      }
+    </script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,763 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sistema Solar | Educa y Juega</title>
+    <meta name="description" content="Explora el sistema solar online con animaciones. Planetas, órbitas y astronomía educativa." />
+    <meta name="keywords" content="sistema solar, planetas, astronomía, espacio, ciencias naturales" />
+    <link rel="canonical" href="https://educayjuega.com/sistema-solar.html" />
+    <meta property="og:title" content="Sistema Solar Interactivo | Educa y Juega" />
+    <meta property="og:description" content="Explora el sistema solar online con animaciones. Planetas, órbitas y astronomía educativa." />
+    <meta property="og:url" content="https://educayjuega.com/sistema-solar.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://educayjuega.com/favicon.svg" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Sistema Solar Interactivo | Educa y Juega" />
+    <meta name="twitter:description" content="Explora el sistema solar online con animaciones. Planetas, órbitas y astronomía educativa." />
+
+    <link rel="stylesheet" href="css/styles.css" />
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+    <style>
+      .tool-header h1 {
+        color: white;
+      }
+      .tool-header {
+        background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+        border-bottom: 2px solid #3b82f6;
+      }
+      .tool-content {
+        background-color: #020617; /* Space background */
+        background-image: radial-gradient(
+          circle at center,
+          rgba(255, 255, 255, 0.05) 0%,
+          transparent 100%
+        );
+        position: relative;
+        min-height: 800px;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: "Inter", sans-serif;
+        color: white;
+      } /* Espacio Estrellado */
+      .stars {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image:
+          radial-gradient(1px 1px at 20px 30px, #ffffff, rgba(0, 0, 0, 0)),
+          radial-gradient(1px 1px at 40px 70px, #ffffff, rgba(0, 0, 0, 0)),
+          radial-gradient(
+            2px 2px at 90px 40px,
+            rgba(255, 255, 255, 0.8),
+            rgba(0, 0, 0, 0)
+          ),
+          radial-gradient(2px 2px at 160px 120px, #ffffff, rgba(0, 0, 0, 0));
+        background-repeat: repeat;
+        background-size: 200px 200px;
+        opacity: 0.6;
+        z-index: 0;
+      } /* 3D Universe Container */
+      .solar-system-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+      }
+      .universe {
+        transform-style: preserve-3d;
+        transform: rotateX(70deg); /* Tilt to see orbits */
+        width: 1000px;
+        height: 1000px;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .sun {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        background: radial-gradient(circle, #fde047, #eab308, #ca8a04);
+        border-radius: 50%;
+        transform: rotateX(-70deg); /* Counter-tilt to face camera */
+        box-shadow:
+          0 0 50px #facc15,
+          0 0 100px #ca8a04;
+        cursor: pointer;
+        z-index: 100;
+        transition:
+          transform 0.3s,
+          box-shadow 0.3s;
+      }
+      .sun:hover,
+      .sun.active {
+        transform: rotateX(-70deg) scale(1.1);
+        box-shadow:
+          0 0 80px #facc15,
+          0 0 150px #ca8a04;
+      } /* Órbitas */
+      .orbit {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        border-radius: 50%;
+        border: 1px dashed rgba(255, 255, 255, 0.2);
+        transform-style: preserve-3d;
+        transform: translate(-50%, -50%);
+      }
+      .orbit.hovered {
+        border-color: rgba(255, 255, 255, 0.6);
+        border-style: solid;
+      }
+      .orbit.active {
+        border-color: #3b82f6;
+        border-style: solid;
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.4) inset;
+      } /* Planetas */
+      .planet-container {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform-style: preserve-3d; /* Se centran horizontal y verticalmente respecto al borde de la órbita */
+        margin-top: -15px;
+        margin-left: -15px;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+      }
+      .planet {
+        border-radius: 50%;
+        position: relative;
+        flex-shrink: 0;
+        transition:
+          transform 0.3s,
+          filter 0.3s;
+        box-shadow:
+          inset -5px -5px 10px rgba(0, 0, 0, 0.6),
+          0 0 5px rgba(255, 255, 255, 0.2);
+      }
+      .planet-container:hover .planet,
+      .planet-container.active .planet {
+        transform: scale(1.4);
+        filter: brightness(1.2);
+        box-shadow:
+          inset -5px -5px 10px rgba(0, 0, 0, 0.5),
+          0 0 15px rgba(255, 255, 255, 0.5);
+      } /* Nombres Flotantes */
+      .planet-label {
+        position: absolute;
+        top: -25px;
+        color: white;
+        font-size: 0.8rem;
+        font-weight: 600;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 2px 8px;
+        border-radius: 4px;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s;
+        white-space: nowrap;
+      }
+      .planet-container:hover .planet-label,
+      .planet-container.active .planet-label {
+        opacity: 1;
+      } /* Rings of Saturn */
+      .saturn-rings {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 6px solid rgba(212, 175, 55, 0.6);
+        transform: translate(-50%, -50%) rotateX(75deg);
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.5) inset;
+      } /* Panel de Información UI Premium */
+      .data-panel {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        width: 360px;
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 1.5rem;
+        color: #f8fafc;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+        opacity: 0;
+        transform: translateX(50px);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        pointer-events: none;
+        z-index: 200;
+      }
+      .data-panel.visible {
+        opacity: 1;
+        transform: translateX(0);
+        pointer-events: auto;
+      }
+      .panel-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .panel-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        box-shadow: inset -5px -5px 10px rgba(0, 0, 0, 0.5);
+      }
+      .panel-title h2 {
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      .panel-title p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: #94a3b8;
+        font-style: italic;
+      }
+      .data-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .data-item {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 0.75rem;
+        border-radius: 8px;
+        border-left: 3px solid #3b82f6;
+      }
+      .data-item.full {
+        grid-column: 1 / -1;
+      }
+      .data-label {
+        font-size: 0.75rem;
+        color: #94a3b8;
+        text-transform: uppercase;
+        font-weight: bold;
+        margin-bottom: 0.2rem;
+      }
+      .data-val {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+      }
+      .panel-desc {
+        font-size: 0.95rem;
+        line-height: 1.5;
+        color: #cbd5e1;
+      }
+      .close-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        color: white;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: background 0.2s;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .close-btn:hover {
+        background: rgba(239, 68, 68, 0.8);
+      } /* Instrucciones */
+      .instructions {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background: rgba(15, 23, 42, 0.7);
+        padding: 1rem;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+        z-index: 100;
+      }
+      .instructions h3 {
+        margin-bottom: 0.5rem;
+        color: #60a5fa;
+      } /* Controls */
+      .controls {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        background: rgba(15, 23, 42, 0.7);
+        padding: 0.5rem;
+        border-radius: 8px;
+        display: flex;
+        gap: 0.5rem;
+        z-index: 100;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .controls button {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .controls button:hover,
+      .controls button.active {
+        background: #3b82f6;
+      }
+      @media (max-width: 768px) {
+        .data-panel {
+          bottom: 0;
+          right: 0;
+          width: 100%;
+          border-radius: 16px 16px 0 0;
+        }
+        .universe {
+          transform: scale(0.6) rotateX(70deg);
+        }
+        .instructions {
+          display: none;
+        }
+      }
+    </style>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Sistema Solar Interactivo | Educa y Juega",
+    "url": "https://educayjuega.com/sistema-solar.html",
+    "description": "Explora el sistema solar online con animaciones. Planetas, órbitas y astronomía educativa.",
+    "inLanguage": "es-ES"
+  }
+  </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-container">
+        <a href="index.html" class="logo">
+          <span class="logo-icon">📚</span> Educa y Juega
+        </a>
+        <button class="menu-toggle" aria-label="Menú">☰</button>
+                  <nav class="nav-menu">
+            <a href="index.html">🏠 Inicio</a>
+            <a href="hora-mundial.html">🕐 Hora Mundial</a>
+            <a href="dados.html">🎲 Dados</a>
+            <a href="ruleta.html">🎰 Ruleta</a>
+            <a href="ruleta-preguntas.html">❓ Ruleta Preguntas</a>
+            <a href="temporizador.html">⏱️ Temporizador</a>
+            <a href="cronometro.html">⏱ Cronómetro</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="vocabulario.html">📝 Vocabulario</a>
+            <a href="conjugador.html">📝 Conjugador</a>
+            <a href="ejercicios.html">➕ Ejercicios</a>
+            <a href="fracciones.html">🍕 Fracciones</a>
+            <a href="tablas.html">✖️ Tablas</a>
+            <a href="calculadora.html">🧮 Calculadora</a>
+            <a href="calculadora-areas.html">📐 Calcular Áreas</a>
+            <a href="geometria.html">📐 Geometría</a>
+            <a href="convertidor.html">🔄 Convertir</a>
+            <a href="recta-numerica.html">📏 Recta</a>
+            <a href="linea-tiempo.html">⏳ Línea Tiempo</a>
+            <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
+            <a href="sistema-solar.html">🌍 Sistema Solar</a>
+            <a href="ciclo-agua.html">💧 Ciclo Agua</a>
+            <a href="cuerpo-humano.html">🧍 Cuerpo Humano</a>
+            <a href="grupos.html">👥 Grupos</a>
+            <a href="selector.html">🎯 Selector</a>
+            <a href="asistencias.html">📋 Asistencias</a>
+            <a href="horario.html">📅 Horario</a>
+            <a href="normas-aula.html">📜 Normas</a>
+            <a href="pizarra.html">🖍️ Pizarra</a>
+            <a href="bolsa-premios.html">🎁 Premios</a>
+            <a href="puntos.html">🏆 Puntos</a>
+            <a href="aciertos.html">✅ Aciertos</a>
+            <a href="ajedrez.html">♟️ Ajedrez</a>
+            <a href="bingo.html">🎱 Bingo</a>
+            <a href="buscaminas.html">💣 Buscaminas</a>
+            <a href="crucigrama.html">✏️ Crucigrama</a>
+            <a href="damas.html">🟡 Damas</a>
+            <a href="laberinto.html">🌀 Laberinto</a>
+            <a href="memoria.html">🧠 Memoria</a>
+            <a href="piedra-papel.html">🪨 PPT</a>
+            <a href="sopa-letras.html">🔍 Sopa Letras</a>
+            <a href="sudoku.html">🔢 Sudoku</a>
+            <a href="tangram.html">🔺 Tangram</a>
+            <a href="tres-en-raya.html">⭕ Tres Raya</a>
+            <a href="contacto.html">📧 Contacto</a>
+            <a href="sobre-nosotros.html">ℹ️ Nosotros</a>
+            <a href="privacidad.html">🔒 Privacidad</a>
+          </nav>
+      </div>
+    </header>
+    <main>
+      <div class="tool-header">
+        <h1>🌌 Sistema Solar 3D</h1>
+        <p>Datos astronómicos reales y simulador interactivo</p>
+      </div>
+      <div class="tool-content" id="space-container">
+        <div class="stars"></div>
+        <div class="instructions">
+          <h3>🪐 Explorador Espacial</h3>
+          <p>1. <strong>Pasa el ratón</strong> por un planeta o su órbita.</p>
+          <p>2. <strong>Haz clic</strong> para abrir sus datos astronómicos.</p>
+          <p>3. <strong>Usa los controles</strong> para pausar la rotación.</p>
+        </div>
+        <div class="controls">
+          <button id="btn-play" class="active">▶️ Play</button>
+          <button id="btn-pause">⏸️ Pausa</button>
+        </div>
+        <div class="solar-system-container">
+          <div class="universe" id="universe">
+            <!-- Dinámicamente generado con JS -->
+          </div>
+        </div>
+        <!-- Panel UI -->
+        <div class="data-panel" id="dataPanel">
+          <button class="close-btn" onclick="cerrarPanel()">✕</button>
+          <div class="panel-header">
+            <div class="panel-icon" id="p-icon"></div>
+            <div class="panel-title">
+              <h2 id="p-name">Planeta</h2>
+              <p id="p-type">Tipo</p>
+            </div>
+          </div>
+          <div class="data-grid">
+            <div class="data-item">
+              <div class="data-label">Diámetro</div>
+              <div class="data-val" id="p-diam">0 km</div>
+            </div>
+            <div class="data-item">
+              <div class="data-label">Distancia al Sol</div>
+              <div class="data-val" id="p-dist">0 Millones km</div>
+            </div>
+            <div class="data-item">
+              <div class="data-label">Gravedad</div>
+              <div class="data-val" id="p-grav">0 m/s²</div>
+            </div>
+            <div class="data-item">
+              <div class="data-label">Lunas</div>
+              <div class="data-val" id="p-moons">0</div>
+            </div>
+            <div class="data-item">
+              <div class="data-label">Día (Rotación)</div>
+              <div class="data-val" id="p-day">0</div>
+            </div>
+            <div class="data-item">
+              <div class="data-label">Año (Órbita)</div>
+              <div class="data-val" id="p-year">0</div>
+            </div>
+            <div class="data-item full">
+              <div class="data-label">Masa Ecuatorial</div>
+              <div class="data-val" id="p-mass">0</div>
+            </div>
+          </div>
+          <div class="panel-desc" id="p-desc">Descripción del planeta.</div>
+        </div>
+      </div>
+    </main>
+    <script>
+      // Base de Datos Exacta del Sistema Solar
+      const astros = {
+        sol: {
+          id: "sol",
+          name: "Sol",
+          type: "Estrella Enana Amarilla",
+          color: "radial-gradient(circle, #fde047, #eab308, #ca8a04)",
+          diameter: "1.392.700",
+          dist: "0",
+          grav: "274.0",
+          moons: "0",
+          day: "27 días",
+          year: "230 millones años",
+          mass: "333.000 veces la Tierra",
+          desc: "La estrella central del sistema solar. Contiene el 99.86% de toda la masa del sistema y su energía es fundamental para la vida en la Tierra.",
+          size: 80,
+          orbitRadius: 0,
+          speed: 0,
+        },
+        mercurio: {
+          id: "mercurio",
+          name: "Mercurio",
+          type: "Planeta Terrestre",
+          color: "radial-gradient(circle, #d1d5db, #9ca3af, #4b5563)",
+          diameter: "4.879",
+          dist: "58 (0.39 UA)",
+          grav: "3.70",
+          moons: "0",
+          day: "58.6 días",
+          year: "88 días terrestres",
+          mass: "0.055 Tierras",
+          desc: "El planeta más pequeño y cercano al Sol. Carece de atmósfera significativa, por lo que tiene temperaturas extremas que van de 430°C de día a -180°C de noche.",
+          size: 14,
+          orbitRadius: 140,
+          speed: 8,
+        },
+        venus: {
+          id: "venus",
+          name: "Venus",
+          type: "Planeta Terrestre",
+          color: "radial-gradient(circle, #fde68a, #fcd34d, #d97706)",
+          diameter: "12.104",
+          dist: "108 (0.72 UA)",
+          grav: "8.87",
+          moons: "0",
+          day: "243 días",
+          year: "225 días terrestres",
+          mass: "0.815 Tierras",
+          desc: "El planeta más caliente debido a un intenso efecto invernadero. Curiosamente, gira en sentido contrario a la mayoría de los planetas.",
+          size: 22,
+          orbitRadius: 220,
+          speed: 12,
+        },
+        tierra: {
+          id: "tierra",
+          name: "La Tierra",
+          type: "Planeta Terrestre",
+          color: "radial-gradient(circle, #93c5fd, #3b82f6, #1e40af)",
+          diameter: "12.742",
+          dist: "149.6 (1 UA)",
+          grav: "9.807",
+          moons: "1",
+          day: "24 horas",
+          year: "365.25 días",
+          mass: "1 Tierra (5.97 × 10^24 kg)",
+          desc: "Nuestro hogar. Es el único planeta conocido que alberga vida y donde el agua existe en estado líquido en su superficie de forma estable.",
+          size: 24,
+          orbitRadius: 310,
+          speed: 16,
+        },
+        marte: {
+          id: "marte",
+          name: "Marte",
+          type: "Planeta Terrestre",
+          color: "radial-gradient(circle, #fca5a5, #ef4444, #991b1b)",
+          diameter: "6.779",
+          dist: "227.9 (1.52 UA)",
+          grav: "3.71",
+          moons: "2 (Fobos, Deimos)",
+          day: "24.6 horas",
+          year: "687 días terrestres",
+          mass: "0.107 Tierras",
+          desc: 'Conocido como el "Planeta Rojo" por el óxido de hierro. Posee el volcán más grande del sistema solar: el Monte Olimpo.',
+          size: 18,
+          orbitRadius: 400,
+          speed: 20,
+        },
+        jupiter: {
+          id: "jupiter",
+          name: "Júpiter",
+          type: "Gigante Gaseoso",
+          color: "radial-gradient(circle, #fed7aa, #fdba74, #c2410c)",
+          diameter: "139.820",
+          dist: "778.5 (5.20 UA)",
+          grav: "24.79",
+          moons: "95 confirmadas",
+          day: "9.9 horas",
+          year: "11.86 años terrestres",
+          mass: "317.8 Tierras",
+          desc: 'El planeta más grande. Su famosa "Gran Mancha Roja" es una tormenta gigante que lleva activa cientos de años.',
+          size: 45,
+          orbitRadius: 540,
+          speed: 30,
+        },
+        saturno: {
+          id: "saturno",
+          name: "Saturno",
+          type: "Gigante Gaseoso",
+          color: "radial-gradient(circle, #fef08a, #fde047, #a16207)",
+          diameter: "116.460",
+          dist: "1.434 (9.58 UA)",
+          grav: "10.44",
+          moons: "146 confirmadas",
+          day: "10.7 horas",
+          year: "29.45 años terrestres",
+          mass: "95.1 Tierras",
+          desc: "Destaca por su espectacular sistema de anillos compuestos por hielo, polvo y rocas. Es el planeta menos denso del sistema.",
+          size: 38,
+          orbitRadius: 680,
+          speed: 40,
+          hasRings: true,
+        },
+        urano: {
+          id: "urano",
+          name: "Urano",
+          type: "Gigante de Hielo",
+          color: "radial-gradient(circle, #a5f3fc, #22d3ee, #0891b2)",
+          diameter: "50.724",
+          dist: "2.871 (19.2 UA)",
+          grav: "8.69",
+          moons: "27",
+          day: "17.2 horas",
+          year: "84 años terrestres",
+          mass: "14.5 Tierras",
+          desc: 'Un gigante de hielo que tiene una característica única: su eje de rotación está inclinado casi 90 grados, por lo que gira "acostado".',
+          size: 28,
+          orbitRadius: 800,
+          speed: 50,
+        },
+        neptuno: {
+          id: "neptuno",
+          name: "Neptuno",
+          type: "Gigante de Hielo",
+          color: "radial-gradient(circle, #bfdbfe, #2563eb, #1e3a8a)",
+          diameter: "49.244",
+          dist: "4.495 (30.1 UA)",
+          grav: "11.15",
+          moons: "14",
+          day: "16.1 horas",
+          year: "164 años terrestres",
+          mass: "17.1 Tierras",
+          desc: "El planeta más lejano y ventoso del sistema solar, con vientos supersónicos que pueden alcanzar los 2.100 km/h.",
+          size: 27,
+          orbitRadius: 920,
+          speed: 60,
+        },
+      };
+      const universe = document.getElementById("universe");
+      let isPlaying = true;
+      let styleSheet = document.createElement("style");
+      document.head.appendChild(styleSheet);
+      // Generar órbitas, planetas y animaciones
+      let cssRules = "";
+      // El Sol
+      const sunData = astros.sol;
+      universe.innerHTML += `<div class="sun" id="astro-sol" onclick="mostrarDatos('sol')"></div>`;
+      // Planetas
+      const planets = Object.keys(astros).filter((k) => k !== "sol");
+      planets.forEach((key) => {
+        const p = astros[key];
+        const animName = `spin-${key}`;
+        const counterAnim = `counter-${key}`;
+        cssRules += `
+@keyframes ${animName} {
+0% { transform: translate(-50%, -50%) rotateZ(0deg); }
+100% { transform: translate(-50%, -50%) rotateZ(360deg); }
+}
+@keyframes ${counterAnim} {
+0% { transform: rotateZ(0deg); }
+100% { transform: rotateZ(-360deg); }
+}
+`;
+        const orbitDiv = document.createElement("div");
+        orbitDiv.className = "orbit";
+        orbitDiv.id = `orbit-${key}`;
+        orbitDiv.style.width = `${p.orbitRadius}px`;
+        orbitDiv.style.height = `${p.orbitRadius}px`;
+        orbitDiv.style.animation = `${animName} ${p.speed}s linear infinite`;
+        const ringsHtml = p.hasRings ? `<div class="saturn-rings"></div>` : "";
+        orbitDiv.innerHTML = `
+<div class="planet-container" id="container-${key}" style="animation: ${counterAnim} ${p.speed}s linear infinite;" onclick="mostrarDatos('${key}')" onmouseenter="hoverPlanet('${key}', true)" onmouseleave="hoverPlanet('${key}', false)">
+<div style="transform: rotateX(-70deg); position: relative; display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;">
+<div class="planet" id="astro-${key}" style="width:${p.size}px; height:${p.size}px; background:${p.color};">
+${ringsHtml}
+</div>
+<div class="planet-label">${p.name}</div>
+</div>
+</div>
+`;
+        universe.appendChild(orbitDiv);
+      });
+      styleSheet.innerHTML = cssRules;
+      function hoverPlanet(key, isHover) {
+        const orbit = document.getElementById(`orbit-${key}`);
+        if (orbit) {
+          if (isHover) orbit.classList.add("hovered");
+          else orbit.classList.remove("hovered");
+        }
+      }
+      let activePlanet = null;
+      function mostrarDatos(key) {
+        const p = astros[key];
+        // Clean previous active
+        document
+          .querySelectorAll(".active")
+          .forEach((el) => el.classList.remove("active"));
+        // Set new active
+        if (key !== "sol") {
+          document.getElementById(`orbit-${key}`).classList.add("active");
+          document.getElementById(`container-${key}`).classList.add("active");
+        } else {
+          document.getElementById("astro-sol").classList.add("active");
+        }
+        activePlanet = key;
+        // Update UI
+        document.getElementById("p-icon").style.background = p.color;
+        document.getElementById("p-name").textContent = p.name;
+        document.getElementById("p-type").textContent = p.type;
+        document.getElementById("p-diam").textContent = p.diameter + " km";
+        document.getElementById("p-dist").textContent = p.dist + " M km";
+        document.getElementById("p-grav").textContent = p.grav + " m/s²";
+        document.getElementById("p-moons").textContent = p.moons;
+        document.getElementById("p-day").textContent = p.day;
+        document.getElementById("p-year").textContent = p.year;
+        document.getElementById("p-mass").textContent = p.mass;
+        document.getElementById("p-desc").textContent = p.desc;
+        document.getElementById("dataPanel").classList.add("visible");
+      }
+      function cerrarPanel() {
+        document.getElementById("dataPanel").classList.remove("visible");
+        document
+          .querySelectorAll(".active")
+          .forEach((el) => el.classList.remove("active"));
+        activePlanet = null;
+      }
+      // Play/Pause Controls
+      document.getElementById("btn-pause").addEventListener("click", () => {
+        document
+          .querySelectorAll(".orbit, .planet, .planet-label")
+          .forEach((el) => {
+            el.style.animationPlayState = "paused";
+          });
+        document.getElementById("btn-pause").classList.add("active");
+        document.getElementById("btn-play").classList.remove("active");
+      });
+      document.getElementById("btn-play").addEventListener("click", () => {
+        document
+          .querySelectorAll(".orbit, .planet, .planet-label")
+          .forEach((el) => {
+            el.style.animationPlayState = "running";
+          });
+        document.getElementById("btn-play").classList.add("active");
+        document.getElementById("btn-pause").classList.remove("active");
+      });
+    </script>
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-links">
+          <a href="contacto.html">📧 Contacto</a>
+          <a href="privacidad.html">🔒 Política de Privacidad</a>
+          <a href="sobre-nosotros.html">ℹ️ Sobre Nosotros</a>
+        </div>
+        <p class="footer-copy">
+          &copy; 2026 Educa y Juega. Herramientas educativas gratuitas
+          para profesores.
+        </p>
+      </div>
+    </footer>
+    <script src="js/main.js"></script>
+  </body>
+</html>

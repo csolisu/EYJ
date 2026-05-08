@@ -1,0 +1,805 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sopa de Letras | Educa y Juega</title>
+    <meta name="description" content="Sopa de letras interactiva gratis. Encuentra palabras ocultas con diferentes temas educativos." />
+    <meta name="keywords" content="sopa de letras, buscar palabras, pasatiempos, juego educativo, vocabulario" />
+    <link rel="canonical" href="https://educayjuega.com/sopa-letras.html" />
+    <meta property="og:title" content="Sopa de Letras Interactiva | Educa y Juega" />
+    <meta property="og:description" content="Sopa de letras interactiva gratis. Encuentra palabras ocultas con diferentes temas educativos." />
+    <meta property="og:url" content="https://educayjuega.com/sopa-letras.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://educayjuega.com/favicon.svg" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Sopa de Letras Interactiva | Educa y Juega" />
+    <meta name="twitter:description" content="Sopa de letras interactiva gratis. Encuentra palabras ocultas con diferentes temas educativos." />
+
+<link rel="stylesheet" href="css/styles.css" />
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+    <style>
+      .tool-header {
+        background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+        color: white;
+        padding: 2rem 1rem;
+        text-align: center;
+      }
+      .tool-header h1 {
+        color: white;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+      .tool-content {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+      }
+      .mode-selector {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+      }
+      .mode-btn {
+        flex: 1;
+        padding: 1rem;
+        border: 2px solid #e5e7eb;
+        background: white;
+        border-radius: 0.75rem;
+        cursor: pointer;
+        text-align: center;
+        font-weight: 500;
+      }
+      .mode-btn:hover {
+        border-color: var(--primary);
+      }
+      .mode-btn.active {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: white;
+      }
+      .create-panel,
+      .play-panel {
+        display: none;
+      }
+      .create-panel.active,
+      .play-panel.active {
+        display: block;
+      }
+      .word-input-section {
+        background: white;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        box-shadow: var(--shadow);
+        margin-bottom: 2rem;
+      }
+      .word-input-section h3 {
+        margin-bottom: 1rem;
+      }
+      .word-list-input {
+        width: 100%;
+        min-height: 120px;
+        padding: 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 0.75rem;
+        font-size: 1rem;
+        resize: vertical;
+        margin-bottom: 1rem;
+      }
+      .word-list-input:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+      .config-row {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+      }
+      .config-item {
+        flex: 1;
+        min-width: 150px;
+      }
+      .config-item label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+      }
+      .config-item input,
+      .config-item select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 0.5rem;
+      }
+      .puzzle-container {
+        background: white;
+        border-radius: 1rem;
+        padding: 2rem;
+        box-shadow: var(--shadow);
+        text-align: center;
+      }
+      .grid-container {
+        display: inline-block;
+        background: #f3f4f6;
+        padding: 1rem;
+        border-radius: 0.75rem;
+        margin-bottom: 1rem;
+      }
+      .puzzle-grid {
+        display: grid;
+        gap: 2px;
+        background: #d1d5db;
+        border: 2px solid #6b7280;
+      }
+      .puzzle-cell {
+        width: 35px;
+        height: 35px;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 1.1rem;
+        cursor: pointer;
+        text-transform: uppercase;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+      }
+      .puzzle-cell:hover {
+        background: #e0e7ff;
+      }
+      .puzzle-cell.selected {
+        background: #f59e0b;
+        color: white;
+      }
+      .puzzle-cell.found {
+        background: #10b981;
+        color: white;
+      }
+      .word-bank {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        justify-content: center;
+        margin-top: 1.5rem;
+      }
+      .word-bank-item {
+        padding: 0.5rem 1rem;
+        background: #e5e7eb;
+        border-radius: 2rem;
+        font-weight: 500;
+      }
+      .word-bank-item.found {
+        background: #10b981;
+        color: white;
+        text-decoration: line-through;
+      }
+      .found-words {
+        margin-top: 1rem;
+        color: var(--gray);
+      }
+      .empty-state {
+        text-align: center;
+        padding: 2rem;
+        color: var(--gray);
+      }
+      .success-message {
+        background: #d1fae5;
+        color: #065f46;
+        padding: 1rem;
+        border-radius: 0.75rem;
+        text-align: center;
+        margin-top: 1rem;
+      }
+      .add-word-row {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+      .add-word-row input {
+        flex: 1;
+        padding: 0.75rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+      }
+      .add-word-row input:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+      .word-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        min-height: 40px;
+      }
+      .word-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.25rem 0.5rem;
+        background: #e0e7ff;
+        border: 1px solid #6366f1;
+        border-radius: 0.5rem;
+        font-size: 0.9rem;
+        color: #4338ca;
+      }
+      .word-tag-remove {
+        cursor: pointer;
+        font-weight: bold;
+        color: #4338ca;
+        padding: 0 0.25rem;
+      }
+      .word-tag-remove:hover {
+        color: #dc2626;
+      }
+      .word-tags-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+      .word-tags-actions button {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+        border-radius: 0.4rem;
+        cursor: pointer;
+      }
+      .separator-option {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+        color: var(--gray);
+      }
+      .puzzle-wrapper {
+        position: relative;
+        display: inline-block;
+      }
+      #selectionCanvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        z-index: 10;
+      }
+    </style>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Sopa de Letras Interactiva | Educa y Juega",
+    "url": "https://educayjuega.com/sopa-letras.html",
+    "description": "Sopa de letras interactiva gratis. Encuentra palabras ocultas con diferentes temas educativos.",
+    "inLanguage": "es-ES"
+  }
+  </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-container">
+        <a href="index.html" class="logo">
+          <span class="logo-icon">📚</span> Educa y Juega
+        </a>
+        <button class="menu-toggle" aria-label="Menú">☰</button>
+                  <nav class="nav-menu">
+            <a href="index.html">🏠 Inicio</a>
+            <a href="hora-mundial.html">🕐 Hora Mundial</a>
+            <a href="dados.html">🎲 Dados</a>
+            <a href="ruleta.html">🎰 Ruleta</a>
+            <a href="ruleta-preguntas.html">❓ Ruleta Preguntas</a>
+            <a href="temporizador.html">⏱️ Temporizador</a>
+            <a href="cronometro.html">⏱ Cronómetro</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="vocabulario.html">📝 Vocabulario</a>
+            <a href="conjugador.html">📝 Conjugador</a>
+            <a href="ejercicios.html">➕ Ejercicios</a>
+            <a href="fracciones.html">🍕 Fracciones</a>
+            <a href="tablas.html">✖️ Tablas</a>
+            <a href="calculadora.html">🧮 Calculadora</a>
+            <a href="calculadora-areas.html">📐 Calcular Áreas</a>
+            <a href="geometria.html">📐 Geometría</a>
+            <a href="convertidor.html">🔄 Convertir</a>
+            <a href="recta-numerica.html">📏 Recta</a>
+            <a href="linea-tiempo.html">⏳ Línea Tiempo</a>
+            <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
+            <a href="sistema-solar.html">🌍 Sistema Solar</a>
+            <a href="ciclo-agua.html">💧 Ciclo Agua</a>
+            <a href="cuerpo-humano.html">🧍 Cuerpo Humano</a>
+            <a href="grupos.html">👥 Grupos</a>
+            <a href="selector.html">🎯 Selector</a>
+            <a href="asistencias.html">📋 Asistencias</a>
+            <a href="horario.html">📅 Horario</a>
+            <a href="normas-aula.html">📜 Normas</a>
+            <a href="pizarra.html">🖍️ Pizarra</a>
+            <a href="bolsa-premios.html">🎁 Premios</a>
+            <a href="puntos.html">🏆 Puntos</a>
+            <a href="aciertos.html">✅ Aciertos</a>
+            <a href="ajedrez.html">♟️ Ajedrez</a>
+            <a href="bingo.html">🎱 Bingo</a>
+            <a href="buscaminas.html">💣 Buscaminas</a>
+            <a href="crucigrama.html">✏️ Crucigrama</a>
+            <a href="damas.html">🟡 Damas</a>
+            <a href="laberinto.html">🌀 Laberinto</a>
+            <a href="memoria.html">🧠 Memoria</a>
+            <a href="piedra-papel.html">🪨 PPT</a>
+            <a href="sopa-letras.html">🔍 Sopa Letras</a>
+            <a href="sudoku.html">🔢 Sudoku</a>
+            <a href="tangram.html">🔺 Tangram</a>
+            <a href="tres-en-raya.html">⭕ Tres Raya</a>
+            <a href="contacto.html">📧 Contacto</a>
+            <a href="sobre-nosotros.html">ℹ️ Nosotros</a>
+            <a href="privacidad.html">🔒 Privacidad</a>
+          </nav>
+      </div>
+    </header>
+    <main>
+      <div class="tool-header">
+        <h1>🔍 Sopa de Letras</h1>
+        <p>Crea y resuelve sopas de letras interactivas</p>
+      </div>
+      <div class="tool-content">
+        <div class="mode-selector">
+          <button class="mode-btn active" onclick="setMode('create')">
+            ✏️ Crear
+          </button>
+          <button class="mode-btn" onclick="setMode('play')">🎮 Jugar</button>
+        </div>
+        <div class="create-panel active" id="createPanel">
+          <div class="word-input-section">
+            <h3>Palabras a incluir</h3>
+            <div class="add-word-row">
+              <input
+                type="text"
+                id="singleWordInput"
+                placeholder="Escribe una palabra y presiona Enter o klik en Agregar"
+              />
+              <button class="btn" onclick="addSingleWord()">➕ Agregar</button>
+            </div>
+            <div class="word-tags" id="wordTags">
+              <span style="color: var(--gray); font-size: 0.9rem"
+                >Sin palabras agregadas</span
+              >
+            </div>
+            <div class="word-tags-actions">
+              <button
+                onclick="clearAllWords()"
+                style="
+                  background: #fee2e2;
+                  border: 1px solid #fca5a5;
+                  color: #dc2626;
+                "
+              >
+                🗑️ Limpiar todo
+              </button>
+              <button
+                onclick="loadFromTextarea()"
+                style="
+                  background: #fef3c7;
+                  border: 1px solid #fcd34d;
+                  color: #92400e;
+                "
+              >
+                📋 Cargar del texto
+              </button>
+            </div>
+            <textarea
+              class="word-list-input"
+              id="wordInput"
+              placeholder="O escribe varias palabras (una por línea o separadas por guiones):&#10;EJEMPLO&#10;PALABRA-TEST&#10;PRUEBA"
+            ></textarea>
+            <div class="separator-option">
+              <input type="checkbox" id="autoDetectSeparators" checked />
+              <label for="autoDetectSeparators"
+                >Detectar automáticamente: líneas nuevas y guiones (-)</label
+              >
+            </div>
+            <div class="config-row">
+              <div class="config-item">
+                <label>Tamaño de cuadrícula</label>
+                <select id="gridSize">
+                  <option value="10">10 x 10</option>
+                  <option value="12" selected>12 x 12</option>
+                  <option value="15">15 x 15</option>
+                  <option value="18">18 x 18</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn" onclick="generatePuzzle()">
+              🎲 Generar Sopa de Letras
+            </button>
+          </div>
+        </div>
+        <div class="play-panel" id="playPanel">
+          <div id="puzzleContainer">
+            <div class="empty-state">Crea una sopa de letras primero</div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-links">
+          <a href="contacto.html">📧 Contacto</a>
+          <a href="privacidad.html">🔒 Política de Privacidad</a>
+          <a href="sobre-nosotros.html">ℹ️ Sobre Nosotros</a>
+        </div>
+        <p class="footer-copy">
+          &copy; 2026 Educa y Juega. Herramientas educativas gratuitas
+          para profesores.
+        </p>
+      </div>
+    </footer>
+    <script>
+      let puzzle = [];
+      let words = [];
+      let foundWords = [];
+      let size = 12;
+      let isSelecting = false;
+      let selectedCells = [];
+      let wordList = [];
+      let canvas, ctx;
+      let startCell = null;
+      function setMode(mode) {
+        document
+          .querySelectorAll(".mode-btn")
+          .forEach((btn) => btn.classList.remove("active"));
+        document
+          .querySelectorAll(".create-panel, .play-panel")
+          .forEach((p) => p.classList.remove("active"));
+        if (mode === "create") {
+          document.getElementById("createPanel").classList.add("active");
+        } else {
+          document.getElementById("playPanel").classList.add("active");
+        }
+        document
+          .querySelector(`[onclick="setMode('${mode}')"]`)
+          .classList.add("active");
+      }
+      function generatePuzzle() {
+        const input = document.getElementById("wordInput").value.trim();
+        const autoDetect = document.getElementById(
+          "autoDetectSeparators",
+        ).checked;
+        if (autoDetect) {
+          words = input
+            .split(/[\n-]+/)
+            .map((w) => w.trim().toUpperCase())
+            .filter((w) => w);
+        } else {
+          words = input
+            .split("\n")
+            .map((w) => w.trim().toUpperCase())
+            .filter((w) => w);
+        }
+        if (wordList.length > 0) {
+          const tagWords = wordList.map((w) => w.toUpperCase());
+          words = [...new Set([...words, ...tagWords])];
+        }
+        if (words.length === 0) {
+          alert("Escribe al menos una palabra");
+          return;
+        }
+        size = parseInt(document.getElementById("gridSize").value);
+        puzzle = Array(size)
+          .fill(null)
+          .map(() => Array(size).fill(""));
+        const placedWords = [];
+        const directions = [
+          [0, 1],
+          [1, 0],
+          [1, 1],
+          [1, -1],
+        ];
+        for (const word of words) {
+          let placed = false;
+          const shuffledDirs = directions.sort(() => Math.random() - 0.5);
+          for (const dir of shuffledDirs) {
+            if (placed) break;
+            const maxAttempts = 100;
+            for (let attempt = 0; attempt < maxAttempts; attempt++) {
+              const startRow = Math.floor(Math.random() * size);
+              const startCol = Math.floor(Math.random() * size);
+              if (canPlace(word, startRow, startCol, dir[0], dir[1])) {
+                placeWord(word, startRow, startCol, dir[0], dir[1]);
+                placedWords.push(word);
+                placed = true;
+                break;
+              }
+            }
+          }
+        }
+        fillEmptyCells();
+        renderPuzzle();
+        setMode("play");
+      }
+      function canPlace(word, row, col, dRow, dCol) {
+        if (
+          row + dRow * (word.length - 1) < 0 ||
+          row + dRow * (word.length - 1) >= size
+        )
+          return false;
+        if (
+          col + dCol * (word.length - 1) < 0 ||
+          col + dCol * (word.length - 1) >= size
+        )
+          return false;
+        for (let i = 0; i < word.length; i++) {
+          const r = row + dRow * i;
+          const c = col + dCol * i;
+          if (puzzle[r][c] !== "" && puzzle[r][c] !== word[i]) return false;
+        }
+        return true;
+      }
+      function placeWord(word, row, col, dRow, dCol) {
+        for (let i = 0; i < word.length; i++) {
+          puzzle[row + dRow * i][col + dCol * i] = word[i];
+        }
+      }
+      function fillEmptyCells() {
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        for (let r = 0; r < size; r++) {
+          for (let c = 0; c < size; c++) {
+            if (puzzle[r][c] === "") {
+              puzzle[r][c] =
+                letters[Math.floor(Math.random() * letters.length)];
+            }
+          }
+        }
+      }
+      function renderPuzzle() {
+        foundWords = [];
+        const container = document.getElementById("puzzleContainer");
+        let html = `
+<div class="puzzle-container">
+<div class="grid-container">
+<div class="puzzle-grid" style="grid-template-columns: repeat(${size}, 35px);">
+`;
+        for (let r = 0; r < size; r++) {
+          for (let c = 0; c < size; c++) {
+            html += `<div class="puzzle-cell" data-row="${r}" data-col="${c}"
+onmousedown="startSelection(${r}, ${c})"
+onmouseover="continueSelection(${r}, ${c})"
+onmouseup="endSelection()"
+ontouchstart="startSelection(${r}, ${c}); event.preventDefault()"
+ontouchmove="handleTouch(event)"
+ontouchend="endSelection()">${puzzle[r][c]}</div>`;
+          }
+        }
+        html += `
+</div>
+</div>
+<div class="word-bank">
+${words.map((w) => `<span class="word-bank-item" id="word-${w}">${w}</span>`).join("")}
+</div>
+<div class="found-words">Palabras encontradas: <span id="foundCount">0</span>/${words.length}</div>
+</div>
+`;
+        container.innerHTML = html;
+      }
+      function startSelection(row, col) {
+        isSelecting = true;
+        startCell = { row, col };
+        selectedCells = [{ row, col }];
+        document
+          .querySelectorAll(".puzzle-cell")
+          .forEach((cell) => cell.classList.remove("selected"));
+        highlightCell(row, col, true);
+        initCanvas();
+        drawSelectionLine(row, col);
+      }
+      function continueSelection(row, col) {
+        if (!isSelecting || selectedCells.length === 0) return;
+        const start = selectedCells[0];
+        const dRow = row - start.row;
+        const dCol = col - start.col;
+        document
+          .querySelectorAll(".puzzle-cell.selected")
+          .forEach((cell) => cell.classList.remove("selected"));
+        if (Math.abs(dRow) === Math.abs(dCol) || dRow === 0 || dCol === 0) {
+          const steps = Math.max(Math.abs(dRow), Math.abs(dCol));
+          const stepRow = dRow === 0 ? 0 : dRow / steps;
+          const stepCol = dCol === 0 ? 0 : dCol / steps;
+          selectedCells = [];
+          for (let i = 0; i <= steps; i++) {
+            const r = start.row + stepRow * i;
+            const c = start.col + stepCol * i;
+            if (r >= 0 && r < size && c >= 0 && c < size) {
+              selectedCells.push({ row: r, col: c });
+              highlightCell(r, c, true);
+            }
+          }
+          drawSelectionLine(row, col);
+        } else {
+          selectedCells = [{ row: start.row, col: start.col }];
+          highlightCell(start.row, start.col, true);
+          clearCanvas();
+        }
+      }
+      function highlightCell(row, col, highlight) {
+        const cell = document.querySelector(
+          `.puzzle-cell[data-row="${row}"][data-col="${col}"]`,
+        );
+        if (cell) {
+          cell.classList.toggle("selected", highlight);
+        }
+      }
+      function endSelection() {
+        if (!isSelecting) return;
+        isSelecting = false;
+        startCell = null;
+        clearCanvas();
+        const selectedWord = selectedCells
+          .map((c) => puzzle[c.row][c.col])
+          .join("");
+        const reverseWord = selectedWord.split("").reverse().join("");
+        if (
+          words.includes(selectedWord) &&
+          !foundWords.includes(selectedWord)
+        ) {
+          markFound(selectedWord);
+        } else if (
+          words.includes(reverseWord) &&
+          !foundWords.includes(reverseWord)
+        ) {
+          markFound(reverseWord);
+        }
+        document
+          .querySelectorAll(".puzzle-cell")
+          .forEach((cell) => cell.classList.remove("selected"));
+        selectedCells = [];
+      }
+      function markFound(word) {
+        foundWords.push(word);
+        document.getElementById(`word-${word}`).classList.add("found");
+        document.getElementById("foundCount").textContent = foundWords.length;
+        selectedCells.forEach((c) => {
+          const cell = document.querySelector(
+            `.puzzle-cell[data-row="${c.row}"][data-col="${c.col}"]`,
+          );
+          if (cell) cell.classList.add("found");
+        });
+        if (foundWords.length === words.length) {
+          setTimeout(() => {
+            const container = document.getElementById("puzzleContainer");
+            container.innerHTML +=
+              '<div class="success-message">🎉 ¡Felicidades! ¡Encontraste todas las palabras!</div>';
+          }, 500);
+        }
+      }
+      document.addEventListener("mouseup", () => {
+        if (isSelecting) endSelection();
+      });
+      function handleTouch(e) {
+        e.preventDefault();
+        const touch = e.touches[0];
+        const element = document.elementFromPoint(touch.clientX, touch.clientY);
+        if (element && element.classList.contains("puzzle-cell")) {
+          const row = parseInt(element.dataset.row);
+          const col = parseInt(element.dataset.col);
+          continueSelection(row, col);
+        }
+      }
+      document.addEventListener("touchend", () => {
+        if (isSelecting) endSelection();
+      });
+      function addSingleWord() {
+        const input = document.getElementById("singleWordInput");
+        const word = input.value.trim().toUpperCase();
+        if (word && !wordList.includes(word)) {
+          wordList.push(word);
+          renderWordTags();
+          input.value = "";
+        }
+      }
+      document
+        .getElementById("singleWordInput")
+        .addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            addSingleWord();
+          }
+        });
+      function removeWord(index) {
+        wordList.splice(index, 1);
+        renderWordTags();
+      }
+      function clearAllWords() {
+        wordList = [];
+        renderWordTags();
+        document.getElementById("wordInput").value = "";
+      }
+      function loadFromTextarea() {
+        const input = document.getElementById("wordInput").value;
+        const autoDetect = document.getElementById(
+          "autoDetectSeparators",
+        ).checked;
+        let newWords;
+        if (autoDetect) {
+          newWords = input
+            .split(/[\n-]+/)
+            .map((w) => w.trim().toUpperCase())
+            .filter((w) => w);
+        } else {
+          newWords = input
+            .split("\n")
+            .map((w) => w.trim().toUpperCase())
+            .filter((w) => w);
+        }
+        newWords.forEach((w) => {
+          if (w && !wordList.includes(w)) {
+            wordList.push(w);
+          }
+        });
+        renderWordTags();
+      }
+      function renderWordTags() {
+        const container = document.getElementById("wordTags");
+        if (wordList.length === 0) {
+          container.innerHTML =
+            '<span style="color: var(--gray); font-size: 0.9rem;">Sin palabras agregadas</span>';
+        } else {
+          container.innerHTML = wordList
+            .map(
+              (w, i) =>
+                `<span class="word-tag">${w} <span class="word-tag-remove" onclick="removeWord(${i})">×</span></span>`,
+            )
+            .join("");
+        }
+      }
+      function initCanvas() {
+        const gridContainer = document.querySelector(".grid-container");
+        if (!gridContainer) return;
+        canvas = document.getElementById("selectionCanvas");
+        if (!canvas) {
+          canvas = document.createElement("canvas");
+          canvas.id = "selectionCanvas";
+          const wrapper = document.createElement("div");
+          wrapper.className = "puzzle-wrapper";
+          gridContainer.parentNode.insertBefore(wrapper, gridContainer);
+          wrapper.appendChild(gridContainer);
+          wrapper.appendChild(canvas);
+        }
+        const rect = gridContainer.getBoundingClientRect();
+        canvas.width = gridContainer.offsetWidth;
+        canvas.height = gridContainer.offsetHeight;
+        ctx = canvas.getContext("2d");
+      }
+      function drawSelectionLine(endRow, endCol) {
+        if (!canvas || !startCell) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const cellSize = 37;
+        const startX = startCell.col * cellSize + cellSize / 2;
+        const startY = startCell.row * cellSize + cellSize / 2;
+        const endX = endCol * cellSize + cellSize / 2;
+        const endY = endRow * cellSize + cellSize / 2;
+        const dRow = endRow - startCell.row;
+        const dCol = endCol - startCell.col;
+        const isValidDirection =
+          Math.abs(dRow) === Math.abs(dCol) || dRow === 0 || dCol === 0;
+        let color = "#6366f1";
+        if (dRow === 0 && dCol !== 0) color = "#3b82f6";
+        else if (dCol === 0 && dRow !== 0) color = "#10b981";
+        else if (Math.abs(dRow) === Math.abs(dCol)) color = "#f59e0b";
+        ctx.strokeStyle = isValidDirection ? color : "#9ca3af";
+        ctx.lineWidth = isValidDirection ? 4 : 2;
+        ctx.lineCap = "round";
+        ctx.setLineDash(isValidDirection ? [] : [5, 5]);
+        ctx.beginPath();
+        ctx.moveTo(startX, startY);
+        ctx.lineTo(endX, endY);
+        ctx.stroke();
+      }
+      function clearCanvas() {
+        if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    </script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

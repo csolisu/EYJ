@@ -1,0 +1,772 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ciclo del Agua | Educa y Juega</title>
+    <meta name="description" content="Ciclo del agua interactivo. Aprende las etapas del ciclo hidrológico con animaciones educativas." />
+    <meta name="keywords" content="ciclo del agua, hidrología, ciencias naturales, evaporación, precipitación, educación" />
+    <link rel="canonical" href="https://educayjuega.com/ciclo-agua.html" />
+    <meta property="og:title" content="Ciclo del Agua | Educa y Juega" />
+    <meta property="og:description" content="Ciclo del agua interactivo. Aprende las etapas del ciclo hidrológico con animaciones educativas." />
+    <meta property="og:url" content="https://educayjuega.com/ciclo-agua.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://educayjuega.com/favicon.svg" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Ciclo del Agua | Educa y Juega" />
+    <meta name="twitter:description" content="Ciclo del agua interactivo. Aprende las etapas del ciclo hidrológico con animaciones educativas." />
+
+    <link rel="stylesheet" href="css/styles.css" />
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+    <style>
+      .tool-header h1 {
+        color: white;
+      }
+      :root {
+        --sky: #bae6fd;
+        --sun: #fcd34d;
+        --sun-ray: #fbbf24;
+        --mountain-light: #84cc16;
+        --mountain-dark: #65a30d;
+        --river: #93c5fd;
+        --ocean: #60a5fa;
+        --ocean-wave: #3b82f6;
+        --cloud: #ffffff;
+        --arrow: #0f172a;
+      }
+      .tool-header {
+        background: linear-gradient(135deg, #0ea5e9 0%, #0369a1 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+      .controls {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+      }
+      .controls button {
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px;
+        border: none;
+        background: #334155;
+        color: white;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.2s;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .controls button:hover {
+        transform: translateY(-2px);
+      }
+      .controls button.active {
+        background: #0ea5e9;
+        box-shadow: 0 4px 12px rgba(14, 165, 233, 0.4);
+      }
+      .water-cycle-wrapper {
+        max-width: 1000px;
+        margin: 0 auto;
+        position: relative;
+        padding: 0 1rem;
+      }
+      .diorama {
+        position: relative;
+        width: 100%;
+        height: 0;
+        padding-bottom: 60%; /* Aspect Ratio 10:6 */
+        background: var(--sky);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        border: 4px solid rgba(255, 255, 255, 0.5);
+      }
+      .diorama svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      } /* SVG Animations */
+      .sun-rays {
+        transform-origin: 850px 150px;
+        animation: rotateSun 30s linear infinite;
+      }
+      @keyframes rotateSun {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .cloud {
+        animation: floatCloud 4s ease-in-out infinite alternate;
+      }
+      .cloud-2 {
+        animation-delay: 2s;
+      }
+      @keyframes floatCloud {
+        from {
+          transform: translateY(0);
+        }
+        to {
+          transform: translateY(-15px);
+        }
+      }
+      .rain-drop {
+        animation: fallRain 1s linear infinite;
+        opacity: 0;
+      }
+      .rain-drop:nth-child(even) {
+        animation-delay: 0.5s;
+      }
+      .rain-drop:nth-child(3n) {
+        animation-delay: 0.3s;
+      }
+      @keyframes fallRain {
+        0% {
+          transform: translateY(0);
+          opacity: 0;
+        }
+        20% {
+          opacity: 0.8;
+        }
+        100% {
+          transform: translateY(80px);
+          opacity: 0;
+        }
+      }
+      .evap-wave {
+        stroke-dasharray: 40;
+        stroke-dashoffset: 40;
+        animation: evapRise 2s linear infinite;
+        opacity: 0.6;
+      }
+      .evap-wave:nth-child(2) {
+        animation-delay: 0.6s;
+      }
+      .evap-wave:nth-child(3) {
+        animation-delay: 1.2s;
+      }
+      @keyframes evapRise {
+        0% {
+          stroke-dashoffset: 40;
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        50% {
+          opacity: 0.6;
+        }
+        100% {
+          stroke-dashoffset: 0;
+          opacity: 0;
+          transform: translateY(-30px);
+        }
+      } /* Hotspots Overlay */
+      .hotspot-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+      .hotspot {
+        position: absolute;
+        z-index: 10;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 46px;
+        height: 46px;
+        background: white;
+        border: 3px solid var(--arrow);
+        border-radius: 50%;
+        cursor: pointer;
+        pointer-events: auto;
+        transform: translate(-50%, -50%);
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        color: var(--arrow);
+        font-weight: bold;
+        font-size: 1.4rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+      .hotspot:hover {
+        transform: translate(-50%, -50%) scale(1.15);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      }
+      .hotspot.active {
+        background: var(--arrow);
+        color: white;
+        box-shadow: 0 0 0 8px rgba(15, 23, 42, 0.2);
+      } /* Posicionamiento de Hotspots en porcentajes */
+      #hs-evaporacion {
+        top: 62%;
+        left: 88%;
+      }
+      #hs-condensacion {
+        top: 15%;
+        left: 56%;
+      }
+      #hs-precipitacion {
+        top: 46%;
+        left: 10%;
+      }
+      #hs-recoleccion {
+        top: 82%;
+        left: 20%;
+      }
+      #hs-transpiracion {
+        top: 65%;
+        left: 35%;
+        display: none;
+      }
+      #hs-infiltracion {
+        top: 92%;
+        left: 10%;
+        display: none;
+        border-color: #78350f;
+        color: #78350f;
+      }
+      #hs-infiltracion.active {
+        background: #78350f;
+        color: white;
+        box-shadow: 0 0 0 8px rgba(120, 53, 15, 0.2);
+      }
+      .mode-full #hs-transpiracion,
+      .mode-full #hs-infiltracion {
+        display: flex;
+      } /* Panel Glassmorphism */
+      .data-panel {
+        position: absolute;
+        bottom: -120%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        max-width: 550px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 24px 24px 0 0;
+        padding: 2.5rem 2rem;
+        color: #1e293b;
+        transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        z-index: 20;
+        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2);
+        display: flex;
+        flex-direction: column;
+      }
+      .data-panel.visible {
+        bottom: 0;
+      }
+      .close-btn {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        background: rgba(0, 0, 0, 0.05);
+        border: none;
+        color: #64748b;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: background 0.2s;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .close-btn:hover {
+        background: rgba(239, 68, 68, 0.2);
+        color: #ef4444;
+      }
+      .panel-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+      .panel-icon {
+        font-size: 3.5rem;
+        background: rgba(0, 0, 0, 0.05);
+        width: 80px;
+        height: 80px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 20px;
+      }
+      .panel-title {
+        font-size: 2rem;
+        margin: 0;
+        color: #0f172a;
+        font-weight: 800;
+      }
+      .p-desc {
+        font-size: 1.15rem;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+        color: #475569;
+      }
+      .p-fact {
+        background: rgba(56, 189, 248, 0.15);
+        border-left: 4px solid #0ea5e9;
+        padding: 1rem 1.5rem;
+        border-radius: 0 12px 12px 0;
+        font-size: 1rem;
+        color: #0369a1;
+      }
+      .p-fact strong {
+        color: #0284c7;
+        display: block;
+        margin-bottom: 0.3rem;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+      }
+      @media (max-width: 768px) {
+        .hotspot {
+          width: 35px;
+          height: 35px;
+          font-size: 1.1rem;
+          border-width: 2px;
+        }
+        .panel-title {
+          font-size: 1.5rem;
+        }
+        .panel-icon {
+          width: 60px;
+          height: 60px;
+          font-size: 2.5rem;
+        }
+        .p-desc {
+          font-size: 1rem;
+        }
+        .diorama {
+          padding-bottom: 80%;
+        }
+      }
+    </style>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Ciclo del Agua | Educa y Juega",
+    "url": "https://educayjuega.com/ciclo-agua.html",
+    "description": "Ciclo del agua interactivo. Aprende las etapas del ciclo hidrológico con animaciones educativas.",
+    "inLanguage": "es-ES"
+  }
+  </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-container">
+        <a href="index.html" class="logo">
+          <span class="logo-icon">📚</span> Educa y Juega
+        </a>
+        <button class="menu-toggle" aria-label="Menú">☰</button>
+                  <nav class="nav-menu">
+            <a href="index.html">🏠 Inicio</a>
+            <a href="hora-mundial.html">🕐 Hora Mundial</a>
+            <a href="dados.html">🎲 Dados</a>
+            <a href="ruleta.html">🎰 Ruleta</a>
+            <a href="ruleta-preguntas.html">❓ Ruleta Preguntas</a>
+            <a href="temporizador.html">⏱️ Temporizador</a>
+            <a href="cronometro.html">⏱ Cronómetro</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="vocabulario.html">📝 Vocabulario</a>
+            <a href="conjugador.html">📝 Conjugador</a>
+            <a href="ejercicios.html">➕ Ejercicios</a>
+            <a href="fracciones.html">🍕 Fracciones</a>
+            <a href="tablas.html">✖️ Tablas</a>
+            <a href="calculadora.html">🧮 Calculadora</a>
+            <a href="calculadora-areas.html">📐 Calcular Áreas</a>
+            <a href="geometria.html">📐 Geometría</a>
+            <a href="convertidor.html">🔄 Convertir</a>
+            <a href="recta-numerica.html">📏 Recta</a>
+            <a href="linea-tiempo.html">⏳ Línea Tiempo</a>
+            <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
+            <a href="sistema-solar.html">🌍 Sistema Solar</a>
+            <a href="ciclo-agua.html">💧 Ciclo Agua</a>
+            <a href="cuerpo-humano.html">🧍 Cuerpo Humano</a>
+            <a href="grupos.html">👥 Grupos</a>
+            <a href="selector.html">🎯 Selector</a>
+            <a href="asistencias.html">📋 Asistencias</a>
+            <a href="horario.html">📅 Horario</a>
+            <a href="normas-aula.html">📜 Normas</a>
+            <a href="pizarra.html">🖍️ Pizarra</a>
+            <a href="bolsa-premios.html">🎁 Premios</a>
+            <a href="puntos.html">🏆 Puntos</a>
+            <a href="aciertos.html">✅ Aciertos</a>
+            <a href="ajedrez.html">♟️ Ajedrez</a>
+            <a href="bingo.html">🎱 Bingo</a>
+            <a href="buscaminas.html">💣 Buscaminas</a>
+            <a href="crucigrama.html">✏️ Crucigrama</a>
+            <a href="damas.html">🟡 Damas</a>
+            <a href="laberinto.html">🌀 Laberinto</a>
+            <a href="memoria.html">🧠 Memoria</a>
+            <a href="piedra-papel.html">🪨 PPT</a>
+            <a href="sopa-letras.html">🔍 Sopa Letras</a>
+            <a href="sudoku.html">🔢 Sudoku</a>
+            <a href="tangram.html">🔺 Tangram</a>
+            <a href="tres-en-raya.html">⭕ Tres Raya</a>
+            <a href="contacto.html">📧 Contacto</a>
+            <a href="sobre-nosotros.html">ℹ️ Nosotros</a>
+            <a href="privacidad.html">🔒 Privacidad</a>
+          </nav>
+      </div>
+    </header>
+    <main>
+      <div class="tool-header">
+        <h1>💧 El Ciclo del Agua Interactivo</h1>
+        <p>
+          Explora cómo el agua viaja constantemente a través de la Tierra y la
+          atmósfera
+        </p>
+      </div>
+      <div class="water-cycle-wrapper">
+        <div class="controls">
+          <button id="btn-basic" class="active" onclick="setMode('basic')">
+            Modo Clásico (4 Etapas)
+          </button>
+          <button id="btn-full" onclick="setMode('full')">
+            Modo Completo (6 Etapas)
+          </button>
+        </div>
+        <div class="diorama" id="diorama">
+          <!-- SVG Illustration -->
+          <svg viewBox="0 0 1000 600" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <!-- Arrow Marker -->
+              <marker
+                id="arrowhead"
+                markerWidth="10"
+                markerHeight="7"
+                refX="9"
+                refY="3.5"
+                orient="auto"
+              >
+                <polygon points="0 0, 10 3.5, 0 7" fill="#0f172a" />
+              </marker>
+            </defs>
+            <!-- Sun -->
+            <g transform="translate(850, 120)">
+              <circle cx="0" cy="0" r="50" fill="#facc15" />
+              <g
+                class="sun-rays"
+                stroke="#facc15"
+                stroke-width="6"
+                stroke-linecap="round"
+              >
+                <line x1="0" y1="-70" x2="0" y2="-90" />
+                <line x1="0" y1="70" x2="0" y2="90" />
+                <line x1="-70" y1="0" x2="-90" y2="0" />
+                <line x1="70" y1="0" x2="90" y2="0" />
+                <line x1="-50" y1="-50" x2="-65" y2="-65" />
+                <line x1="50" y1="50" x2="65" y2="65" />
+                <line x1="-50" y1="50" x2="-65" y2="65" />
+                <line x1="50" y1="-50" x2="65" y2="-65" />
+              </g>
+            </g>
+            <!-- Background Mountain -->
+            <path
+              d="M 100 600 L 250 350 Q 300 320 400 400 L 600 600 Z"
+              fill="#65a30d"
+              opacity="0.5"
+            />
+            <!-- Main Mountain -->
+            <path
+              d="M -50 600 L 80 250 Q 150 180 220 280 Q 280 350 450 480 L 500 600 Z"
+              fill="#84cc16"
+            />
+            <!-- Mountain Shading -->
+            <path
+              d="M -50 600 L 80 250 Q 150 180 220 280 L 220 600 Z"
+              fill="#65a30d"
+              opacity="0.3"
+            />
+            <!-- Trees (Optional details for Transpiration) -->
+            <path d="M 280 430 Q 290 400 300 430 Z" fill="#4d7c0f" />
+            <path d="M 310 440 Q 320 410 330 440 Z" fill="#4d7c0f" />
+            <path d="M 340 455 Q 350 425 360 455 Z" fill="#4d7c0f" />
+            <!-- Ocean -->
+            <path
+              d="M 350 600 L 400 500 Q 450 480 500 500 T 600 500 T 700 500 T 800 500 T 900 500 T 1000 500 L 1000 600 Z"
+              fill="#60a5fa"
+            />
+            <path
+              d="M 320 600 L 380 530 Q 430 510 480 530 T 580 530 T 680 530 T 780 530 T 880 530 T 980 530 L 1050 530 L 1050 600 Z"
+              fill="#3b82f6"
+              opacity="0.8"
+            />
+            <!-- Small waves in ocean -->
+            <path
+              d="M 600 560 Q 615 550 630 560"
+              fill="none"
+              stroke="#ffffff"
+              stroke-width="3"
+              stroke-linecap="round"
+              opacity="0.4"
+            />
+            <path
+              d="M 800 540 Q 815 530 830 540"
+              fill="none"
+              stroke="#ffffff"
+              stroke-width="3"
+              stroke-linecap="round"
+              opacity="0.4"
+            />
+            <!-- River -->
+            <path
+              d="M 160 250 Q 190 320 140 380 T 220 460 T 350 490 T 420 510"
+              fill="none"
+              stroke="#93c5fd"
+              stroke-width="25"
+              stroke-linecap="round"
+            />
+            <!-- Rain Drops (Animated) -->
+            <g fill="#3b82f6">
+              <path
+                d="M 150 180 L 150 190 M 180 190 L 180 200 M 210 170 L 210 180 M 160 220 L 160 230 M 190 230 L 190 240 M 220 210 L 220 220"
+                stroke="#3b82f6"
+                stroke-width="4"
+                stroke-linecap="round"
+                class="rain-drop"
+              />
+            </g>
+            <!-- Cloud 1 (Left - Rain) -->
+            <g class="cloud" transform="translate(180, 120)">
+              <circle cx="0" cy="0" r="40" fill="#ffffff" />
+              <circle cx="-35" cy="10" r="30" fill="#ffffff" />
+              <circle cx="35" cy="10" r="30" fill="#ffffff" />
+              <circle cx="-15" cy="20" r="25" fill="#ffffff" />
+              <circle cx="15" cy="20" r="25" fill="#ffffff" />
+            </g>
+            <!-- Cloud 2 (Center) -->
+            <g class="cloud cloud-2" transform="translate(550, 180)">
+              <circle cx="0" cy="0" r="45" fill="#ffffff" />
+              <circle cx="-40" cy="15" r="35" fill="#ffffff" />
+              <circle cx="40" cy="15" r="35" fill="#ffffff" />
+            </g>
+            <!-- Evaporation Waves -->
+            <g
+              fill="none"
+              stroke="#60a5fa"
+              stroke-width="5"
+              stroke-linecap="round"
+            >
+              <path
+                d="M 700 450 Q 710 430 700 410 T 700 370"
+                class="evap-wave"
+              />
+              <path
+                d="M 750 460 Q 760 440 750 420 T 750 380"
+                class="evap-wave"
+              />
+              <path
+                d="M 800 440 Q 810 420 800 400 T 800 360"
+                class="evap-wave"
+              />
+            </g>
+            <!-- Cycle Arrows (Dark Blue) -->
+            <!-- 1. Evaporation Arrow -->
+            <path
+              d="M 850 400 Q 880 300 750 220"
+              fill="none"
+              stroke="#0f172a"
+              stroke-width="4"
+              marker-end="url(#arrowhead)"
+            />
+            <!-- 2. Condensation Arrow -->
+            <path
+              d="M 450 160 Q 350 130 280 140"
+              fill="none"
+              stroke="#0f172a"
+              stroke-width="4"
+              marker-end="url(#arrowhead)"
+            />
+            <!-- 3. Precipitation Arrow -->
+            <path
+              d="M 100 180 Q 50 250 120 300"
+              fill="none"
+              stroke="#0f172a"
+              stroke-width="4"
+              marker-end="url(#arrowhead)"
+            />
+            <!-- 4. Runoff Arrow -->
+            <path
+              d="M 240 460 Q 280 480 340 500"
+              fill="none"
+              stroke="#0f172a"
+              stroke-width="4"
+              marker-end="url(#arrowhead)"
+            />
+          </svg>
+          <!-- Hotspots Overlay (HTML) -->
+          <div class="hotspot-overlay">
+            <div
+              class="hotspot"
+              id="hs-evaporacion"
+              onclick="mostrarDatos('evaporacion')"
+            >
+              1
+            </div>
+            <div
+              class="hotspot"
+              id="hs-condensacion"
+              onclick="mostrarDatos('condensacion')"
+            >
+              2
+            </div>
+            <div
+              class="hotspot"
+              id="hs-precipitacion"
+              onclick="mostrarDatos('precipitacion')"
+            >
+              3
+            </div>
+            <div
+              class="hotspot"
+              id="hs-recoleccion"
+              onclick="mostrarDatos('recoleccion')"
+            >
+              4
+            </div>
+            <!-- Etapas Completas -->
+            <div
+              class="hotspot"
+              id="hs-transpiracion"
+              onclick="mostrarDatos('transpiracion')"
+            >
+              +
+            </div>
+            <div
+              class="hotspot"
+              id="hs-infiltracion"
+              onclick="mostrarDatos('infiltracion')"
+            >
+              +
+            </div>
+          </div>
+          <!-- Panel de Datos Glassmorphism -->
+          <div class="data-panel" id="dataPanel">
+            <button
+              class="close-btn"
+              aria-label="Cerrar"
+              onclick="cerrarPanel()"
+            >
+              ✕
+            </button>
+            <div class="panel-header">
+              <div class="panel-icon" id="p-icon">💧</div>
+              <h2 class="panel-title" id="p-name">Etapa</h2>
+            </div>
+            <p class="p-desc" id="p-desc">Descripción...</p>
+            <div class="p-fact">
+              <strong>¿Sabías que...?</strong>
+              <span id="p-fact-text">Dato curioso</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script>
+      const datos = {
+        evaporacion: {
+          icon: "☀️",
+          name: "Evaporación",
+          desc: "El calor del Sol calienta el agua de los océanos, ríos y lagos, transformándola de estado líquido a vapor de agua (un gas invisible) que asciende hacia la atmósfera.",
+          fact: "Casi el 90% del vapor de agua que entra en nuestra atmósfera proviene directamente de la evaporación de los océanos.",
+        },
+        condensacion: {
+          icon: "☁️",
+          name: "Condensación",
+          desc: "A medida que el vapor de agua sube muy alto en el cielo, el aire frío hace que se enfríe y vuelva a convertirse en millones de pequeñísimas gotas de agua líquida, formando las nubes.",
+          fact: "La niebla que ves a veces en las mañanas frías es en realidad una nube que se ha formado a ras de suelo mediante la condensación.",
+        },
+        precipitacion: {
+          icon: "🌧️",
+          name: "Precipitación",
+          desc: "Cuando las gotas de agua en las nubes chocan y se unen, se vuelven demasiado pesadas para flotar en el aire, por lo que caen hacia la Tierra atraídas por la gravedad en forma de lluvia, nieve o granizo.",
+          fact: 'No todas las gotas de lluvia llegan al suelo; a veces hace tanto calor que se evaporan en el aire antes de tocar la tierra (un fenómeno llamado "virga").',
+        },
+        recoleccion: {
+          icon: "🌊",
+          name: "Recolección y Escorrentía",
+          desc: "Es el proceso en el que el agua de lluvia que cae sobre la tierra fluye por la superficie formando arroyos y ríos (escorrentía), hasta acumularse nuevamente en los grandes lagos y océanos.",
+          fact: "El agua siempre busca el punto más bajo debido a la gravedad, por eso todos los ríos terminan eventualmente desembocando en el mar.",
+        },
+        transpiracion: {
+          icon: "🌳",
+          name: "Transpiración",
+          desc: "Al igual que nosotros sudamos, las plantas y los árboles absorben agua del suelo por sus raíces y luego liberan vapor de agua al aire a través de unos pequeños poros en sus hojas llamados estomas.",
+          fact: "Un solo roble grande puede transpirar hasta 150 litros de agua al día hacia la atmósfera.",
+        },
+        infiltracion: {
+          icon: "🪨",
+          name: "Infiltración",
+          desc: "No toda el agua resbala por la superficie; una gran parte penetra en la tierra (se infiltra) colándose por la arena y las grietas de las rocas, recargando los acuíferos o ríos subterráneos.",
+          fact: "Hay más agua dulce bajo tierra (agua subterránea) que en todos los lagos y ríos de la superficie del mundo combinados.",
+        },
+      };
+      function setMode(mode) {
+        const diorama = document.getElementById("diorama");
+        const btnBasic = document.getElementById("btn-basic");
+        const btnFull = document.getElementById("btn-full");
+        if (mode === "full") {
+          diorama.classList.add("mode-full");
+          btnFull.classList.add("active");
+          btnBasic.classList.remove("active");
+        } else {
+          diorama.classList.remove("mode-full");
+          btnBasic.classList.add("active");
+          btnFull.classList.remove("active");
+        }
+        cerrarPanel();
+      }
+      function mostrarDatos(etapa) {
+        const data = datos[etapa];
+        // Limpiar activos
+        document
+          .querySelectorAll(".hotspot")
+          .forEach((el) => el.classList.remove("active"));
+        // Activar el seleccionado
+        document.getElementById(`hs-${etapa}`).classList.add("active");
+        // Llenar panel
+        document.getElementById("p-icon").textContent = data.icon;
+        document.getElementById("p-name").textContent = data.name;
+        document.getElementById("p-desc").textContent = data.desc;
+        document.getElementById("p-fact-text").textContent = data.fact;
+        // Mostrar panel
+        document.getElementById("dataPanel").classList.add("visible");
+      }
+      function cerrarPanel() {
+        document.getElementById("dataPanel").classList.remove("visible");
+        document
+          .querySelectorAll(".hotspot")
+          .forEach((el) => el.classList.remove("active"));
+      }
+    </script>
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-links">
+          <a href="contacto.html">📧 Contacto</a>
+          <a href="privacidad.html">🔒 Política de Privacidad</a>
+          <a href="sobre-nosotros.html">ℹ️ Sobre Nosotros</a>
+        </div>
+        <p class="footer-copy">
+          &copy; 2026 Educa y Juega. Herramientas educativas gratuitas
+          para profesores.
+        </p>
+      </div>
+    </footer>
+    <script src="js/main.js"></script>
+  </body>
+</html>

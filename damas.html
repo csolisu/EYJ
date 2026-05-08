@@ -1,0 +1,711 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Damas | Educa y Juega</title>
+    <meta name="description" content="Juego de damas clásico online con arrastrar y soltar. Capturas obligatorias y promoción a dama." />
+    <meta name="keywords" content="damas, juego de damas, damas online, juego de mesa, estrategia" />
+    <link rel="canonical" href="https://educayjuega.com/damas.html" />
+    <meta property="og:title" content="Juego de Damas Online | Educa y Juega" />
+    <meta property="og:description" content="Juego de damas clásico online con arrastrar y soltar. Capturas obligatorias y promoción a dama." />
+    <meta property="og:url" content="https://educayjuega.com/damas.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://educayjuega.com/favicon.svg" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Juego de Damas Online | Educa y Juega" />
+    <meta name="twitter:description" content="Juego de damas clásico online con arrastrar y soltar. Capturas obligatorias y promoción a dama." />
+
+    <link rel="stylesheet" href="css/styles.css" />
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+    <style>
+      .tool-header {
+        background: linear-gradient(
+          135deg,
+          #f59e0b 0%,
+          #d97706 50%,
+          #92400e 100%
+        );
+        color: white;
+        padding: 2.5rem;
+        text-align: center;
+      }
+      .tool-header h1 {
+        color: white;
+        margin: 0 0 0.5rem 0;
+        font-size: 2.5rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+      }
+      .game-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+      }
+      .turno {
+        font-size: 1.4rem;
+        font-weight: 700;
+        padding: 1rem 2rem;
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .turno .player {
+        padding: 0.4rem 1rem;
+        border-radius: 0.5rem;
+        margin-left: 0.5rem;
+        font-weight: 700;
+      }
+      .turno .player.blancas {
+        background: linear-gradient(135deg, #f3f4f6, #d1d5db);
+        color: #374151;
+        border: 2px solid #9ca3af;
+      }
+      .turno .player.rojas {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+        border: 2px solid #991b1b;
+      }
+      .info-box {
+        background: linear-gradient(135deg, #fef3c7, #fde68a);
+        border: 2px solid #f59e0b;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.75rem;
+        font-size: 0.95rem;
+        color: #92400e;
+        font-weight: 600;
+      }
+      .tablero {
+        display: grid;
+        grid-template-columns: repeat(8, 60px);
+        grid-template-rows: repeat(8, 60px);
+        background: linear-gradient(135deg, #78350f, #5c2d0e);
+        border: 12px solid #451a03;
+        border-radius: 8px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+      .celda {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+      .celda-clara {
+        background-color: #fde68a;
+      }
+      .celda-oscura {
+        background-color: #92400e;
+      }
+      .celda.seleccionada {
+        background-color: #fbbf24 !important;
+        box-shadow: inset 0 0 10px #f59e0b;
+      }
+      .celda.ultimo-mov {
+        background-color: #60a5fa !important;
+      }
+      .celda.valido {
+        cursor: pointer;
+        position: relative;
+      }
+      .celda.valido::after {
+        content: "";
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        background-color: #10b981;
+        border-radius: 50%;
+        animation: pulse 1s infinite;
+      }
+      .celda.valido.captura::after {
+        width: 24px;
+        height: 24px;
+        background-color: #ef4444;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.2);
+          opacity: 0.8;
+        }
+      }
+      .ficha {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        cursor: grab;
+        transition: transform 0.15s;
+        position: relative;
+        z-index: 5;
+        border: 3px solid;
+      }
+      .ficha:active {
+        cursor: grabbing;
+        transform: scale(1.1);
+      }
+      .ficha.roja {
+        background: radial-gradient(
+          circle at 35% 35%,
+          #f87171,
+          #ef4444 60%,
+          #dc2626
+        );
+        border-color: #991b1b;
+        box-shadow:
+          0 4px 8px rgba(0, 0, 0, 0.4),
+          inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+      }
+      .ficha.blanca {
+        background: radial-gradient(
+          circle at 35% 35%,
+          #ffffff,
+          #f3f4f6 60%,
+          #d1d5db
+        );
+        border-color: #6b7280;
+        box-shadow:
+          0 4px 8px rgba(0, 0, 0, 0.4),
+          inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+      }
+      .ficha:hover {
+        transform: scale(1.1);
+      }
+      .ficha.seleccionada {
+        transform: scale(1.15);
+        box-shadow:
+          0 0 0 4px #fbbf24,
+          0 0 20px rgba(251, 191, 36, 0.6);
+      }
+      .ficha.dama::after {
+        content: "👑";
+        font-size: 1.4rem;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+      }
+      .game-controls {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .btn-nuevo {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 1rem;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.2s;
+      }
+      .btn-nuevo:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+      }
+      #mensaje {
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: 700;
+        padding: 1rem 2rem;
+        border-radius: 1rem;
+        animation: bounceIn 0.5s ease;
+      }
+      @keyframes bounceIn {
+        0% {
+          transform: scale(0.5);
+          opacity: 0;
+        }
+        50% {
+          transform: scale(1.1);
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      #mensaje.ganador-rojas {
+        background: linear-gradient(135deg, #fee2e2, #fecaca);
+        color: #991b1b;
+        border: 3px solid #ef4444;
+      }
+      #mensaje.ganador-blancas {
+        background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+        color: #065f46;
+        border: 3px solid #10b981;
+      }
+      @media (max-width: 520px) {
+        .tablero {
+          grid-template-columns: repeat(8, 45px);
+          grid-template-rows: repeat(8, 45px);
+        }
+        .celda {
+          width: 45px;
+          height: 45px;
+        }
+        .ficha {
+          width: 34px;
+          height: 34px;
+        }
+      }
+    </style>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Juego de Damas Online | Educa y Juega",
+    "url": "https://educayjuega.com/damas.html",
+    "description": "Juego de damas clásico online con arrastrar y soltar. Capturas obligatorias y promoción a dama.",
+    "inLanguage": "es-ES"
+  }
+  </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-container">
+        <a href="index.html" class="logo"
+          ><span class="logo-icon">📚</span>Educa y Juega</a
+        >
+        <button class="menu-toggle" aria-label="Menú">☰</button>
+                  <nav class="nav-menu">
+            <a href="index.html">🏠 Inicio</a>
+            <a href="hora-mundial.html">🕐 Hora Mundial</a>
+            <a href="dados.html">🎲 Dados</a>
+            <a href="ruleta.html">🎰 Ruleta</a>
+            <a href="ruleta-preguntas.html">❓ Ruleta Preguntas</a>
+            <a href="temporizador.html">⏱️ Temporizador</a>
+            <a href="cronometro.html">⏱ Cronómetro</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="vocabulario.html">📝 Vocabulario</a>
+            <a href="conjugador.html">📝 Conjugador</a>
+            <a href="ejercicios.html">➕ Ejercicios</a>
+            <a href="fracciones.html">🍕 Fracciones</a>
+            <a href="tablas.html">✖️ Tablas</a>
+            <a href="calculadora.html">🧮 Calculadora</a>
+            <a href="calculadora-areas.html">📐 Calcular Áreas</a>
+            <a href="geometria.html">📐 Geometría</a>
+            <a href="convertidor.html">🔄 Convertir</a>
+            <a href="recta-numerica.html">📏 Recta</a>
+            <a href="linea-tiempo.html">⏳ Línea Tiempo</a>
+            <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
+            <a href="sistema-solar.html">🌍 Sistema Solar</a>
+            <a href="ciclo-agua.html">💧 Ciclo Agua</a>
+            <a href="cuerpo-humano.html">🧍 Cuerpo Humano</a>
+            <a href="grupos.html">👥 Grupos</a>
+            <a href="selector.html">🎯 Selector</a>
+            <a href="asistencias.html">📋 Asistencias</a>
+            <a href="horario.html">📅 Horario</a>
+            <a href="normas-aula.html">📜 Normas</a>
+            <a href="pizarra.html">🖍️ Pizarra</a>
+            <a href="bolsa-premios.html">🎁 Premios</a>
+            <a href="puntos.html">🏆 Puntos</a>
+            <a href="aciertos.html">✅ Aciertos</a>
+            <a href="ajedrez.html">♟️ Ajedrez</a>
+            <a href="bingo.html">🎱 Bingo</a>
+            <a href="buscaminas.html">💣 Buscaminas</a>
+            <a href="crucigrama.html">✏️ Crucigrama</a>
+            <a href="damas.html">🟡 Damas</a>
+            <a href="laberinto.html">🌀 Laberinto</a>
+            <a href="memoria.html">🧠 Memoria</a>
+            <a href="piedra-papel.html">🪨 PPT</a>
+            <a href="sopa-letras.html">🔍 Sopa Letras</a>
+            <a href="sudoku.html">🔢 Sudoku</a>
+            <a href="tangram.html">🔺 Tangram</a>
+            <a href="tres-en-raya.html">⭕ Tres Raya</a>
+            <a href="contacto.html">📧 Contacto</a>
+            <a href="sobre-nosotros.html">ℹ️ Nosotros</a>
+            <a href="privacidad.html">🔒 Privacidad</a>
+          </nav>
+      </div>
+    </header>
+    <main>
+      <div class="tool-header">
+        <h1>🟡 Damas ♟️</h1>
+        <p>
+          🎯 Click o arrastra las fichas para mover - 👑 Las damas pueden
+          moverse en todas direcciones
+        </p>
+      </div>
+      <div class="tool-content">
+        <div class="game-container">
+          <div class="turno" id="turno">
+            🎮 Turno: <span class="player rojas">🔴 Rojas</span>
+          </div>
+          <div class="info-box" id="infoBox">
+            💡 Las capturas son obligatorias - Salta sobre las fichas del
+            oponente
+          </div>
+          <div class="tablero" id="tablero"></div>
+          <div class="game-controls">
+            <button class="btn btn-nuevo" onclick="resetDamas()">
+              🔄 Nuevo Juego
+            </button>
+          </div>
+          <div id="mensaje"></div>
+        </div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-links">
+          <a href="index.html">🏠 Inicio</a>
+          <a href="dados.html">🎲 Dados</a>
+          <a href="temporizador.html">⏱️ Temporizador</a>
+          <a href="ruleta.html">🎰 Ruleta</a>
+          <a href="grupos.html">👥 Grupos</a>
+          <a href="quiz.html">📝 Quiz</a>
+          <a href="contacto.html">📧 Contacto</a>
+        </div>
+        <p class="footer-copy">&copy; 2026 Educa y Juega.</p>
+      </div>
+    </footer>
+    <script src="js/main.js"></script>
+    <script>
+      let damas = [];
+      let turno = "rojas";
+      let seleccionada = null;
+      let ultimoOrigen = null;
+      let ultimoDestino = null;
+      let debeCapturar = false;
+      let movimientosMostrados = [];
+      function initTablero() {
+        damas = Array(8)
+          .fill(null)
+          .map(() => Array(8).fill(0));
+        for (let r = 0; r < 3; r++) {
+          for (let c = 0; c < 8; c++) {
+            if ((r + c) % 2 === 1) damas[r][c] = 1;
+          }
+        }
+        for (let r = 5; r < 8; r++) {
+          for (let c = 0; c < 8; c++) {
+            if ((r + c) % 2 === 1) damas[r][c] = 2;
+          }
+        }
+      }
+      function esCasillaOscura(f, c) {
+        return (f + c) % 2 === 1;
+      }
+      function esMiFicha(ficha, jugador) {
+        if (jugador === "rojas") return ficha === 1 || ficha === 3;
+        return ficha === 2 || ficha === 4;
+      }
+      function esDama(ficha) {
+        return ficha === 3 || ficha === 4;
+      }
+      function getMovimientos(fila, col) {
+        const ficha = damas[fila][col];
+        if (!ficha) return [];
+        const esRoja = ficha === 1 || ficha === 3;
+        const esDamaR = esDama(ficha);
+        let moves = [];
+        let capturas = [];
+        let dirs = esDamaR
+          ? [
+              [1, 1],
+              [1, -1],
+              [-1, 1],
+              [-1, -1],
+            ]
+          : esRoja
+            ? [
+                [1, 1],
+                [1, -1],
+              ]
+            : [
+                [-1, -1],
+                [-1, 1],
+              ];
+        for (let [dr, dc] of dirs) {
+          let nr = fila + dr,
+            nc = col + dc;
+          if (nr < 0 || nr > 7 || nc < 0 || nc > 7) continue;
+          if (damas[nr][nc] === 0) {
+            moves.push({ fila: nr, col: nc, esCaptura: false });
+          } else if (esMiFicha(damas[nr][nc], esRoja ? "blancas" : "rojas")) {
+            let nr2 = nr + dr,
+              nc2 = nc + dc;
+            if (
+              nr2 >= 0 &&
+              nr2 < 8 &&
+              nc2 >= 0 &&
+              nc2 < 8 &&
+              damas[nr2][nc2] === 0
+            ) {
+              capturas.push({
+                fila: nr2,
+                col: nc2,
+                esCaptura: true,
+                capturaFila: nr,
+                capturaCol: nc,
+              });
+            }
+          }
+        }
+        return [...capturas, ...moves];
+      }
+      function hayCapturaObligatoria() {
+        for (let r = 0; r < 8; r++) {
+          for (let c = 0; c < 8; c++) {
+            const f = damas[r][c];
+            if (f > 0 && esMiFicha(f, turno)) {
+              const moves = getMovimientos(r, c);
+              if (moves.some((m) => m.esCaptura)) return true;
+            }
+          }
+        }
+        return false;
+      }
+      function getMovimientosFiltrados(fila, col) {
+        const moves = getMovimientos(fila, col);
+        const hayCapturas = hayCapturaObligatoria();
+        if (hayCapturas) return moves.filter((m) => m.esCaptura);
+        return moves.filter((m) => !m.esCaptura);
+      }
+      function ejecutarMovimiento(destFila, destCol, movimiento) {
+        const origFila = seleccionada.fila;
+        const origCol = seleccionada.col;
+        const ficha = damas[origFila][origCol];
+        ultimoOrigen = { fila: origFila, col: origCol };
+        ultimoDestino = { fila: destFila, col: destCol };
+        if (movimiento.esCaptura) {
+          damas[movimiento.capturaFila][movimiento.capturaCol] = 0;
+          const masCapturas = getMovimientos(destFila, destCol).filter(
+            (m) => m.esCaptura,
+          );
+          if (masCapturas.length > 0) {
+            debeCapturar = true;
+            seleccionada = { fila: destFila, col: destCol };
+            damas[destFila][destCol] = ficha;
+            damas[origFila][origCol] = 0;
+            document.getElementById("infoBox").textContent =
+              "⚠️ Debes continuar capturando!";
+            movimientosMostrados = masCapturas;
+            renderizar();
+            return;
+          }
+        }
+        damas[destFila][destCol] = ficha;
+        damas[origFila][origCol] = 0;
+        const esRoja = ficha === 1;
+        if ((esRoja && destFila === 7) || (!esRoja && destFila === 0)) {
+          damas[destFila][destCol] = esRoja ? 3 : 4;
+        }
+        turno = turno === "rojas" ? "blancas" : "rojas";
+        debeCapturar = false;
+        movimientosMostrados = [];
+        document.getElementById("turno").innerHTML =
+          `🎮 Turno: <span class="player ${turno}">${turno === "rojas" ? "🔴 Rojas" : "⚪ Blancas"}</span>`;
+        const hayCapt = hayCapturaObligatoria();
+        document.getElementById("infoBox").textContent = hayCapt
+          ? "⚠️ Las capturas son obligatorias"
+          : "💡 Las capturas son obligatorias";
+        deseleccionar();
+        verificarVictoria();
+      }
+      function deseleccionar() {
+        if (!debeCapturar) {
+          seleccionada = null;
+          movimientosMostrados = [];
+        }
+        renderizar();
+      }
+      function verificarVictoria() {
+        let rojas = 0,
+          blancas = 0,
+          puedeMoverRojas = false,
+          puedeMoverBlancas = false;
+        for (let r = 0; r < 8; r++) {
+          for (let c = 0; c < 8; c++) {
+            const f = damas[r][c];
+            if (f === 1 || f === 3) {
+              rojas++;
+              if (getMovimientosFiltrados(r, c).length > 0)
+                puedeMoverRojas = true;
+            }
+            if (f === 2 || f === 4) {
+              blancas++;
+              if (getMovimientosFiltrados(r, c).length > 0)
+                puedeMoverBlancas = true;
+            }
+          }
+        }
+        const msg = document.getElementById("mensaje");
+        if (rojas === 0 || (turno === "rojas" && !puedeMoverRojas)) {
+          msg.textContent = "🎉🏆 Las Blancas Ganan!";
+          msg.className = "ganador-blancas";
+        } else if (
+          blancas === 0 ||
+          (turno === "blancas" && !puedeMoverBlancas)
+        ) {
+          msg.textContent = "🎉🏆 Las Rojas Ganan!";
+          msg.className = "ganador-rojas";
+        } else {
+          msg.textContent = "";
+          msg.className = "";
+        }
+      }
+      function manejarClick(fila, col) {
+        const ficha = damas[fila][col];
+        if (debeCapturar) {
+          const moves = getMovimientosFiltrados(
+            seleccionada.fila,
+            seleccionada.col,
+          );
+          const mov = moves.find((m) => m.fila === fila && m.col === col);
+          if (mov) ejecutarMovimiento(fila, col, mov);
+          return;
+        }
+        if (ficha > 0 && esMiFicha(ficha, turno)) {
+          if (
+            !seleccionada ||
+            seleccionada.fila !== fila ||
+            seleccionada.col !== col
+          ) {
+            seleccionada = { fila, col };
+            movimientosMostrados = getMovimientosFiltrados(fila, col);
+          } else {
+            deseleccionar();
+          }
+          renderizar();
+          return;
+        }
+        if (seleccionada && movimientosMostrados.length > 0) {
+          const mov = movimientosMostrados.find(
+            (m) => m.fila === fila && m.col === col,
+          );
+          if (mov) {
+            ejecutarMovimiento(fila, col, mov);
+            return;
+          }
+        }
+        deseleccionar();
+      }
+      function manejarArrastre(origenFila, origenCol, destFila, destCol) {
+        const ficha = damas[origenFila][origenCol];
+        if (!ficha || !esMiFicha(ficha, turno)) {
+          renderizar();
+          return;
+        }
+        const moves = getMovimientosFiltrados(origenFila, origenCol);
+        const mov = moves.find((m) => m.fila === destFila && m.col === destCol);
+        if (mov) {
+          seleccionada = { fila: origenFila, col: origenCol };
+          ejecutarMovimiento(destFila, destCol, mov);
+        } else {
+          renderizar();
+        }
+      }
+      function renderizar() {
+        const tablero = document.getElementById("tablero");
+        tablero.innerHTML = "";
+        for (let r = 0; r < 8; r++) {
+          for (let c = 0; c < 8; c++) {
+            const celda = document.createElement("div");
+            celda.className =
+              "celda " +
+              (esCasillaOscura(r, c) ? "celda-oscura" : "celda-clara");
+            celda.style.width = "60px";
+            celda.style.height = "60px";
+            celda.style.display = "flex";
+            celda.style.alignItems = "center";
+            celda.style.justifyContent = "center";
+            if (
+              seleccionada &&
+              seleccionada.fila === r &&
+              seleccionada.col === c
+            )
+              celda.classList.add("seleccionada");
+            if (
+              (ultimoOrigen &&
+                ultimoOrigen.fila === r &&
+                ultimoOrigen.col === c) ||
+              (ultimoDestino &&
+                ultimoDestino.fila === r &&
+                ultimoDestino.col === c)
+            )
+              celda.classList.add("ultimo-mov");
+            celda.dataset.fila = r;
+            celda.dataset.col = c;
+            celda.onclick = () => manejarClick(r, c);
+            celda.ondragover = (e) => {
+              e.preventDefault();
+            };
+            celda.ondrop = (e) => {
+              e.preventDefault();
+              const f = parseInt(e.dataTransfer.getData("fila"));
+              const c2 = parseInt(e.dataTransfer.getData("col"));
+              if (!isNaN(f)) manejarArrastre(f, c2, r, c);
+            };
+            const esValido = movimientosMostrados.some(
+              (m) => m.fila === r && m.col === c,
+            );
+            if (esValido) {
+              celda.classList.add("valido");
+              if (
+                movimientosMostrados.find((m) => m.fila === r && m.col === c)
+                  ?.esCaptura
+              )
+                celda.classList.add("captura");
+            }
+            const ficha = damas[r][c];
+            if (ficha > 0) {
+              const fDiv = document.createElement("div");
+              let clase = "ficha " + (esDama(ficha) ? "dama " : "");
+              clase += ficha === 1 || ficha === 3 ? "roja" : "blanca";
+              if (
+                seleccionada &&
+                seleccionada.fila === r &&
+                seleccionada.col === c
+              )
+                clase += " seleccionada";
+              fDiv.className = clase;
+              fDiv.draggable = esMiFicha(ficha, turno);
+              fDiv.ondragstart = (e) => {
+                if (!esMiFicha(ficha, turno)) {
+                  e.preventDefault();
+                  return;
+                }
+                e.dataTransfer.setData("fila", r);
+                e.dataTransfer.setData("col", c);
+              };
+              celda.appendChild(fDiv);
+            }
+            tablero.appendChild(celda);
+          }
+        }
+      }
+      function resetDamas() {
+        initTablero();
+        turno = "rojas";
+        seleccionada = null;
+        ultimoOrigen = null;
+        ultimoDestino = null;
+        debeCapturar = false;
+        movimientosMostrados = [];
+        document.getElementById("turno").innerHTML =
+          '🎮 Turno: <span class="player rojas">🔴 Rojas</span>';
+        document.getElementById("infoBox").textContent =
+          "💡 Las capturas son obligatorias";
+        document.getElementById("mensaje").textContent = "";
+        document.getElementById("mensaje").className = "";
+        renderizar();
+      }
+      initTablero();
+      renderizar();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,230 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Convertidor de Unidades | Educa y Juega</title>
+    <meta name="description" content="Convertidor de unidades online. Convierte entre longitud, peso, volumen, temperatura y más." />
+    <meta name="keywords" content="convertidor de unidades, conversión, medidas, longitud, peso, temperatura" />
+    <link rel="canonical" href="https://educayjuega.com/convertidor.html" />
+    <meta property="og:title" content="Convertidor de Unidades | Educa y Juega" />
+    <meta property="og:description" content="Convertidor de unidades online. Convierte entre longitud, peso, volumen, temperatura y más." />
+    <meta property="og:url" content="https://educayjuega.com/convertidor.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://educayjuega.com/favicon.svg" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Convertidor de Unidades | Educa y Juega" />
+    <meta name="twitter:description" content="Convertidor de unidades online. Convierte entre longitud, peso, volumen, temperatura y más." />
+
+    <link rel="stylesheet" href="css/styles.css" />
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+    <style>
+      .tool-header h1 {
+        color: white;
+      }
+      .tool-header {
+        background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+      }
+      .tool-content {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+      .convert-box {
+        background: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: var(--shadow);
+      }
+      .tipo-select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+      }
+      .input-row {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+      .input-row input,
+      .input-row select {
+        flex: 1;
+        padding: 0.75rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 0.5rem;
+      }
+    </style>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Convertidor de Unidades | Educa y Juega",
+    "url": "https://educayjuega.com/convertidor.html",
+    "description": "Convertidor de unidades online. Convierte entre longitud, peso, volumen, temperatura y más.",
+    "inLanguage": "es-ES"
+  }
+  </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-container">
+        <a href="index.html" class="logo">
+          <span class="logo-icon">📚</span> Educa y Juega
+        </a>
+        <button class="menu-toggle" aria-label="Menú">☰</button>
+                  <nav class="nav-menu">
+            <a href="index.html">🏠 Inicio</a>
+            <a href="hora-mundial.html">🕐 Hora Mundial</a>
+            <a href="dados.html">🎲 Dados</a>
+            <a href="ruleta.html">🎰 Ruleta</a>
+            <a href="ruleta-preguntas.html">❓ Ruleta Preguntas</a>
+            <a href="temporizador.html">⏱️ Temporizador</a>
+            <a href="cronometro.html">⏱ Cronómetro</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="vocabulario.html">📝 Vocabulario</a>
+            <a href="conjugador.html">📝 Conjugador</a>
+            <a href="ejercicios.html">➕ Ejercicios</a>
+            <a href="fracciones.html">🍕 Fracciones</a>
+            <a href="tablas.html">✖️ Tablas</a>
+            <a href="calculadora.html">🧮 Calculadora</a>
+            <a href="calculadora-areas.html">📐 Calcular Áreas</a>
+            <a href="geometria.html">📐 Geometría</a>
+            <a href="convertidor.html">🔄 Convertir</a>
+            <a href="recta-numerica.html">📏 Recta</a>
+            <a href="linea-tiempo.html">⏳ Línea Tiempo</a>
+            <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
+            <a href="sistema-solar.html">🌍 Sistema Solar</a>
+            <a href="ciclo-agua.html">💧 Ciclo Agua</a>
+            <a href="cuerpo-humano.html">🧍 Cuerpo Humano</a>
+            <a href="grupos.html">👥 Grupos</a>
+            <a href="selector.html">🎯 Selector</a>
+            <a href="asistencias.html">📋 Asistencias</a>
+            <a href="horario.html">📅 Horario</a>
+            <a href="normas-aula.html">📜 Normas</a>
+            <a href="pizarra.html">🖍️ Pizarra</a>
+            <a href="bolsa-premios.html">🎁 Premios</a>
+            <a href="puntos.html">🏆 Puntos</a>
+            <a href="aciertos.html">✅ Aciertos</a>
+            <a href="ajedrez.html">♟️ Ajedrez</a>
+            <a href="bingo.html">🎱 Bingo</a>
+            <a href="buscaminas.html">💣 Buscaminas</a>
+            <a href="crucigrama.html">✏️ Crucigrama</a>
+            <a href="damas.html">🟡 Damas</a>
+            <a href="laberinto.html">🌀 Laberinto</a>
+            <a href="memoria.html">🧠 Memoria</a>
+            <a href="piedra-papel.html">🪨 PPT</a>
+            <a href="sopa-letras.html">🔍 Sopa Letras</a>
+            <a href="sudoku.html">🔢 Sudoku</a>
+            <a href="tangram.html">🔺 Tangram</a>
+            <a href="tres-en-raya.html">⭕ Tres Raya</a>
+            <a href="contacto.html">📧 Contacto</a>
+            <a href="sobre-nosotros.html">ℹ️ Nosotros</a>
+            <a href="privacidad.html">🔒 Privacidad</a>
+          </nav>
+      </div>
+    </header>
+    <main>
+      <div class="tool-header">
+        <h1>🔄 Convertidor de Unidades</h1>
+        <p>Convierte entre diferentes unidades</p>
+      </div>
+      <div class="tool-content">
+        <div class="convert-box">
+          <select class="tipo-select" id="tipo" onchange="updateUnidades()">
+            <option value="longitud">Longitud</option>
+            <option value="peso">Peso</option>
+            <option value="temperatura">Temperatura</option>
+          </select>
+          <div class="input-row">
+            <input
+              type="number"
+              id="valor"
+              placeholder="Valor"
+              oninput="convertir()"
+            />
+            <select id="de" onchange="convertir()"></select>
+          </div>
+          <div class="input-row">
+            <input
+              type="text"
+              id="resultado"
+              placeholder="Resultado"
+              readonly
+            />
+            <select id="a" onchange="convertir()"></select>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-links">
+          <a href="contacto.html">📧 Contacto</a>
+          <a href="privacidad.html">🔒 Política de Privacidad</a>
+          <a href="sobre-nosotros.html">ℹ️ Sobre Nosotros</a>
+        </div>
+        <p class="footer-copy">
+          &copy; 2026 Educa y Juega. Herramientas educativas gratuitas
+          para profesores.
+        </p>
+      </div>
+    </footer>
+    <script>
+      const units = {
+        longitud: ["m", "km", "cm", "mm", "pulgada", "pie"],
+        peso: ["kg", "g", "lb", "oz"],
+        temperatura: ["°C", "°F", "K"],
+      };
+      function updateUnidades() {
+        let t = document.getElementById("tipo").value;
+        let opts = units[t]
+          .map((u) => `<option value="${u}">${u}</option>`)
+          .join("");
+        document.getElementById("de").innerHTML = opts;
+        document.getElementById("a").innerHTML = opts;
+        convertir();
+      }
+      function convertir() {
+        let t = document.getElementById("tipo").value;
+        let v = parseFloat(document.getElementById("valor").value);
+        let de = document.getElementById("de").value;
+        let a = document.getElementById("a").value;
+        if (isNaN(v)) {
+          document.getElementById("resultado").value = "";
+          return;
+        }
+        let r = 0;
+        if (t === "longitud") {
+          const toM = {
+            m: 1,
+            km: 1000,
+            cm: 0.01,
+            mm: 0.001,
+            pulgada: 0.0254,
+            pie: 0.3048,
+          };
+          r = (v * toM[de]) / toM[a];
+        } else if (t === "peso") {
+          const toKg = { kg: 1, g: 0.001, lb: 0.453592, oz: 0.0283495 };
+          r = (v * toKg[de]) / toKg[a];
+        } else if (t === "temperatura") {
+          if (de === "°C" && a === "°F") r = (v * 9) / 5 + 32;
+          else if (de === "°F" && a === "°C") r = ((v - 32) * 5) / 9;
+          else if (de === "°C" && a === "K") r = v + 273.15;
+          else if (de === "K" && a === "°C") r = v - 273.15;
+          else r = v;
+        }
+        document.getElementById("resultado").value = Math.round(r * 100) / 100;
+      }
+      updateUnidades();
+    </script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

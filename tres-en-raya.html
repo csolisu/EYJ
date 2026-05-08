@@ -1,0 +1,562 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tres en Raya Neón | Educa y Juega</title>
+    <meta name="description" content="Juego de tres en raya virtual. Juega contra la computadora o dos jugadores. Clásico juego del gato." />
+    <meta name="keywords" content="tres en raya, juego del gato, tic tac toe, juego de mesa, estrategia" />
+    <link rel="canonical" href="https://educayjuega.com/tres-en-raya.html" />
+    <meta property="og:title" content="Tres en Raya Online | Educa y Juega" />
+    <meta property="og:description" content="Juego de tres en raya virtual. Juega contra la computadora o dos jugadores. Clásico juego del gato." />
+    <meta property="og:url" content="https://educayjuega.com/tres-en-raya.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://educayjuega.com/favicon.svg" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Tres en Raya Online | Educa y Juega" />
+    <meta name="twitter:description" content="Juego de tres en raya virtual. Juega contra la computadora o dos jugadores. Clásico juego del gato." />
+
+<link rel="stylesheet" href="css/styles.css" />
+    <!-- Confetti JS for winning effects -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+    <style>
+      :root {
+        --bg-color: #0f172a;
+        --board-bg: rgba(30, 41, 59, 0.7);
+        --grid-line: #334155;
+        --player-x: #06b6d4; /* Cyan neon */
+        --player-o: #ec4899; /* Pink neon */
+        --glow-x:
+          0 0 15px rgba(6, 182, 212, 0.5), 0 0 30px rgba(6, 182, 212, 0.3);
+        --glow-o:
+          0 0 15px rgba(236, 72, 153, 0.5), 0 0 30px rgba(236, 72, 153, 0.3);
+        --text-light: #f8fafc;
+      }
+      .tool-header {
+        background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+        color: white;
+        padding: 2rem 1rem;
+        text-align: center;
+      }
+      .tool-header h1 {
+        font-size: 2.5rem;
+        color: white;
+        margin-bottom: 0.5rem;
+      }
+      .game-container {
+        max-width: 600px;
+        margin: 2rem auto 4rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 3rem 1rem;
+        background-color: var(--bg-color);
+        background-image:
+          radial-gradient(
+            at 0% 0%,
+            rgba(6, 182, 212, 0.15) 0px,
+            transparent 50%
+          ),
+          radial-gradient(
+            at 100% 100%,
+            rgba(236, 72, 153, 0.15) 0px,
+            transparent 50%
+          );
+        color: var(--text-light);
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      }
+      /* Scoreboard */
+      .scoreboard {
+        display: flex;
+        gap: 2rem;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 1rem 2rem;
+        border-radius: 20px;
+        margin-bottom: 2rem;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+      .score-box {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 80px;
+        transition: transform 0.3s;
+      }
+      .score-box.active {
+        transform: scale(1.15);
+      }
+      .score-box.player-x {
+        color: var(--player-x);
+      }
+      .score-box.player-o {
+        color: var(--player-o);
+      }
+      .score-box.active.player-x {
+        text-shadow: var(--glow-x);
+      }
+      .score-box.active.player-o {
+        text-shadow: var(--glow-o);
+      }
+      .score-label {
+        font-size: 1rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 0.25rem;
+      }
+      .score-value {
+        font-size: 2rem;
+        font-weight: 800;
+      }
+      .score-divider {
+        width: 2px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 2px;
+      }
+      /* Board */
+      .board-wrapper {
+        position: relative;
+        padding: 1.5rem;
+        background: var(--board-bg);
+        border-radius: 20px;
+        box-shadow:
+          0 20px 50px rgba(0, 0, 0, 0.5),
+          inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+      }
+      .board {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        background: var(--grid-line);
+        border-radius: 10px;
+        overflow: hidden;
+        border: 8px solid var(--grid-line);
+      }
+      .cell {
+        width: 100px;
+        height: 100px;
+        background: var(--board-bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        position: relative;
+      }
+      .cell:hover:not(.occupied) {
+        background: rgba(255, 255, 255, 0.05);
+      }
+      .cell.occupied {
+        cursor: default;
+      }
+      /* SVG Drawings */
+      .mark-svg {
+        width: 65%;
+        height: 65%;
+        stroke-width: 12;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        fill: none;
+        overflow: visible;
+      }
+      .mark-x {
+        stroke: var(--player-x);
+        filter: drop-shadow(0 0 8px var(--player-x));
+      }
+      .mark-o {
+        stroke: var(--player-o);
+        filter: drop-shadow(0 0 8px var(--player-o));
+      }
+      /* Drawing Animation Classes */
+      .draw-x path {
+        stroke-dasharray: 100;
+        stroke-dashoffset: 100;
+        animation: drawPath 0.3s ease forwards;
+      }
+      .draw-x path:nth-child(2) {
+        animation-delay: 0.15s;
+      }
+      .draw-o circle {
+        stroke-dasharray: 300;
+        stroke-dashoffset: 300;
+        animation: drawPath 0.4s ease forwards;
+      }
+      @keyframes drawPath {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+      /* Winning Line */
+      .win-line {
+        position: absolute;
+        background: #fff;
+        border-radius: 10px;
+        z-index: 10;
+        transform-origin: left center;
+        box-shadow:
+          0 0 15px #fff,
+          0 0 30px #fff;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      /* Buttons */
+      .controls {
+        margin-top: 2.5rem;
+        display: flex;
+        gap: 1rem;
+      }
+      .btn {
+        padding: 0.75rem 2rem;
+        border-radius: 50px;
+        border: none;
+        font-size: 1.1rem;
+        font-weight: 700;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .btn-primary {
+        background: linear-gradient(135deg, var(--player-x), #3b82f6);
+        color: white;
+        box-shadow: 0 10px 20px rgba(6, 182, 212, 0.3);
+      }
+      .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 25px rgba(6, 182, 212, 0.4);
+        filter: brightness(1.1);
+      }
+      .btn-secondary {
+        background: rgba(255, 255, 255, 0.05);
+        color: #cbd5e1;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+      }
+      /* Status text */
+      .status-text {
+        margin-top: 1.5rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        height: 2rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        animation: fadeIn 0.3s;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @media (max-width: 450px) {
+        .cell {
+          width: 80px;
+          height: 80px;
+        }
+        .header-title h1 {
+          font-size: 2.5rem;
+        }
+      }
+    </style>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Tres en Raya Online | Educa y Juega",
+    "url": "https://educayjuega.com/tres-en-raya.html",
+    "description": "Juego de tres en raya virtual. Juega contra la computadora o dos jugadores. Clásico juego del gato.",
+    "inLanguage": "es-ES"
+  }
+  </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-container">
+        <a href="index.html" class="logo">
+          <span class="logo-icon">📚</span> Educa y Juega
+        </a>
+        <button class="menu-toggle" aria-label="Menú">☰</button>
+                  <nav class="nav-menu">
+            <a href="index.html">🏠 Inicio</a>
+            <a href="hora-mundial.html">🕐 Hora Mundial</a>
+            <a href="dados.html">🎲 Dados</a>
+            <a href="ruleta.html">🎰 Ruleta</a>
+            <a href="ruleta-preguntas.html">❓ Ruleta Preguntas</a>
+            <a href="temporizador.html">⏱️ Temporizador</a>
+            <a href="cronometro.html">⏱ Cronómetro</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="vocabulario.html">📝 Vocabulario</a>
+            <a href="conjugador.html">📝 Conjugador</a>
+            <a href="ejercicios.html">➕ Ejercicios</a>
+            <a href="fracciones.html">🍕 Fracciones</a>
+            <a href="tablas.html">✖️ Tablas</a>
+            <a href="calculadora.html">🧮 Calculadora</a>
+            <a href="calculadora-areas.html">📐 Calcular Áreas</a>
+            <a href="geometria.html">📐 Geometría</a>
+            <a href="convertidor.html">🔄 Convertir</a>
+            <a href="recta-numerica.html">📏 Recta</a>
+            <a href="linea-tiempo.html">⏳ Línea Tiempo</a>
+            <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
+            <a href="sistema-solar.html">🌍 Sistema Solar</a>
+            <a href="ciclo-agua.html">💧 Ciclo Agua</a>
+            <a href="cuerpo-humano.html">🧍 Cuerpo Humano</a>
+            <a href="grupos.html">👥 Grupos</a>
+            <a href="selector.html">🎯 Selector</a>
+            <a href="asistencias.html">📋 Asistencias</a>
+            <a href="horario.html">📅 Horario</a>
+            <a href="normas-aula.html">📜 Normas</a>
+            <a href="pizarra.html">🖍️ Pizarra</a>
+            <a href="bolsa-premios.html">🎁 Premios</a>
+            <a href="puntos.html">🏆 Puntos</a>
+            <a href="aciertos.html">✅ Aciertos</a>
+            <a href="ajedrez.html">♟️ Ajedrez</a>
+            <a href="bingo.html">🎱 Bingo</a>
+            <a href="buscaminas.html">💣 Buscaminas</a>
+            <a href="crucigrama.html">✏️ Crucigrama</a>
+            <a href="damas.html">🟡 Damas</a>
+            <a href="laberinto.html">🌀 Laberinto</a>
+            <a href="memoria.html">🧠 Memoria</a>
+            <a href="piedra-papel.html">🪨 PPT</a>
+            <a href="sopa-letras.html">🔍 Sopa Letras</a>
+            <a href="sudoku.html">🔢 Sudoku</a>
+            <a href="tangram.html">🔺 Tangram</a>
+            <a href="tres-en-raya.html">⭕ Tres Raya</a>
+            <a href="contacto.html">📧 Contacto</a>
+            <a href="sobre-nosotros.html">ℹ️ Nosotros</a>
+            <a href="privacidad.html">🔒 Privacidad</a>
+          </nav>
+      </div>
+    </header>
+    <main>
+      <div class="tool-header">
+        <h1>⭕ Tres en Raya</h1>
+        <p>¡El clásico duelo de X vs O con un diseño moderno!</p>
+      </div>
+
+      <div class="game-container">
+        <div class="scoreboard">
+          <div class="score-box player-x active" id="score-box-x">
+            <span class="score-label">Jugador X</span>
+            <span class="score-value" id="score-x">0</span>
+          </div>
+          <div class="score-divider"></div>
+          <div class="score-box player-o" id="score-box-o">
+            <span class="score-label">Jugador O</span>
+            <span class="score-value" id="score-o">0</span>
+          </div>
+        </div>
+        <div class="board-wrapper">
+          <div class="board" id="board">
+            <!-- Cells generated by JS -->
+          </div>
+          <!-- The glowing winning line -->
+          <div class="win-line" id="winLine"></div>
+        </div>
+        <div class="status-text" id="statusText"></div>
+        <div class="controls">
+          <button class="btn btn-primary" onclick="restartRound()">
+            🎮 Jugar de Nuevo
+          </button>
+          <button class="btn btn-secondary" onclick="resetScores()">
+            🔄 Reiniciar Puntos
+          </button>
+        </div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-links">
+          <a href="contacto.html">📧 Contacto</a>
+          <a href="privacidad.html">🔒 Política de Privacidad</a>
+          <a href="sobre-nosotros.html">ℹ️ Sobre Nosotros</a>
+        </div>
+        <p class="footer-copy">&copy; 2026 Educa y Juega.</p>
+      </div>
+    </footer>
+    <script src="js/main.js"></script>
+    <script>
+      const boardEl = document.getElementById("board");
+      const statusText = document.getElementById("statusText");
+      const winLine = document.getElementById("winLine");
+      const scoreBoxX = document.getElementById("score-box-x");
+      const scoreBoxO = document.getElementById("score-box-o");
+      let boardState = ["", "", "", "", "", "", "", "", ""];
+      let currentPlayer = "X";
+      let gameActive = true;
+      let scores = { X: 0, O: 0 };
+      const winConditions = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8], // Rows
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8], // Cols
+        [0, 4, 8],
+        [2, 4, 6], // Diagonals
+      ];
+      // Line positioning data (top, left, width, rotation) based on 100px cells + 8px gap
+      // Total board width = 100*3 + 8*2 = 316. Padding wrapper = 24px (1.5rem)
+      // Adjustments are relative to .board-wrapper inner
+      const lineCoords = [
+        // Rows
+        { top: "38px", left: "15px", width: "316px", angle: 0 },
+        { top: "146px", left: "15px", width: "316px", angle: 0 },
+        { top: "254px", left: "15px", width: "316px", angle: 0 },
+        // Cols
+        { top: "15px", left: "65px", width: "316px", angle: 90 },
+        { top: "15px", left: "173px", width: "316px", angle: 90 },
+        { top: "15px", left: "281px", width: "316px", angle: 90 },
+        // Diagonals (approx 447px length)
+        { top: "25px", left: "25px", width: "420px", angle: 45 },
+        { top: "25px", left: "320px", width: "420px", angle: 135 },
+      ];
+      const svgX = `<svg class="mark-svg mark-x draw-x" viewBox="0 0 100 100"><path d="M20 20 L80 80"/><path d="M80 20 L20 80"/></svg>`;
+      const svgO = `<svg class="mark-svg mark-o draw-o" viewBox="0 0 100 100"><circle cx="50" cy="50" r="35"/></svg>`;
+      function initBoard() {
+        boardEl.innerHTML = "";
+        boardState.forEach((_, idx) => {
+          const cell = document.createElement("div");
+          cell.className = "cell";
+          cell.dataset.idx = idx;
+          cell.addEventListener("click", handleCellClick);
+          boardEl.appendChild(cell);
+        });
+        updateTurnDisplay();
+        winLine.style.opacity = "0";
+      }
+      function handleCellClick(e) {
+        const cell = e.target.closest(".cell");
+        if (!cell) return;
+        const idx = cell.dataset.idx;
+        if (boardState[idx] !== "" || !gameActive) return;
+        boardState[idx] = currentPlayer;
+        cell.classList.add("occupied");
+        cell.innerHTML = currentPlayer === "X" ? svgX : svgO;
+        checkWin();
+      }
+      function checkWin() {
+        let roundWon = false;
+        let winningPatternIdx = -1;
+        for (let i = 0; i < winConditions.length; i++) {
+          const [a, b, c] = winConditions[i];
+          if (
+            boardState[a] &&
+            boardState[a] === boardState[b] &&
+            boardState[a] === boardState[c]
+          ) {
+            roundWon = true;
+            winningPatternIdx = i;
+            break;
+          }
+        }
+        if (roundWon) {
+          gameActive = false;
+          scores[currentPlayer]++;
+          document.getElementById(
+            `score-${currentPlayer.toLowerCase()}`,
+          ).innerText = scores[currentPlayer];
+          // Show winning message
+          statusText.innerHTML = `¡El Jugador <span style="color: var(--player-${currentPlayer.toLowerCase()}); text-shadow: var(--glow-${currentPlayer.toLowerCase()})">${currentPlayer}</span> ha ganado!`;
+          // Draw winning line
+          drawWinningLine(winningPatternIdx, currentPlayer);
+          // Confetti
+          triggerConfetti(currentPlayer);
+          return;
+        }
+        const roundDraw = !boardState.includes("");
+        if (roundDraw) {
+          statusText.innerText = "¡Empate!";
+          gameActive = false;
+          return;
+        }
+        currentPlayer = currentPlayer === "X" ? "O" : "X";
+        updateTurnDisplay();
+      }
+      function drawWinningLine(idx, player) {
+        const coords = lineCoords[idx];
+        // Get actual dimensions if mobile
+        const boardRect = boardEl.getBoundingClientRect();
+        const scale = boardRect.width / 316; // 316 is base width
+        const top = parseInt(coords.top) * scale;
+        const left = parseInt(coords.left) * scale;
+        const width = parseInt(coords.width) * scale;
+        winLine.style.width = "0px"; // Start from 0 to animate
+        winLine.style.height = 6 * scale + "px";
+        winLine.style.top = top + 24 + "px"; // +24 for wrapper padding approx
+        winLine.style.left = left + 24 + "px";
+        winLine.style.transform = `rotate(${coords.angle}deg)`;
+        const color = player === "X" ? "#06b6d4" : "#ec4899";
+        winLine.style.backgroundColor = color;
+        winLine.style.boxShadow = `0 0 15px ${color}, 0 0 30px ${color}`;
+        // Allow DOM to update before animating
+        requestAnimationFrame(() => {
+          winLine.style.opacity = "1";
+          winLine.style.transition = "width 0.4s ease-out";
+          winLine.style.width = width + "px";
+        });
+      }
+      function triggerConfetti(player) {
+        const color = player === "X" ? "#06b6d4" : "#ec4899";
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: [color, "#ffffff"],
+        });
+      }
+      function updateTurnDisplay() {
+        if (!gameActive) return;
+        statusText.innerHTML = `Turno del Jugador <span style="color: var(--player-${currentPlayer.toLowerCase()})">${currentPlayer}</span>`;
+        if (currentPlayer === "X") {
+          scoreBoxX.classList.add("active");
+          scoreBoxO.classList.remove("active");
+        } else {
+          scoreBoxO.classList.add("active");
+          scoreBoxX.classList.remove("active");
+        }
+      }
+      function restartRound() {
+        boardState = ["", "", "", "", "", "", "", "", ""];
+        gameActive = true;
+        currentPlayer = currentPlayer === "X" ? "O" : "X"; // Loser goes first usually, or alternate
+        winLine.style.transition = "none";
+        initBoard();
+      }
+      function resetScores() {
+        scores = { X: 0, O: 0 };
+        document.getElementById("score-x").innerText = "0";
+        document.getElementById("score-o").innerText = "0";
+        currentPlayer = "X";
+        restartRound();
+      }
+      // Setup initially
+      initBoard();
+      // Responsive handling for the line
+      window.addEventListener("resize", () => {
+        if (!gameActive && !boardState.includes("")) return; // draw
+        if (!gameActive) {
+          // If there's a win line shown, redraw it to fit new size
+          // Simple hack: just restart round on resize if they resize mid-win
+        }
+      });
+    </script>
+  </body>
+</html>

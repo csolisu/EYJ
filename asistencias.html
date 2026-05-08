@@ -1,0 +1,211 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Control de Asistencias | Educa y Juega</title>
+    <meta name="description" content="Registro de asistencias digital para profesores. Controla la presencia de tus alumnos de forma sencilla y gratuita." />
+    <meta name="keywords" content="asistencias, registro de alumnos, control de presencia, herramienta profesor, gestión aula" />
+    <link rel="canonical" href="https://educayjuega.com/asistencias.html" />
+    <meta property="og:title" content="Registro de Asistencias | Educa y Juega" />
+    <meta property="og:description" content="Registro de asistencias digital para profesores. Controla la presencia de tus alumnos de forma sencilla y gratuita." />
+    <meta property="og:url" content="https://educayjuega.com/asistencias.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://educayjuega.com/favicon.svg" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Registro de Asistencias | Educa y Juega" />
+    <meta name="twitter:description" content="Registro de asistencias digital para profesores. Controla la presencia de tus alumnos de forma sencilla y gratuita." />
+
+    <link rel="stylesheet" href="css/styles.css" />
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+    <style>
+      .tool-header h1 {
+        color: white;
+      }
+      .tool-header {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+      }
+      .tool-content {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+      .alumnos-list {
+        background: white;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        box-shadow: var(--shadow);
+      }
+      .alumno-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.75rem;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      .alumno-row:last-child {
+        border-bottom: none;
+      }
+      .alumno-name {
+        flex: 1;
+        font-weight: 500;
+      }
+      .asist-btn {
+        width: 40px;
+        height: 40px;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1.25rem;
+      }
+      .asist-btn.P {
+        background: #10b981;
+      }
+      .asist-btn.A {
+        background: #ef4444;
+      }
+      .asist-btn.J {
+        background: #f59e0b;
+      }
+    </style>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Registro de Asistencias | Educa y Juega",
+    "url": "https://educayjuega.com/asistencias.html",
+    "description": "Registro de asistencias digital para profesores. Controla la presencia de tus alumnos de forma sencilla y gratuita.",
+    "inLanguage": "es-ES"
+  }
+  </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-container">
+        <a href="index.html" class="logo">
+          <span class="logo-icon">📚</span> Educa y Juega
+        </a>
+        <button class="menu-toggle" aria-label="Menú">☰</button>
+                  <nav class="nav-menu">
+            <a href="index.html">🏠 Inicio</a>
+            <a href="hora-mundial.html">🕐 Hora Mundial</a>
+            <a href="dados.html">🎲 Dados</a>
+            <a href="ruleta.html">🎰 Ruleta</a>
+            <a href="ruleta-preguntas.html">❓ Ruleta Preguntas</a>
+            <a href="temporizador.html">⏱️ Temporizador</a>
+            <a href="cronometro.html">⏱ Cronómetro</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="vocabulario.html">📝 Vocabulario</a>
+            <a href="conjugador.html">📝 Conjugador</a>
+            <a href="ejercicios.html">➕ Ejercicios</a>
+            <a href="fracciones.html">🍕 Fracciones</a>
+            <a href="tablas.html">✖️ Tablas</a>
+            <a href="calculadora.html">🧮 Calculadora</a>
+            <a href="calculadora-areas.html">📐 Calcular Áreas</a>
+            <a href="geometria.html">📐 Geometría</a>
+            <a href="convertidor.html">🔄 Convertir</a>
+            <a href="recta-numerica.html">📏 Recta</a>
+            <a href="linea-tiempo.html">⏳ Línea Tiempo</a>
+            <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
+            <a href="sistema-solar.html">🌍 Sistema Solar</a>
+            <a href="ciclo-agua.html">💧 Ciclo Agua</a>
+            <a href="cuerpo-humano.html">🧍 Cuerpo Humano</a>
+            <a href="grupos.html">👥 Grupos</a>
+            <a href="selector.html">🎯 Selector</a>
+            <a href="asistencias.html">📋 Asistencias</a>
+            <a href="horario.html">📅 Horario</a>
+            <a href="normas-aula.html">📜 Normas</a>
+            <a href="pizarra.html">🖍️ Pizarra</a>
+            <a href="bolsa-premios.html">🎁 Premios</a>
+            <a href="puntos.html">🏆 Puntos</a>
+            <a href="aciertos.html">✅ Aciertos</a>
+            <a href="ajedrez.html">♟️ Ajedrez</a>
+            <a href="bingo.html">🎱 Bingo</a>
+            <a href="buscaminas.html">💣 Buscaminas</a>
+            <a href="crucigrama.html">✏️ Crucigrama</a>
+            <a href="damas.html">🟡 Damas</a>
+            <a href="laberinto.html">🌀 Laberinto</a>
+            <a href="memoria.html">🧠 Memoria</a>
+            <a href="piedra-papel.html">🪨 PPT</a>
+            <a href="sopa-letras.html">🔍 Sopa Letras</a>
+            <a href="sudoku.html">🔢 Sudoku</a>
+            <a href="tangram.html">🔺 Tangram</a>
+            <a href="tres-en-raya.html">⭕ Tres Raya</a>
+            <a href="contacto.html">📧 Contacto</a>
+            <a href="sobre-nosotros.html">ℹ️ Nosotros</a>
+            <a href="privacidad.html">🔒 Privacidad</a>
+          </nav>
+      </div>
+    </header>
+    <main>
+      <div class="tool-header">
+        <h1>📋 Control de Asistencias</h1>
+        <p>Registra la asistencia diaria</p>
+      </div>
+      <div class="tool-content">
+        <div style="margin-bottom: 1rem">
+          <input
+            type="text"
+            id="nuevoAlumno"
+            placeholder="Nombre del alumno"
+            style="
+              padding: 0.75rem;
+              border: 2px solid #e5e7eb;
+              border-radius: 0.5rem;
+              width: 70%;
+            "
+          /><button class="btn" onclick="agregarAlumno()">+</button>
+        </div>
+        <div class="alumnos-list" id="lista"></div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-links">
+          <a href="contacto.html">📧 Contacto</a>
+          <a href="privacidad.html">🔒 Política de Privacidad</a>
+          <a href="sobre-nosotros.html">ℹ️ Sobre Nosotros</a>
+        </div>
+        <p class="footer-copy">
+          &copy; 2026 Educa y Juega. Herramientas educativas gratuitas
+          para profesores.
+        </p>
+      </div>
+    </footer>
+    <script>
+      let alumnos = [
+        { nombre: "Juan", estado: "P" },
+        { nombre: "María", estado: "P" },
+        { nombre: "Pedro", estado: "P" },
+      ];
+      function render() {
+        let html = "";
+        alumnos.forEach((a, i) => {
+          html += `<div class="alumno-row"><span class="alumno-name">${a.nombre}</span><button class="asist-btn ${a.estado}" onclick="cambiarEstado(${i})">${a.estado === "P" ? "✓" : a.estado === "A" ? "✗" : "?"}</button></div>`;
+        });
+        document.getElementById("lista").innerHTML = html;
+      }
+      function agregarAlumno() {
+        let n = document.getElementById("nuevoAlumno").value.trim();
+        if (n) {
+          alumnos.push({ nombre: n, estado: "P" });
+          document.getElementById("nuevoAlumno").value = "";
+          render();
+        }
+      }
+      function cambiarEstado(i) {
+        let e = ["P", "A", "J"];
+        let idx = e.indexOf(alumnos[i].estado);
+        alumnos[i].estado = e[(idx + 1) % 3];
+        render();
+      }
+      render();
+    </script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,372 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Geometría Interactiva | Educa y Juega</title>
+    <meta name="description" content="Geometría interactiva para estudiantes. Explora figuras, ángulos, áreas y fórmulas geométricas." />
+    <meta name="keywords" content="geometría, figuras geométricas, ángulos, áreas, matemáticas interactivas" />
+    <link rel="canonical" href="https://educayjuega.com/geometria.html" />
+    <meta property="og:title" content="Geometría Interactiva | Educa y Juega" />
+    <meta property="og:description" content="Geometría interactiva para estudiantes. Explora figuras, ángulos, áreas y fórmulas geométricas." />
+    <meta property="og:url" content="https://educayjuega.com/geometria.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://educayjuega.com/favicon.svg" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Geometría Interactiva | Educa y Juega" />
+    <meta name="twitter:description" content="Geometría interactiva para estudiantes. Explora figuras, ángulos, áreas y fórmulas geométricas." />
+
+    <link rel="stylesheet" href="css/styles.css" />
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+    <style>
+      .tool-header h1 {
+        color: white;
+      }
+      .tool-header {
+        background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+      }
+      .tool-content {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+      .figuras-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+      }
+      .figura-card {
+        background: white;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        text-align: center;
+        box-shadow: var(--shadow);
+        cursor: pointer;
+      }
+      .figura-card:hover {
+        transform: scale(1.05);
+      }
+      .figura-card svg {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 1rem;
+      }
+      .info-panel {
+        background: white;
+        border-radius: 1rem;
+        padding: 2rem;
+        margin-top: 2rem;
+        box-shadow: var(--shadow);
+      }
+      .calc-inputs {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin: 1.5rem 0;
+      }
+      .calc-inputs input {
+        padding: 0.75rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+      }
+      .calc-inputs label {
+        display: block;
+        margin-bottom: 0.25rem;
+        font-weight: 600;
+      }
+      .resultado-calc {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #06b6d4;
+        text-align: center;
+        padding: 1rem;
+        background: #f0fdfa;
+        border-radius: 0.5rem;
+        margin-top: 1rem;
+      }
+    </style>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Geometría Interactiva | Educa y Juega",
+    "url": "https://educayjuega.com/geometria.html",
+    "description": "Geometría interactiva para estudiantes. Explora figuras, ángulos, áreas y fórmulas geométricas.",
+    "inLanguage": "es-ES"
+  }
+  </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-container">
+        <a href="index.html" class="logo">
+          <span class="logo-icon">📚</span> Educa y Juega
+        </a>
+        <button class="menu-toggle" aria-label="Menú">☰</button>
+                  <nav class="nav-menu">
+            <a href="index.html">🏠 Inicio</a>
+            <a href="hora-mundial.html">🕐 Hora Mundial</a>
+            <a href="dados.html">🎲 Dados</a>
+            <a href="ruleta.html">🎰 Ruleta</a>
+            <a href="ruleta-preguntas.html">❓ Ruleta Preguntas</a>
+            <a href="temporizador.html">⏱️ Temporizador</a>
+            <a href="cronometro.html">⏱ Cronómetro</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="vocabulario.html">📝 Vocabulario</a>
+            <a href="conjugador.html">📝 Conjugador</a>
+            <a href="ejercicios.html">➕ Ejercicios</a>
+            <a href="fracciones.html">🍕 Fracciones</a>
+            <a href="tablas.html">✖️ Tablas</a>
+            <a href="calculadora.html">🧮 Calculadora</a>
+            <a href="calculadora-areas.html">📐 Calcular Áreas</a>
+            <a href="geometria.html">📐 Geometría</a>
+            <a href="convertidor.html">🔄 Convertir</a>
+            <a href="recta-numerica.html">📏 Recta</a>
+            <a href="linea-tiempo.html">⏳ Línea Tiempo</a>
+            <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
+            <a href="sistema-solar.html">🌍 Sistema Solar</a>
+            <a href="ciclo-agua.html">💧 Ciclo Agua</a>
+            <a href="cuerpo-humano.html">🧍 Cuerpo Humano</a>
+            <a href="grupos.html">👥 Grupos</a>
+            <a href="selector.html">🎯 Selector</a>
+            <a href="asistencias.html">📋 Asistencias</a>
+            <a href="horario.html">📅 Horario</a>
+            <a href="normas-aula.html">📜 Normas</a>
+            <a href="pizarra.html">🖍️ Pizarra</a>
+            <a href="bolsa-premios.html">🎁 Premios</a>
+            <a href="puntos.html">🏆 Puntos</a>
+            <a href="aciertos.html">✅ Aciertos</a>
+            <a href="ajedrez.html">♟️ Ajedrez</a>
+            <a href="bingo.html">🎱 Bingo</a>
+            <a href="buscaminas.html">💣 Buscaminas</a>
+            <a href="crucigrama.html">✏️ Crucigrama</a>
+            <a href="damas.html">🟡 Damas</a>
+            <a href="laberinto.html">🌀 Laberinto</a>
+            <a href="memoria.html">🧠 Memoria</a>
+            <a href="piedra-papel.html">🪨 PPT</a>
+            <a href="sopa-letras.html">🔍 Sopa Letras</a>
+            <a href="sudoku.html">🔢 Sudoku</a>
+            <a href="tangram.html">🔺 Tangram</a>
+            <a href="tres-en-raya.html">⭕ Tres Raya</a>
+            <a href="contacto.html">📧 Contacto</a>
+            <a href="sobre-nosotros.html">ℹ️ Nosotros</a>
+            <a href="privacidad.html">🔒 Privacidad</a>
+          </nav>
+      </div>
+    </header>
+    <main>
+      <div class="tool-header">
+        <h1>📐 Geometría Interactiva</h1>
+        <p>Aprende las propiedades de las figuras geométricas</p>
+      </div>
+      <div class="tool-content">
+        <div class="figuras-grid">
+          <div class="figura-card" onclick="showInfo('triangulo')">
+            <svg viewBox="0 0 100 100">
+              <polygon points="50,10 10,90 90,90" fill="#06b6d4" />
+            </svg>
+            <h3>Triángulo</h3>
+          </div>
+          <div class="figura-card" onclick="showInfo('cuadrado')">
+            <svg viewBox="0 0 100 100">
+              <rect x="15" y="15" width="70" height="70" fill="#10b981" />
+            </svg>
+            <h3>Cuadrado</h3>
+          </div>
+          <div class="figura-card" onclick="showInfo('rectangulo')">
+            <svg viewBox="0 0 100 100">
+              <rect x="10" y="30" width="80" height="40" fill="#f59e0b" />
+            </svg>
+            <h3>Rectángulo</h3>
+          </div>
+          <div class="figura-card" onclick="showInfo('circulo')">
+            <svg viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="40" fill="#ec4899" />
+            </svg>
+            <h3>Círculo</h3>
+          </div>
+          <div class="figura-card" onclick="showInfo('pentagono')">
+            <svg viewBox="0 0 100 100">
+              <polygon points="50,10 95,38 77,90 23,90 5,38" fill="#8b5cf6" />
+            </svg>
+            <h3>Pentágono</h3>
+          </div>
+          <div class="figura-card" onclick="showInfo('hexagono')">
+            <svg viewBox="0 0 100 100">
+              <polygon
+                points="25,10 75,10 100,50 75,90 25,90 0,50"
+                fill="#6366f1"
+              />
+            </svg>
+            <h3>Hexágono</h3>
+          </div>
+        </div>
+        <div class="info-panel" id="infoPanel">
+          <h3>Selecciona una figura para ver sus propiedades</h3>
+        </div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-links">
+          <a href="contacto.html">📧 Contacto</a>
+          <a href="privacidad.html">🔒 Política de Privacidad</a>
+          <a href="sobre-nosotros.html">ℹ️ Sobre Nosotros</a>
+        </div>
+        <p class="footer-copy">
+          &copy; 2026 Educa y Juega. Herramientas educativas gratuitas
+          para profesores.
+        </p>
+      </div>
+    </footer>
+    <script>
+      const data = {
+        triangulo: {
+          nombre: "Triángulo",
+          lados: 3,
+          angulos: "3 (suma 180°)",
+          formulaArea: "(b × h) / 2",
+          formulaPerimetro: "b + c1 + c2",
+          inputs: [
+            { label: "Base (b)", id: "base" },
+            { label: "Altura (h)", id: "altura" },
+            { label: "Lado c1", id: "lado1" },
+            { label: "Lado c2", id: "lado2" },
+          ],
+        },
+        cuadrado: {
+          nombre: "Cuadrado",
+          lados: 4,
+          angulos: "4 ángulos rectos (90°)",
+          formulaArea: "lado²",
+          formulaPerimetro: "4 × lado",
+          inputs: [{ label: "Lado", id: "lado" }],
+        },
+        rectangulo: {
+          nombre: "Rectángulo",
+          lados: 4,
+          angulos: "4 ángulos rectos (90°)",
+          formulaArea: "base × altura",
+          formulaPerimetro: "2 × (base + altura)",
+          inputs: [
+            { label: "Base", id: "base" },
+            { label: "Altura", id: "altura" },
+          ],
+        },
+        circulo: {
+          nombre: "Círculo",
+          lados: 0,
+          angulos: "360°",
+          formulaArea: "π × r²",
+          formulaPerimetro: "2 × π × r",
+          inputs: [{ label: "Radio (r)", id: "radio" }],
+        },
+        pentagono: {
+          nombre: "Pentágono",
+          lados: 5,
+          angulos: "5 (suma 540°)",
+          formulaArea: "(P × a) / 2",
+          formulaPerimetro: "5 × lado",
+          inputs: [
+            { label: "Lado", id: "lado" },
+            { label: "Apotema (a)", id: "apotema" },
+          ],
+        },
+        hexagono: {
+          nombre: "Hexágono",
+          lados: 6,
+          angulos: "6 (suma 720°)",
+          formulaArea: "(P × a) / 2",
+          formulaPerimetro: "6 × lado",
+          inputs: [
+            { label: "Lado", id: "lado" },
+            { label: "Apotema (a)", id: "apotema" },
+          ],
+        },
+      };
+      function showInfo(figura) {
+        const d = data[figura];
+        let html = `<h2>${d.nombre}</h2>`;
+        html += `<p><strong>Lados:</strong> ${d.lados}</p>`;
+        html += `<p><strong>Ángulos:</strong> ${d.angulos}</p>`;
+        html += `<p><strong>Fórmula Área:</strong> ${d.formulaArea}</p>`;
+        html += `<p><strong>Fórmula Perímetro:</strong> ${d.formulaPerimetro}</p>`;
+        html += `<div class="calc-inputs">`;
+        d.inputs.forEach((input) => {
+          html += `<div><label>${input.label}</label><input type="number" id="${figura}_${input.id}" placeholder="${input.label}"></div>`;
+        });
+        html += `</div>`;
+        html += `<button class="btn" onclick="calcular${figura.charAt(0).toUpperCase() + figura.slice(1)}()">Calcular Área y Perímetro</button>`;
+        html += `<div class="resultado-calc" id="resultado_${figura}"></div>`;
+        document.getElementById("infoPanel").innerHTML = html;
+      }
+      function calcularTriangulo() {
+        const base =
+          parseFloat(document.getElementById("triangulo_base").value) || 0;
+        const altura =
+          parseFloat(document.getElementById("triangulo_altura").value) || 0;
+        const lado1 =
+          parseFloat(document.getElementById("triangulo_lado1").value) || 0;
+        const lado2 =
+          parseFloat(document.getElementById("triangulo_lado2").value) || 0;
+        const area = (base * altura) / 2;
+        const perimetro = base + lado1 + lado2;
+        document.getElementById("resultado_triangulo").innerHTML =
+          `Área: ${area.toFixed(2)}<br>Perímetro: ${perimetro.toFixed(2)}`;
+      }
+      function calcularCuadrado() {
+        const lado =
+          parseFloat(document.getElementById("cuadrado_lado").value) || 0;
+        const area = lado * lado;
+        const perimetro = 4 * lado;
+        document.getElementById("resultado_cuadrado").innerHTML =
+          `Área: ${area.toFixed(2)}<br>Perímetro: ${perimetro.toFixed(2)}`;
+      }
+      function calcularRectangulo() {
+        const base =
+          parseFloat(document.getElementById("rectangulo_base").value) || 0;
+        const altura =
+          parseFloat(document.getElementById("rectangulo_altura").value) || 0;
+        const area = base * altura;
+        const perimetro = 2 * (base + altura);
+        document.getElementById("resultado_rectangulo").innerHTML =
+          `Área: ${area.toFixed(2)}<br>Perímetro: ${perimetro.toFixed(2)}`;
+      }
+      function calcularCirculo() {
+        const radio =
+          parseFloat(document.getElementById("circulo_radio").value) || 0;
+        const area = Math.PI * radio * radio;
+        const perimetro = 2 * Math.PI * radio;
+        document.getElementById("resultado_circulo").innerHTML =
+          `Área: ${area.toFixed(2)}<br>Perímetro: ${perimetro.toFixed(2)}`;
+      }
+      function calcularPentagono() {
+        const lado =
+          parseFloat(document.getElementById("pentagono_lado").value) || 0;
+        const apotema =
+          parseFloat(document.getElementById("pentagono_apotema").value) || 0;
+        const perimetro = 5 * lado;
+        const area = (perimetro * apotema) / 2;
+        document.getElementById("resultado_pentagono").innerHTML =
+          `Área: ${area.toFixed(2)}<br>Perímetro: ${perimetro.toFixed(2)}`;
+      }
+      function calcularHexagono() {
+        const lado =
+          parseFloat(document.getElementById("hexagono_lado").value) || 0;
+        const apotema =
+          parseFloat(document.getElementById("hexagono_apotema").value) || 0;
+        const perimetro = 6 * lado;
+        const area = (perimetro * apotema) / 2;
+        document.getElementById("resultado_hexagono").innerHTML =
+          `Área: ${area.toFixed(2)}<br>Perímetro: ${perimetro.toFixed(2)}`;
+      }
+    </script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

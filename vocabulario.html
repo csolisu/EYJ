@@ -1,0 +1,559 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestor de Vocabulario | Educa y Juega</title>
+    <meta name="description" content="Gestor de vocabulario interactivo. Crea listas de palabras con definiciones y ejemplos." />
+    <meta name="keywords" content="vocabulario, gestor de vocabulario, listas de palabras, definiciones, aprendizaje" />
+    <link rel="canonical" href="https://educayjuega.com/vocabulario.html" />
+    <meta property="og:title" content="Gestor de Vocabulario | Educa y Juega" />
+    <meta property="og:description" content="Gestor de vocabulario interactivo. Crea listas de palabras con definiciones y ejemplos." />
+    <meta property="og:url" content="https://educayjuega.com/vocabulario.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://educayjuega.com/favicon.svg" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Gestor de Vocabulario | Educa y Juega" />
+    <meta name="twitter:description" content="Gestor de vocabulario interactivo. Crea listas de palabras con definiciones y ejemplos." />
+
+<link rel="stylesheet" href="css/styles.css" />
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+    <style>
+      .tool-header {
+        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        color: white;
+        padding: 2rem 1rem;
+        text-align: center;
+      }
+      .tool-header h1 {
+        color: white;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+      .tool-content {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+      }
+      .vocab-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+      }
+      @media (max-width: 768px) {
+        .vocab-container {
+          grid-template-columns: 1fr;
+        }
+      }
+      .panel {
+        background: white;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        box-shadow: var(--shadow);
+      }
+      .panel h3 {
+        margin-bottom: 1rem;
+        color: var(--dark);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .word-input {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+      .word-input input {
+        flex: 1;
+        padding: 0.75rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+      }
+      .word-input input:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+      .vocab-list {
+        max-height: 400px;
+        overflow-y: auto;
+      }
+      .vocab-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem;
+        border-bottom: 1px solid #e5e7eb;
+        background: #f9fafb;
+        margin-bottom: 0.5rem;
+        border-radius: 0.5rem;
+      }
+      .vocab-item:last-child {
+        border-bottom: none;
+      }
+      .vocab-term {
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .vocab-definition {
+        color: var(--gray);
+        font-size: 0.9rem;
+      }
+      .vocab-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+      .vocab-actions button {
+        padding: 0.25rem 0.5rem;
+        border: none;
+        border-radius: 0.25rem;
+        cursor: pointer;
+        font-size: 0.9rem;
+      }
+      .vocab-actions .edit-btn {
+        background: var(--primary);
+        color: white;
+      }
+      .vocab-actions .delete-btn {
+        background: var(--accent-red, #ef4444);
+        color: white;
+      }
+      .mode-selector {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+      }
+      .mode-btn {
+        flex: 1;
+        padding: 1rem;
+        border: 2px solid #e5e7eb;
+        background: white;
+        border-radius: 0.75rem;
+        cursor: pointer;
+        text-align: center;
+        transition: all 0.2s;
+        font-weight: 500;
+      }
+      .mode-btn:hover {
+        border-color: var(--primary);
+      }
+      .mode-btn.active {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: white;
+      }
+      .study-area {
+        background: white;
+        border-radius: 1rem;
+        padding: 2rem;
+        box-shadow: var(--shadow);
+        text-align: center;
+        min-height: 300px;
+      }
+      .flashcard {
+        background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+        border-radius: 1rem;
+        padding: 3rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        min-height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .flashcard:hover {
+        transform: scale(1.02);
+        box-shadow: var(--shadow-lg);
+      }
+      .flashcard-content {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--dark);
+      }
+      .flashcard.revealed .flashcard-content {
+        color: var(--primary);
+      }
+      .study-progress {
+        margin-top: 1rem;
+        font-size: 0.9rem;
+        color: var(--gray);
+      }
+      .study-controls {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1.5rem;
+      }
+      .test-mode {
+        display: none;
+      }
+      .test-mode.active {
+        display: block;
+      }
+      .test-item {
+        text-align: left;
+        padding: 1.5rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 1rem;
+        margin-bottom: 1rem;
+      }
+      .test-question {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+      }
+      .test-answer {
+        background: #f3f4f6;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-top: 1rem;
+        display: none;
+      }
+      .test-answer.visible {
+        display: block;
+      }
+      .test-answer.correct {
+        background: #d1fae5;
+        border: 2px solid #10b981;
+      }
+      .empty-state {
+        text-align: center;
+        padding: 2rem;
+        color: var(--gray);
+      }
+      .import-export {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        flex-wrap: wrap;
+      }
+      .import-export button {
+        flex: 1;
+        padding: 0.5rem;
+        font-size: 0.9rem;
+      }
+    </style>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Gestor de Vocabulario | Educa y Juega",
+    "url": "https://educayjuega.com/vocabulario.html",
+    "description": "Gestor de vocabulario interactivo. Crea listas de palabras con definiciones y ejemplos.",
+    "inLanguage": "es-ES"
+  }
+  </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-container">
+        <a href="index.html" class="logo">
+          <span class="logo-icon">📚</span> Educa y Juega
+        </a>
+        <button class="menu-toggle" aria-label="Menú">☰</button>
+                  <nav class="nav-menu">
+            <a href="index.html">🏠 Inicio</a>
+            <a href="hora-mundial.html">🕐 Hora Mundial</a>
+            <a href="dados.html">🎲 Dados</a>
+            <a href="ruleta.html">🎰 Ruleta</a>
+            <a href="ruleta-preguntas.html">❓ Ruleta Preguntas</a>
+            <a href="temporizador.html">⏱️ Temporizador</a>
+            <a href="cronometro.html">⏱ Cronómetro</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="vocabulario.html">📝 Vocabulario</a>
+            <a href="conjugador.html">📝 Conjugador</a>
+            <a href="ejercicios.html">➕ Ejercicios</a>
+            <a href="fracciones.html">🍕 Fracciones</a>
+            <a href="tablas.html">✖️ Tablas</a>
+            <a href="calculadora.html">🧮 Calculadora</a>
+            <a href="calculadora-areas.html">📐 Calcular Áreas</a>
+            <a href="geometria.html">📐 Geometría</a>
+            <a href="convertidor.html">🔄 Convertir</a>
+            <a href="recta-numerica.html">📏 Recta</a>
+            <a href="linea-tiempo.html">⏳ Línea Tiempo</a>
+            <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
+            <a href="sistema-solar.html">🌍 Sistema Solar</a>
+            <a href="ciclo-agua.html">💧 Ciclo Agua</a>
+            <a href="cuerpo-humano.html">🧍 Cuerpo Humano</a>
+            <a href="grupos.html">👥 Grupos</a>
+            <a href="selector.html">🎯 Selector</a>
+            <a href="asistencias.html">📋 Asistencias</a>
+            <a href="horario.html">📅 Horario</a>
+            <a href="normas-aula.html">📜 Normas</a>
+            <a href="pizarra.html">🖍️ Pizarra</a>
+            <a href="bolsa-premios.html">🎁 Premios</a>
+            <a href="puntos.html">🏆 Puntos</a>
+            <a href="aciertos.html">✅ Aciertos</a>
+            <a href="ajedrez.html">♟️ Ajedrez</a>
+            <a href="bingo.html">🎱 Bingo</a>
+            <a href="buscaminas.html">💣 Buscaminas</a>
+            <a href="crucigrama.html">✏️ Crucigrama</a>
+            <a href="damas.html">🟡 Damas</a>
+            <a href="laberinto.html">🌀 Laberinto</a>
+            <a href="memoria.html">🧠 Memoria</a>
+            <a href="piedra-papel.html">🪨 PPT</a>
+            <a href="sopa-letras.html">🔍 Sopa Letras</a>
+            <a href="sudoku.html">🔢 Sudoku</a>
+            <a href="tangram.html">🔺 Tangram</a>
+            <a href="tres-en-raya.html">⭕ Tres Raya</a>
+            <a href="contacto.html">📧 Contacto</a>
+            <a href="sobre-nosotros.html">ℹ️ Nosotros</a>
+            <a href="privacidad.html">🔒 Privacidad</a>
+          </nav>
+      </div>
+    </header>
+    <main>
+      <div class="tool-header">
+        <h1>📝 Gestor de Vocabulario</h1>
+        <p>Crea listas de palabras y estudio interactivo</p>
+      </div>
+      <div class="tool-content">
+        <div class="mode-selector">
+          <button
+            class="mode-btn active"
+            onclick="setMode('create')"
+            id="createModeBtn"
+          >
+            ✏️ Crear Lista
+          </button>
+          <button class="mode-btn" onclick="setMode('study')" id="studyModeBtn">
+            📚 Estudio
+          </button>
+          <button class="mode-btn" onclick="setMode('test')" id="testModeBtn">
+            ✅ Prueba
+          </button>
+        </div>
+        <div class="vocab-container">
+          <div class="panel" id="createPanel">
+            <h3>📋 Mi Lista de Vocabulario</h3>
+            <div class="word-input">
+              <input
+                type="text"
+                id="termInput"
+                placeholder="Término"
+                onkeypress="if (event.key === 'Enter') addWord();"
+              />
+              <input
+                type="text"
+                id="defInput"
+                placeholder="Definición"
+                onkeypress="if (event.key === 'Enter') addWord();"
+              />
+              <button class="btn" onclick="addWord()">Agregar</button>
+            </div>
+            <div class="vocab-list" id="vocabList">
+              <div class="empty-state">
+                No hay palabras aún. ¡Agrega tu primera palabra!
+              </div>
+            </div>
+            <div class="import-export">
+              <button class="btn btn-secondary" onclick="exportList()">
+                ⬇️ Exportar
+              </button>
+              <button
+                class="btn btn-secondary"
+                onclick="document.getElementById('importFile').click()"
+              >
+                ⬆️ Importar
+              </button>
+              <input
+                type="file"
+                id="importFile"
+                accept=".json"
+                style="display: none"
+                onchange="importList(event)"
+              />
+            </div>
+          </div>
+          <div class="panel study-area" id="studyPanel">
+            <div id="studyContent">
+              <div class="empty-state">
+                Agrega palabras y selecciona un modo de estudio
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-links">
+          <a href="contacto.html">📧 Contacto</a>
+          <a href="privacidad.html">🔒 Política de Privacidad</a>
+          <a href="sobre-nosotros.html">ℹ️ Sobre Nosotros</a>
+        </div>
+        <p class="footer-copy">
+          &copy; 2026 Educa y Juega. Herramientas educativas gratuitas
+          para profesores.
+        </p>
+      </div>
+    </footer>
+    <script>
+      let vocabulary = JSON.parse(localStorage.getItem("vocabulary") || "[]");
+      let currentMode = "create";
+      let currentIndex = 0;
+      let shuffled = [];
+      function saveVocab() {
+        localStorage.setItem("vocabulary", JSON.stringify(vocabulary));
+      }
+      function renderList() {
+        const list = document.getElementById("vocabList");
+        if (vocabulary.length === 0) {
+          list.innerHTML =
+            '<div class="empty-state">No hay palabras aún. ¡Agrega tu primera palabra!</div>';
+          return;
+        }
+        list.innerHTML = vocabulary
+          .map(
+            (item, i) =>
+              `
+<div class="vocab-item">
+<div>
+<div class="vocab-term">${item.term}</div>
+<div class="vocab-definition">${item.definition}</div>
+</div>
+<div class="vocab-actions">
+<button class="edit-btn" onclick="editWord(${i})">✏️</button>
+<button class="delete-btn" onclick="deleteWord(${i})">🗑️</button>
+</div>
+</div>
+`,
+          )
+          .join("");
+      }
+      function addWord() {
+        const term = document.getElementById("termInput").value.trim();
+        const def = document.getElementById("defInput").value.trim();
+        if (term && def) {
+          vocabulary.push({ term, definition: def });
+          saveVocab();
+          document.getElementById("termInput").value = "";
+          document.getElementById("defInput").value = "";
+          document.getElementById("termInput").focus();
+          renderList();
+        }
+      }
+      function deleteWord(index) {
+        vocabulary.splice(index, 1);
+        saveVocab();
+        renderList();
+      }
+      function editWord(index) {
+        const item = vocabulary[index];
+        const newTerm = prompt("Editar término:", item.term);
+        const newDef = prompt("Editar definición:", item.definition);
+        if (newTerm && newDef) {
+          vocabulary[index] = { term: newTerm, definition: newDef };
+          saveVocab();
+          renderList();
+        }
+      }
+      function setMode(mode) {
+        currentMode = mode;
+        document
+          .querySelectorAll(".mode-btn")
+          .forEach((btn) => btn.classList.remove("active"));
+        document.getElementById(mode + "ModeBtn").classList.add("active");
+        if (mode === "study") showStudyMode();
+        else if (mode === "test") showTestMode();
+        else renderList();
+      }
+      function showStudyMode() {
+        const content = document.getElementById("studyContent");
+        if (vocabulary.length === 0) {
+          content.innerHTML =
+            '<div class="empty-state">Agrega palabras primero para estudiar</div>';
+          return;
+        }
+        currentIndex = 0;
+        shuffled = [...vocabulary].sort(() => Math.random() - 0.5);
+        renderFlashcard();
+      }
+      function renderFlashcard() {
+        const content = document.getElementById("studyContent");
+        const item = shuffled[currentIndex];
+        content.innerHTML = `
+<div class="flashcard" onclick="this.classList.toggle('revealed')">
+<div class="flashcard-content">${item.term}</div>
+</div>
+<div class="study-progress">${currentIndex + 1} / ${shuffled.length}</div>
+<div class="study-controls">
+<button class="btn" onclick="prevCard()">⬅️ Anterior</button>
+<button class="btn btn-secondary" onclick="shuffleCards()">🔀 Mezclar</button>
+<button class="btn" onclick="nextCard()">Siguiente ➡️</button>
+</div>
+`;
+      }
+      function nextCard() {
+        if (currentIndex < shuffled.length - 1) {
+          currentIndex++;
+          renderFlashcard();
+        }
+      }
+      function prevCard() {
+        if (currentIndex > 0) {
+          currentIndex--;
+          renderFlashcard();
+        }
+      }
+      function shuffleCards() {
+        shuffled = [...vocabulary].sort(() => Math.random() - 0.5);
+        currentIndex = 0;
+        renderFlashcard();
+      }
+      function showTestMode() {
+        const content = document.getElementById("studyContent");
+        if (vocabulary.length === 0) {
+          content.innerHTML =
+            '<div class="empty-state">Agrega palabras primero para hacer la prueba</div>';
+          return;
+        }
+        shuffled = [...vocabulary].sort(() => Math.random() - 0.5);
+        content.innerHTML = shuffled
+          .map(
+            (item, i) =>
+              `
+<div class="test-item">
+<div class="test-question">${i + 1}. ${item.term}</div>
+<button class="btn" onclick="this.style.display='none'; document.getElementById('answer-${i}').classList.add('visible')">Mostrar Respuesta</button>
+<div class="test-answer" id="answer-${i}">${item.definition}</div>
+</div>
+`,
+          )
+          .join("");
+      }
+      function exportList() {
+        const data = JSON.stringify(vocabulary, null, 2);
+        const blob = new Blob([data], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "vocabulario.json";
+        a.click();
+      }
+      function importList(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          try {
+            const imported = JSON.parse(e.target.result);
+            if (Array.isArray(imported)) {
+              vocabulary = [...vocabulary, ...imported];
+              saveVocab();
+              renderList();
+              alert(`Se importaron ${imported.length} palabras`);
+            }
+          } catch (err) {
+            alert("Error al importar archivo");
+          }
+        };
+        reader.readAsText(file);
+      }
+      renderList();
+    </script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,686 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tabla Periódica Interactiva | Educa y Juega</title>
+    <meta name="description" content="Tabla periódica interactiva de elementos químicos. Consulta cada elemento con información detallada." />
+    <meta name="keywords" content="tabla periódica, elementos químicos, química, tabla periódica interactiva" />
+    <link rel="canonical" href="https://educayjuega.com/tabla-periodica.html" />
+    <meta property="og:title" content="Tabla Periódica Interactiva | Educa y Juega" />
+    <meta property="og:description" content="Tabla periódica interactiva de elementos químicos. Consulta cada elemento con información detallada." />
+    <meta property="og:url" content="https://educayjuega.com/tabla-periodica.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://educayjuega.com/favicon.svg" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Tabla Periódica Interactiva | Educa y Juega" />
+    <meta name="twitter:description" content="Tabla periódica interactiva de elementos químicos. Consulta cada elemento con información detallada." />
+
+    <link rel="stylesheet" href="css/styles.css" />
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+    <style>
+      .tool-header h1 {
+        color: white;
+      }
+      .tool-header {
+        background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+      .tool-content {
+        padding: 1rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .tabla-container {
+        perspective: 1200px;
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 2rem;
+      }
+      .tabla {
+        display: grid;
+        grid-template-columns: repeat(18, minmax(45px, 60px));
+        grid-template-rows: repeat(10, minmax(45px, 60px));
+        gap: 4px;
+        width: fit-content;
+        margin: 0 auto;
+      }
+      .elemento {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        transform-style: preserve-3d;
+        box-shadow:
+          0 1px 3px rgba(0, 0, 0, 0.12),
+          0 1px 2px rgba(0, 0, 0, 0.24);
+        position: relative;
+        background: #fff;
+        color: #1f2937;
+        text-decoration: none;
+        user-select: none;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+      }
+      .elemento:hover,
+      .elemento.active {
+        transform: scale(1.2) translateZ(30px);
+        z-index: 10;
+        box-shadow:
+          0 15px 35px rgba(0, 0, 0, 0.3),
+          0 5px 15px rgba(0, 0, 0, 0.22);
+        filter: brightness(1.05);
+        outline: 2px solid white;
+      }
+      .elemento .num {
+        font-size: 0.65rem;
+        position: absolute;
+        top: 2px;
+        left: 4px;
+        opacity: 0.8;
+        font-weight: 800;
+      }
+      .elemento .mass {
+        font-size: 0.55rem;
+        position: absolute;
+        bottom: 2px;
+        opacity: 0.8;
+        font-weight: 600;
+      }
+      .elemento .sim {
+        font-weight: 900;
+        font-size: 1.2rem;
+        margin-top: 2px;
+        text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+      } /* Categorías */
+      .cat-alkali {
+        background: #fca5a5;
+      }
+      .cat-alkaline {
+        background: #fdba74;
+      }
+      .cat-transition {
+        background: #fcd34d;
+      }
+      .cat-post-transition {
+        background: #a7f3d0;
+      }
+      .cat-metalloid {
+        background: #6ee7b7;
+      }
+      .cat-nonmetal {
+        background: #93c5fd;
+      }
+      .cat-halogen {
+        background: #c4b5fd;
+      }
+      .cat-noble {
+        background: #d8b4fe;
+      }
+      .cat-lanthanide {
+        background: #f9a8d4;
+      }
+      .cat-actinide {
+        background: #fbcfe8;
+      }
+      .cat-unknown {
+        background: #e5e7eb;
+      } /* Panel Informativo */
+      .info-panel {
+        grid-column: 3 / 13;
+        grid-row: 1 / 4;
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        display: flex;
+        overflow: hidden;
+        border: 2px solid #e5e7eb;
+        opacity: 0;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        pointer-events: none;
+        transform: translateY(20px) scale(0.95);
+      }
+      .info-panel.visible {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0) scale(1);
+      }
+      .info-left {
+        width: 35%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        padding: 1.5rem;
+        transition: background 0.3s;
+      }
+      .info-left .info-num {
+        font-size: 1.5rem;
+        font-weight: bold;
+        opacity: 0.9;
+      }
+      .info-left .info-sim {
+        font-size: 4.5rem;
+        font-weight: 900;
+        line-height: 1;
+        margin: 0.5rem 0;
+        text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+      .info-left .info-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        text-align: center;
+        line-height: 1.2;
+      }
+      .info-left .info-mass {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin-top: 0.5rem;
+        font-weight: 600;
+      }
+      .info-right {
+        width: 65%;
+        padding: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        background: #f8fafc;
+      }
+      .info-data {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .info-data p {
+        margin: 0.4rem 0;
+        font-size: 1rem;
+        color: #4b5563;
+      }
+      .info-data strong {
+        color: #1f2937;
+        display: inline-block;
+        width: 120px;
+      }
+      .info-cat {
+        display: inline-block;
+        padding: 0.3rem 0.8rem;
+        border-radius: 6px;
+        font-weight: bold;
+        font-size: 0.9rem;
+        margin-top: 1rem;
+        text-align: center;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      } /* Animación del Átomo */
+      .atom-container {
+        width: 140px;
+        height: 140px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.05);
+      }
+      .nucleus {
+        width: 20px;
+        height: 20px;
+        background: radial-gradient(circle at 30% 30%, #ef4444, #991b1b);
+        border-radius: 50%;
+        box-shadow: 0 0 15px rgba(239, 68, 68, 0.6);
+        z-index: 10;
+      }
+      .orbit {
+        position: absolute;
+        border: 2px solid rgba(99, 102, 241, 0.15);
+        border-radius: 50%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        animation: spin linear infinite;
+      }
+      .electron {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: #3b82f6;
+        border-radius: 50%;
+        box-shadow:
+          0 0 8px #3b82f6,
+          0 0 4px white inset;
+        margin-top: -4px;
+        margin-left: -4px;
+      }
+      @keyframes spin {
+        100% {
+          transform: translate(-50%, -50%) rotate(360deg);
+        }
+      } /* Leyenda */
+      .leyenda {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 2rem;
+        padding: 1.5rem;
+        background: #f8fafc;
+        border-radius: 1rem;
+        border: 1px solid #e2e8f0;
+        width: 100%;
+      }
+      .leyenda-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #475569;
+      }
+      .leyenda-color {
+        width: 20px;
+        height: 20px;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      @media (max-width: 1024px) {
+        .tabla {
+          grid-template-columns: repeat(18, minmax(30px, 40px));
+          grid-template-rows: repeat(10, minmax(30px, 40px));
+        }
+        .info-panel {
+          grid-column: 2 / 14;
+        }
+      }
+    </style>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Tabla Periódica Interactiva | Educa y Juega",
+    "url": "https://educayjuega.com/tabla-periodica.html",
+    "description": "Tabla periódica interactiva de elementos químicos. Consulta cada elemento con información detallada.",
+    "inLanguage": "es-ES"
+  }
+  </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-container">
+        <a href="index.html" class="logo">
+          <span class="logo-icon">📚</span> Educa y Juega
+        </a>
+        <button class="menu-toggle" aria-label="Menú">☰</button>
+                  <nav class="nav-menu">
+            <a href="index.html">🏠 Inicio</a>
+            <a href="hora-mundial.html">🕐 Hora Mundial</a>
+            <a href="dados.html">🎲 Dados</a>
+            <a href="ruleta.html">🎰 Ruleta</a>
+            <a href="ruleta-preguntas.html">❓ Ruleta Preguntas</a>
+            <a href="temporizador.html">⏱️ Temporizador</a>
+            <a href="cronometro.html">⏱ Cronómetro</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="vocabulario.html">📝 Vocabulario</a>
+            <a href="conjugador.html">📝 Conjugador</a>
+            <a href="ejercicios.html">➕ Ejercicios</a>
+            <a href="fracciones.html">🍕 Fracciones</a>
+            <a href="tablas.html">✖️ Tablas</a>
+            <a href="calculadora.html">🧮 Calculadora</a>
+            <a href="calculadora-areas.html">📐 Calcular Áreas</a>
+            <a href="geometria.html">📐 Geometría</a>
+            <a href="convertidor.html">🔄 Convertir</a>
+            <a href="recta-numerica.html">📏 Recta</a>
+            <a href="linea-tiempo.html">⏳ Línea Tiempo</a>
+            <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
+            <a href="sistema-solar.html">🌍 Sistema Solar</a>
+            <a href="ciclo-agua.html">💧 Ciclo Agua</a>
+            <a href="cuerpo-humano.html">🧍 Cuerpo Humano</a>
+            <a href="grupos.html">👥 Grupos</a>
+            <a href="selector.html">🎯 Selector</a>
+            <a href="asistencias.html">📋 Asistencias</a>
+            <a href="horario.html">📅 Horario</a>
+            <a href="normas-aula.html">📜 Normas</a>
+            <a href="pizarra.html">🖍️ Pizarra</a>
+            <a href="bolsa-premios.html">🎁 Premios</a>
+            <a href="puntos.html">🏆 Puntos</a>
+            <a href="aciertos.html">✅ Aciertos</a>
+            <a href="ajedrez.html">♟️ Ajedrez</a>
+            <a href="bingo.html">🎱 Bingo</a>
+            <a href="buscaminas.html">💣 Buscaminas</a>
+            <a href="crucigrama.html">✏️ Crucigrama</a>
+            <a href="damas.html">🟡 Damas</a>
+            <a href="laberinto.html">🌀 Laberinto</a>
+            <a href="memoria.html">🧠 Memoria</a>
+            <a href="piedra-papel.html">🪨 PPT</a>
+            <a href="sopa-letras.html">🔍 Sopa Letras</a>
+            <a href="sudoku.html">🔢 Sudoku</a>
+            <a href="tangram.html">🔺 Tangram</a>
+            <a href="tres-en-raya.html">⭕ Tres Raya</a>
+            <a href="contacto.html">📧 Contacto</a>
+            <a href="sobre-nosotros.html">ℹ️ Nosotros</a>
+            <a href="privacidad.html">🔒 Privacidad</a>
+          </nav>
+      </div>
+    </header>
+    <main>
+      <div class="tool-header">
+        <h1>⚛️ Tabla Periódica Pro</h1>
+        <p>
+          Pasa el ratón sobre un elemento para explorarlo. Haz clic para fijar
+          la información.
+        </p>
+      </div>
+      <div class="tool-content">
+        <div class="tabla-container">
+          <div class="tabla" id="tabla">
+            <!-- Panel Info Dinámico dentro del Grid -->
+            <div class="info-panel" id="info-panel">
+              <div class="info-left" id="info-left">
+                <span class="info-num" id="i-num">1</span>
+                <span class="info-sim" id="i-sim">H</span>
+                <span class="info-name" id="i-name">Hidrógeno</span>
+                <span class="info-mass" id="i-mass">1.008</span>
+              </div>
+              <div class="info-right">
+                <div class="info-data">
+                  <p>
+                    <strong>Categoría:</strong>
+                    <span id="i-cat" class="info-cat">No metal</span>
+                  </p>
+                  <p><strong>Estado:</strong> <span id="i-phase">Gas</span></p>
+                  <p>
+                    <strong>Electrones/Capa:</strong>
+                    <span id="i-shells">1</span>
+                  </p>
+                </div>
+                <div class="atom-container" id="atom-container">
+                  <!-- Animación Atómica -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="leyenda" id="leyenda"></div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-links">
+          <a href="contacto.html">📧 Contacto</a>
+          <a href="privacidad.html">🔒 Política de Privacidad</a>
+          <a href="sobre-nosotros.html">ℹ️ Sobre Nosotros</a>
+        </div>
+        <p class="footer-copy">
+          &copy; 2026 Educa y Juega. Herramientas educativas gratuitas
+          para profesores.
+        </p>
+      </div>
+    </footer>
+    <script src="js/elementos.js"></script>
+    <script>
+      const catMap = {
+        "diatomic nonmetal": { id: "cat-nonmetal", name: "No metal diatómico" },
+        "polyatomic nonmetal": {
+          id: "cat-nonmetal",
+          name: "No metal poliatómico",
+        },
+        "noble gas": { id: "cat-noble", name: "Gas noble" },
+        "alkali metal": { id: "cat-alkali", name: "Metal alcalino" },
+        "alkaline earth metal": { id: "cat-alkaline", name: "Alcalinotérreo" },
+        metalloid: { id: "cat-metalloid", name: "Metaloide" },
+        "post-transition metal": {
+          id: "cat-post-transition",
+          name: "Metal del bloque p",
+        },
+        "transition metal": {
+          id: "cat-transition",
+          name: "Metal de transición",
+        },
+        lanthanide: { id: "cat-lanthanide", name: "Lantánido" },
+        actinide: { id: "cat-actinide", name: "Actínido" },
+      };
+      const nombresES = {
+        Hydrogen: "Hidrógeno",
+        Helium: "Helio",
+        Lithium: "Litio",
+        Beryllium: "Berilio",
+        Boron: "Boro",
+        Carbon: "Carbono",
+        Nitrogen: "Nitrógeno",
+        Oxygen: "Oxígeno",
+        Fluorine: "Flúor",
+        Neon: "Neón",
+        Sodium: "Sodio",
+        Magnesium: "Magnesio",
+        Aluminium: "Aluminio",
+        Silicon: "Silicio",
+        Phosphorus: "Fósforo",
+        Sulfur: "Azufre",
+        Chlorine: "Cloro",
+        Argon: "Argón",
+        Potassium: "Potasio",
+        Calcium: "Calcio",
+        Scandium: "Escandio",
+        Titanium: "Titanio",
+        Vanadium: "Vanadio",
+        Chromium: "Cromo",
+        Manganese: "Manganeso",
+        Iron: "Hierro",
+        Cobalt: "Cobalto",
+        Nickel: "Níquel",
+        Copper: "Cobre",
+        Zinc: "Zinc",
+        Gallium: "Galio",
+        Germanium: "Germanio",
+        Arsenic: "Arsénico",
+        Selenium: "Selenio",
+        Bromine: "Bromo",
+        Krypton: "Criptón",
+        Rubidium: "Rubidio",
+        Strontium: "Estroncio",
+        Yttrium: "Itrio",
+        Zirconium: "Circonio",
+        Niobium: "Niobio",
+        Molybdenum: "Molibdeno",
+        Technetium: "Tecnecio",
+        Ruthenium: "Rutenio",
+        Rhodium: "Rodio",
+        Palladium: "Paladio",
+        Silver: "Plata",
+        Cadmium: "Cadmio",
+        Indium: "Indio",
+        Tin: "Estaño",
+        Antimony: "Antimonio",
+        Tellurium: "Telurio",
+        Iodine: "Yodo",
+        Xenon: "Xenón",
+        Cesium: "Cesio",
+        Barium: "Bario",
+        Lanthanum: "Lantano",
+        Cerium: "Cerio",
+        Praseodymium: "Praseodimio",
+        Neodymium: "Neodimio",
+        Promethium: "Prometio",
+        Samarium: "Samario",
+        Europium: "Europio",
+        Gadolinium: "Gadolinio",
+        Terbium: "Terbio",
+        Dysprosium: "Disprosio",
+        Holmium: "Holmio",
+        Erbium: "Erbio",
+        Thulium: "Tulio",
+        Ytterbium: "Iterbio",
+        Lutetium: "Lutecio",
+        Hafnium: "Hafnio",
+        Tantalum: "Tántalo",
+        Tungsten: "Tungsteno",
+        Rhenium: "Renio",
+        Osmium: "Osmio",
+        Iridium: "Iridio",
+        Platinum: "Platino",
+        Gold: "Oro",
+        Mercury: "Mercurio",
+        Thallium: "Talio",
+        Lead: "Plomo",
+        Bismuth: "Bismuto",
+        Polonium: "Polonio",
+        Astatine: "Astato",
+        Radon: "Radón",
+        Francium: "Francio",
+        Radium: "Radio",
+        Actinium: "Actinio",
+        Thorium: "Torio",
+        Protactinium: "Protactinio",
+        Uranium: "Uranio",
+        Neptunium: "Neptunio",
+        Plutonium: "Plutonio",
+        Americium: "Americio",
+        Curium: "Curio",
+        Berkelium: "Berkelio",
+        Californium: "Californio",
+        Einsteinium: "Einstenio",
+        Fermium: "Fermio",
+        Mendelevium: "Mendelevio",
+        Nobelium: "Nobelio",
+        Lawrencium: "Lawrencio",
+        Rutherfordium: "Rutherfordio",
+        Dubnium: "Dubnio",
+        Seaborgium: "Seaborgio",
+        Bohrium: "Bohrio",
+        Hassium: "Hassio",
+        Meitnerium: "Meitnerio",
+        Darmstadtium: "Darmstadtio",
+        Roentgenium: "Roentgenio",
+        Copernicium: "Copernicio",
+        Nihonium: "Nihonio",
+        Flerovium: "Flerovio",
+        Moscovium: "Moscovio",
+        Livermorium: "Livermorio",
+        Tennessine: "Teneso",
+        Oganesson: "Oganesón",
+      };
+      function getCategoryInfo(cat) {
+        for (let key in catMap) {
+          if (cat.includes(key)) return catMap[key];
+        }
+        return { id: "cat-unknown", name: "Desconocido" };
+      }
+      const tablaEl = document.getElementById("tabla");
+      let lockedElement = null; // Renderizar leyenda
+      const leyendaEl = document.getElementById("leyenda");
+      const uniqueCats = new Set();
+      elementosData.slice(0, 118).forEach((e) => {
+        const catInfo = getCategoryInfo(e.cat);
+        if (!uniqueCats.has(catInfo.id) && catInfo.id !== "cat-unknown") {
+          uniqueCats.add(catInfo.id);
+          leyendaEl.innerHTML += `
+<div class="leyenda-item">
+<div class="leyenda-color ${catInfo.id}"></div>
+<span>${catInfo.name}</span>
+</div>
+`;
+        }
+        const div = document.createElement("div");
+        div.className = `elemento ${catInfo.id}`;
+        div.style.gridColumn = e.col;
+        div.style.gridRow = e.row;
+        div.innerHTML = `
+<span class="num">${e.num}</span>
+<span class="sim">${e.sym}</span>
+<span class="mass">${Math.round(e.mass * 10) / 10}</span>
+`;
+        div.addEventListener("mouseenter", () => {
+          if (!lockedElement) mostrarInfo(e, catInfo, div);
+        });
+        div.addEventListener("mouseleave", () => {
+          if (!lockedElement)
+            document.getElementById("info-panel").classList.remove("visible");
+        });
+        div.addEventListener("click", (ev) => {
+          if (lockedElement === e) {
+            lockedElement = null;
+            div.classList.remove("active");
+          } else {
+            if (lockedElement) {
+              document
+                .querySelectorAll(".elemento.active")
+                .forEach((el) => el.classList.remove("active"));
+            }
+            lockedElement = e;
+            div.classList.add("active");
+            mostrarInfo(e, catInfo, div);
+          }
+        });
+        tablaEl.appendChild(div);
+      });
+      const infoPanel = document.getElementById("info-panel");
+      function mostrarInfo(e, catInfo, el) {
+        infoPanel.classList.add("visible");
+        const bgColor = window.getComputedStyle(el).backgroundColor;
+        document.getElementById("info-left").style.backgroundColor = bgColor;
+        document.getElementById("i-num").textContent = e.num;
+        document.getElementById("i-sim").textContent = e.sym;
+        const nombreEnEspanol = nombresES[e.name] || e.name;
+        document.getElementById("i-name").textContent = nombreEnEspanol;
+        document.getElementById("i-mass").textContent = e.mass;
+        const iCat = document.getElementById("i-cat");
+        iCat.textContent = catInfo.name;
+        iCat.style.backgroundColor = bgColor;
+        iCat.style.color = getContrastYIQ(bgColor);
+        document.getElementById("i-phase").textContent = traducirFase(e.phase);
+        document.getElementById("i-shells").textContent = e.shells.join(", ");
+        renderAtom(e.shells);
+      }
+      function traducirFase(phase) {
+        if (phase === "Solid") return "Sólido";
+        if (phase === "Liquid") return "Líquido";
+        if (phase === "Gas") return "Gas";
+        return "Sintético / Desconocido";
+      }
+      function renderAtom(shells) {
+        const container = document.getElementById("atom-container");
+        container.innerHTML = '<div class="nucleus"></div>';
+        const maxRadius = 65;
+        const step = maxRadius / Math.max(shells.length, 1);
+        shells.forEach((electrons, index) => {
+          const radius = (index + 1) * step;
+          const orbit = document.createElement("div");
+          orbit.className = "orbit";
+          orbit.style.width = `${radius * 2}px`;
+          orbit.style.height = `${radius * 2}px`;
+          orbit.style.animationDuration = `${3 + index * 1.5}s`;
+          if (index % 2 !== 0) orbit.style.animationDirection = "reverse";
+          for (let i = 0; i < electrons; i++) {
+            const electron = document.createElement("div");
+            electron.className = "electron";
+            const angle = (i / electrons) * (2 * Math.PI);
+            const x = radius * Math.cos(angle);
+            const y = radius * Math.sin(angle);
+            electron.style.left = `calc(50% + ${x}px)`;
+            electron.style.top = `calc(50% + ${y}px)`;
+            orbit.appendChild(electron);
+          }
+          container.appendChild(orbit);
+        });
+      }
+      function getContrastYIQ(rgbStr) {
+        const rgb = rgbStr.match(/\d+/g);
+        if (!rgb) return "white";
+        const yiq = (rgb[0] * 299 + rgb[1] * 587 + rgb[2] * 114) / 1000;
+        return yiq >= 128 ? "#1f2937" : "white";
+      }
+    </script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

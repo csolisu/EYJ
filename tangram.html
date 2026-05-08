@@ -1,0 +1,567 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tangram | Educa y Juega</title>
+    <meta name="description" content="Tangram virtual interactivo. Forma figuras con las 7 piezas clásicas del tangram chino." />
+    <meta name="keywords" content="tangram, figuras geométricas, puzzle, rompecabezas, geometría" />
+    <link rel="canonical" href="https://educayjuega.com/tangram.html" />
+    <meta property="og:title" content="Tangram Virtual | Educa y Juega" />
+    <meta property="og:description" content="Tangram virtual interactivo. Forma figuras con las 7 piezas clásicas del tangram chino." />
+    <meta property="og:url" content="https://educayjuega.com/tangram.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://educayjuega.com/favicon.svg" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Tangram Virtual | Educa y Juega" />
+    <meta name="twitter:description" content="Tangram virtual interactivo. Forma figuras con las 7 piezas clásicas del tangram chino." />
+
+<link rel="stylesheet" href="css/styles.css" />
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+    <style>
+      .tool-header h1 {
+        color: white;
+      }
+      :root {
+        --primary: #ec4899;
+        --bg-game: #f8fafc;
+        --border: #e2e8f0;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+      }
+      .tool-header {
+        background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+      .tool-content {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 1rem;
+      }
+      .figuras-opciones {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 1rem;
+      }
+      .fig-btn {
+        padding: 0.75rem 1.5rem;
+        border: 2px solid var(--primary);
+        background: transparent;
+        color: var(--primary);
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.2s;
+      }
+      .fig-btn:hover {
+        background: rgba(236, 72, 153, 0.1);
+      }
+      .fig-btn.active {
+        background: var(--primary);
+        color: white;
+        box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
+      }
+      .game-container {
+        width: 100%;
+        background: var(--bg-game);
+        border-radius: 1rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        border: 2px solid var(--border);
+        overflow: hidden;
+        position: relative;
+        touch-action: none; /* Prevents scrolling while dragging on mobile */
+      }
+      .game-container svg {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+      .controles {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 1rem;
+        margin-bottom: 2rem;
+      }
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        background: #3b82f6;
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 1rem;
+        transition: background 0.2s;
+      }
+      .btn:hover {
+        background: #2563eb;
+      }
+      .btn-secondary {
+        background: #64748b;
+      }
+      .btn-secondary:hover {
+        background: #475569;
+      }
+      .pieza {
+        cursor: grab;
+        filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.2));
+        transition: filter 0.2s;
+      }
+      .pieza.dragging {
+        cursor: grabbing;
+        filter: drop-shadow(0px 10px 15px rgba(0, 0, 0, 0.4));
+      }
+      .instruction {
+        text-align: center;
+        color: #64748b;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+      }
+    </style>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Tangram Virtual | Educa y Juega",
+    "url": "https://educayjuega.com/tangram.html",
+    "description": "Tangram virtual interactivo. Forma figuras con las 7 piezas clásicas del tangram chino.",
+    "inLanguage": "es-ES"
+  }
+  </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-container">
+        <a href="index.html" class="logo">
+          <span class="logo-icon">📚</span> Educa y Juega
+        </a>
+        <button class="menu-toggle" aria-label="Menú">☰</button>
+                  <nav class="nav-menu">
+            <a href="index.html">🏠 Inicio</a>
+            <a href="hora-mundial.html">🕐 Hora Mundial</a>
+            <a href="dados.html">🎲 Dados</a>
+            <a href="ruleta.html">🎰 Ruleta</a>
+            <a href="ruleta-preguntas.html">❓ Ruleta Preguntas</a>
+            <a href="temporizador.html">⏱️ Temporizador</a>
+            <a href="cronometro.html">⏱ Cronómetro</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="vocabulario.html">📝 Vocabulario</a>
+            <a href="conjugador.html">📝 Conjugador</a>
+            <a href="ejercicios.html">➕ Ejercicios</a>
+            <a href="fracciones.html">🍕 Fracciones</a>
+            <a href="tablas.html">✖️ Tablas</a>
+            <a href="calculadora.html">🧮 Calculadora</a>
+            <a href="calculadora-areas.html">📐 Calcular Áreas</a>
+            <a href="geometria.html">📐 Geometría</a>
+            <a href="convertidor.html">🔄 Convertir</a>
+            <a href="recta-numerica.html">📏 Recta</a>
+            <a href="linea-tiempo.html">⏳ Línea Tiempo</a>
+            <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
+            <a href="sistema-solar.html">🌍 Sistema Solar</a>
+            <a href="ciclo-agua.html">💧 Ciclo Agua</a>
+            <a href="cuerpo-humano.html">🧍 Cuerpo Humano</a>
+            <a href="grupos.html">👥 Grupos</a>
+            <a href="selector.html">🎯 Selector</a>
+            <a href="asistencias.html">📋 Asistencias</a>
+            <a href="horario.html">📅 Horario</a>
+            <a href="normas-aula.html">📜 Normas</a>
+            <a href="pizarra.html">🖍️ Pizarra</a>
+            <a href="bolsa-premios.html">🎁 Premios</a>
+            <a href="puntos.html">🏆 Puntos</a>
+            <a href="aciertos.html">✅ Aciertos</a>
+            <a href="ajedrez.html">♟️ Ajedrez</a>
+            <a href="bingo.html">🎱 Bingo</a>
+            <a href="buscaminas.html">💣 Buscaminas</a>
+            <a href="crucigrama.html">✏️ Crucigrama</a>
+            <a href="damas.html">🟡 Damas</a>
+            <a href="laberinto.html">🌀 Laberinto</a>
+            <a href="memoria.html">🧠 Memoria</a>
+            <a href="piedra-papel.html">🪨 PPT</a>
+            <a href="sopa-letras.html">🔍 Sopa Letras</a>
+            <a href="sudoku.html">🔢 Sudoku</a>
+            <a href="tangram.html">🔺 Tangram</a>
+            <a href="tres-en-raya.html">⭕ Tres Raya</a>
+            <a href="contacto.html">📧 Contacto</a>
+            <a href="sobre-nosotros.html">ℹ️ Nosotros</a>
+            <a href="privacidad.html">🔒 Privacidad</a>
+          </nav>
+      </div>
+    </header>
+    <main>
+      <div class="tool-header">
+        <h1>🧩 Tangram Interactivo</h1>
+        <p>Arma figuras moviendo las piezas libremente</p>
+      </div>
+      <div class="tool-content">
+        <p class="instruction">
+          👆 <strong>Arrastra</strong> para mover las piezas | 🖱️
+          <strong>Click Derecho</strong> (o Doble Toque) para rotarlas 45°
+        </p>
+        <div class="figuras-opciones">
+          <button class="fig-btn active" onclick="setPuzzle('cuadrado', this)">
+            Cuadrado
+          </button>
+          <button class="fig-btn" onclick="setPuzzle('casa', this)">
+            Casa
+          </button>
+          <button class="fig-btn" onclick="setPuzzle('gato', this)">
+            Gato
+          </button>
+          <button class="fig-btn" onclick="setPuzzle('barco', this)">
+            Barco
+          </button>
+          <button class="fig-btn" onclick="setPuzzle('cohete', this)">
+            Cohete
+          </button>
+          <button class="fig-btn" onclick="setPuzzle('pato', this)">
+            Pato
+          </button>
+          <button class="fig-btn" onclick="setPuzzle('libre', this)">
+            Modo Libre
+          </button>
+        </div>
+        <div class="game-container">
+          <svg
+            id="tangramCanvas"
+            viewBox="0 0 1000 600"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <!-- Background areas -->
+            <rect x="0" y="0" width="750" height="600" fill="#f8fafc" />
+            <rect x="750" y="0" width="250" height="600" fill="#e2e8f0" />
+            <text
+              x="875"
+              y="40"
+              text-anchor="middle"
+              font-family="sans-serif"
+              font-weight="bold"
+              fill="#64748b"
+            >
+              Bandeja de Piezas
+            </text>
+            <!-- Silhouette Group -->
+            <g
+              id="siluetaGroup"
+              fill="#cbd5e1"
+              stroke="#cbd5e1"
+              stroke-width="1"
+            ></g>
+            <!-- Pieces Group -->
+            <g id="piezasGroup">
+              <!-- T-Large 1 -->
+              <polygon
+                class="pieza"
+                id="tL1"
+                points="-100,-50 100,-50 0,50"
+                fill="#ec4899"
+                stroke="#be185d"
+                stroke-width="2"
+              />
+              <!-- T-Large 2 -->
+              <polygon
+                class="pieza"
+                id="tL2"
+                points="-50,-100 50,0 -50,100"
+                fill="#8b5cf6"
+                stroke="#6d28d9"
+                stroke-width="2"
+              />
+              <!-- T-Medium -->
+              <polygon
+                class="pieza"
+                id="tM"
+                points="50,50 -50,50 50,-50"
+                fill="#3b82f6"
+                stroke="#1d4ed8"
+                stroke-width="2"
+              />
+              <!-- Square -->
+              <polygon
+                class="pieza"
+                id="sq"
+                points="0,-50 50,0 0,50 -50,0"
+                fill="#10b981"
+                stroke="#047857"
+                stroke-width="2"
+              />
+              <!-- T-Small 1 -->
+              <polygon
+                class="pieza"
+                id="tS1"
+                points="-25,0 25,-50 25,50"
+                fill="#f59e0b"
+                stroke="#b45309"
+                stroke-width="2"
+              />
+              <!-- T-Small 2 -->
+              <polygon
+                class="pieza"
+                id="tS2"
+                points="-50,25 50,25 0,-25"
+                fill="#06b6d4"
+                stroke="#0369a1"
+                stroke-width="2"
+              />
+              <!-- Parallelogram -->
+              <polygon
+                class="pieza"
+                id="para"
+                points="25,-75 25,25 -25,75 -25,-25"
+                fill="#ef4444"
+                stroke="#b91c1c"
+                stroke-width="2"
+              />
+            </g>
+          </svg>
+        </div>
+        <div class="controles">
+          <button class="btn btn-secondary" onclick="resetPieces()">
+            🔄 Ordenar Piezas
+          </button>
+          <button class="btn" onclick="solvePuzzle()" id="btnSolve">
+            🪄 Ver Solución
+          </button>
+        </div>
+      </div>
+    </main>
+    <script>
+      const svgCanvas = document.getElementById("tangramCanvas");
+      const piezasGroup = document.getElementById("piezasGroup"); // Initial tray positions and definitions
+      const trayPositions = {
+        tL1: { x: 875, y: 120, r: 0 },
+        tL2: { x: 875, y: 280, r: 0 },
+        tM: { x: 835, y: 440, r: 0 },
+        sq: { x: 925, y: 425, r: 0 },
+        tS1: { x: 825, y: 535, r: 0 },
+        tS2: { x: 925, y: 510, r: 0 },
+        para: { x: 875, y: 350, r: 45 },
+      };
+      const piecePoints = {
+        tL1: "-100,-50 100,-50 0,50",
+        tL2: "-50,-100 50,0 -50,100",
+        tM: "50,50 -50,50 50,-50",
+        sq: "0,-50 50,0 0,50 -50,0",
+        tS1: "-25,0 25,-50 25,50",
+        tS2: "-50,25 50,25 0,-25",
+        para: "25,-75 25,25 -25,75 -25,-25",
+      };
+      // State object for pieces
+      const piecesState = {};
+      let currentPuzzle = "cuadrado";
+      // Puzzles definitions (x, y, rotation)
+      const puzzles = {
+        cuadrado: [
+          { id: "tL1", x: 350, y: 250, r: 0 },
+          { id: "tL2", x: 300, y: 300, r: 0 },
+          { id: "tM", x: 400, y: 350, r: 0 },
+          { id: "sq", x: 350, y: 350, r: 0 },
+          { id: "tS1", x: 375, y: 300, r: 0 },
+          { id: "tS2", x: 300, y: 375, r: 0 },
+          { id: "para", x: 425, y: 275, r: 0 },
+        ],
+        casa: [
+          { id: "tL1", x: 350, y: 350, r: 0 },
+          { id: "tL2", x: 350, y: 250, r: -90 },
+          { id: "tM", x: 400, y: 200, r: 180 },
+          { id: "sq", x: 275, y: 175, r: 45 },
+          { id: "tS1", x: 300, y: 100, r: -90 },
+          { id: "para", x: 375, y: 125, r: 0 },
+          { id: "tS2", x: 275, y: 425, r: 0 },
+        ],
+        gato: [
+          { id: "sq", x: 350, y: 150, r: 45 },
+          { id: "tS1", x: 315, y: 115, r: -45 },
+          { id: "tS2", x: 385, y: 115, r: 45 },
+          { id: "tL1", x: 350, y: 250, r: 135 },
+          { id: "tL2", x: 350, y: 350, r: -45 },
+          { id: "para", x: 450, y: 400, r: 45 },
+          { id: "tM", x: 300, y: 400, r: 0 },
+        ],
+        barco: [
+          { id: "tL1", x: 300, y: 400, r: 180 },
+          { id: "tL2", x: 400, y: 400, r: 90 },
+          { id: "tS1", x: 200, y: 350, r: -90 },
+          { id: "tM", x: 500, y: 350, r: 0 },
+          { id: "sq", x: 350, y: 300, r: 0 },
+          { id: "tS2", x: 350, y: 225, r: 180 },
+          { id: "para", x: 425, y: 225, r: 0 },
+        ],
+        cohete: [
+          { id: "tM", x: 350, y: 150, r: 225 },
+          { id: "tL1", x: 350, y: 250, r: 45 },
+          { id: "tL2", x: 350, y: 350, r: -135 },
+          { id: "sq", x: 350, y: 450, r: 45 },
+          { id: "tS1", x: 275, y: 450, r: -45 },
+          { id: "tS2", x: 425, y: 450, r: 135 },
+          { id: "para", x: 350, y: 525, r: 90 },
+        ],
+        pato: [
+          { id: "sq", x: 250, y: 150, r: 45 },
+          { id: "tS1", x: 180, y: 150, r: -45 },
+          { id: "tS2", x: 300, y: 220, r: 135 },
+          { id: "tL1", x: 350, y: 300, r: -45 },
+          { id: "tL2", x: 450, y: 300, r: 135 },
+          { id: "tM", x: 550, y: 250, r: 45 },
+          { id: "para", x: 400, y: 400, r: 0 },
+        ],
+      };
+      // Variables for dragging
+      let activePiece = null;
+      let isDragging = false;
+      let startX = 0;
+      let startY = 0;
+      let initialTx = 0;
+      let initialTy = 0;
+      function initGame() {
+        // Initialize state and setup events for each piece
+        Object.keys(trayPositions).forEach((id) => {
+          const el = document.getElementById(id);
+          el.style.transition = "transform 0.3s ease-out"; // Add transition for smooth snapping
+          piecesState[id] = { ...trayPositions[id], element: el };
+          updateTransform(id);
+          // Add event listeners
+          el.addEventListener("mousedown", startDrag);
+          el.addEventListener("touchstart", startDrag, { passive: false });
+          // Right click or double click to rotate
+          el.addEventListener("contextmenu", rotatePiece);
+          el.addEventListener("dblclick", rotatePiece);
+        });
+        // SVG Level events
+        svgCanvas.addEventListener("mousemove", drag);
+        svgCanvas.addEventListener("touchmove", drag, { passive: false });
+        window.addEventListener("mouseup", endDrag);
+        window.addEventListener("touchend", endDrag);
+        setPuzzle("cuadrado");
+      }
+      // --- Transformation Logic ---
+      function updateTransform(id) {
+        const state = piecesState[id];
+        state.element.setAttribute(
+          "transform",
+          `translate(${state.x}, ${state.y}) rotate(${state.r})`,
+        );
+      }
+      // --- Drag and Drop Logic ---
+      function getMousePosition(evt) {
+        const CTM = svgCanvas.getScreenCTM();
+        if (evt.touches) {
+          evt = evt.touches[0];
+        }
+        return {
+          x: (evt.clientX - CTM.e) / CTM.a,
+          y: (evt.clientY - CTM.f) / CTM.d,
+        };
+      }
+      function startDrag(evt) {
+        if (evt.type === "touchstart") evt.preventDefault();
+        if (evt.button === 2) return; // Ignore right click for dragging
+        activePiece = evt.target;
+        const id = activePiece.id;
+        isDragging = true;
+        activePiece.classList.add("dragging");
+        activePiece.style.transition = "none"; // Remove transition while dragging
+        // Bring to front
+        piezasGroup.appendChild(activePiece);
+        const pos = getMousePosition(evt);
+        startX = pos.x;
+        startY = pos.y;
+        initialTx = piecesState[id].x;
+        initialTy = piecesState[id].y;
+      }
+      function drag(evt) {
+        if (!isDragging || !activePiece) return;
+        evt.preventDefault();
+        const pos = getMousePosition(evt);
+        const dx = pos.x - startX;
+        const dy = pos.y - startY;
+        const id = activePiece.id;
+        piecesState[id].x = initialTx + dx;
+        piecesState[id].y = initialTy + dy;
+        updateTransform(id);
+      }
+      function endDrag(evt) {
+        if (!activePiece) return;
+        isDragging = false;
+        activePiece.classList.remove("dragging");
+        activePiece.style.transition = "transform 0.3s ease-out"; // Restore transition
+        activePiece = null;
+      }
+      // --- Rotation Logic ---
+      function rotatePiece(evt) {
+        evt.preventDefault(); // Prevent context menu
+        const id = evt.target.id;
+        piecesState[id].r = (piecesState[id].r + 45) % 360;
+        updateTransform(id);
+        // Re-bring to front
+        piezasGroup.appendChild(evt.target);
+      }
+      // --- Controls ---
+      function resetPieces() {
+        Object.keys(trayPositions).forEach((id) => {
+          piecesState[id].x = trayPositions[id].x;
+          piecesState[id].y = trayPositions[id].y;
+          piecesState[id].r = trayPositions[id].r;
+          updateTransform(id);
+        });
+      }
+      function setPuzzle(type, btn) {
+        document
+          .querySelectorAll(".fig-btn")
+          .forEach((b) => b.classList.remove("active"));
+        if (btn) {
+          btn.classList.add("active");
+        } else {
+          document.querySelector(".fig-btn").classList.add("active");
+        }
+        currentPuzzle = type;
+        const siluetaGroup = document.getElementById("siluetaGroup");
+        siluetaGroup.innerHTML = ""; // Clear current silhouette
+        const btnSolve = document.getElementById("btnSolve");
+        if (type === "libre") {
+          btnSolve.style.display = "none";
+          return;
+        }
+        btnSolve.style.display = "inline-block";
+        // Generate silhouette by rendering all pieces in their target positions with gray color
+        const puzzleDef = puzzles[type];
+        puzzleDef.forEach((target) => {
+          const poly = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "polygon",
+          );
+          poly.setAttribute("points", piecePoints[target.id]);
+          poly.setAttribute(
+            "transform",
+            `translate(${target.x}, ${target.y}) rotate(${target.r})`,
+          );
+          siluetaGroup.appendChild(poly);
+        });
+        resetPieces();
+      }
+      function solvePuzzle() {
+        if (currentPuzzle === "libre") return;
+        const puzzleDef = puzzles[currentPuzzle];
+        puzzleDef.forEach((target) => {
+          piecesState[target.id].x = target.x;
+          piecesState[target.id].y = target.y;
+          piecesState[target.id].r = target.r;
+          updateTransform(target.id);
+        });
+      }
+      // Initialize game on load
+      document.addEventListener("DOMContentLoaded", initGame);
+    </script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

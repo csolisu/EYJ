@@ -1,0 +1,1699 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=yes"
+    />
+    <title>
+      Temporizador de Aula - Visual Interactivo para Clases | Recursos
+      Educativos
+    </title>
+    <meta name="description" content="Temporizador visual interactivo para el aula. Cuenta regresiva configurable y múltiples diseños." />
+    <meta name="keywords" content="temporizador, cuenta regresiva, gestión del tiempo, temporizador aula" />
+    <link rel="canonical" href="https://educayjuega.com/temporizador.html" />
+    <meta property="og:title" content="Temporizador Visual | Educa y Juega" />
+    <meta property="og:description" content="Temporizador visual interactivo para el aula. Cuenta regresiva configurable y múltiples diseños." />
+    <meta property="og:url" content="https://educayjuega.com/temporizador.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://educayjuega.com/favicon.svg" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Temporizador Visual | Educa y Juega" />
+    <meta name="twitter:description" content="Temporizador visual interactivo para el aula. Cuenta regresiva configurable y múltiples diseños." />
+
+<link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+      :root {
+        --bg-color: #f9fafb;
+        --panel-bg: rgba(255, 255, 255, 0.9);
+        --glass-border: rgba(79, 70, 229, 0.1);
+        --accent: #4f46e5;
+        --accent-glow: rgba(79, 70, 229, 0.4);
+        --text-main: #1f2937;
+        --text-muted: #6b7280;
+        --primary: #4f46e5;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background-color: var(--bg-color);
+        background-image:
+          radial-gradient(circle at 15% 50%, rgba(79, 70, 229, 0.08), transparent 25%),
+          radial-gradient(circle at 85% 30%, rgba(245, 158, 11, 0.08), transparent 25%);
+        font-family: 'Outfit', system-ui, sans-serif;
+        min-height: 100vh;
+        color: var(--text-main);
+        overflow-x: hidden;
+      }
+      .tool-page {
+        padding: 0 1.5rem;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      .tool-header {
+        text-align: center;
+        margin-bottom: 0;
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        padding: 2rem;
+        margin-left: calc(-50vw + 50%);
+        margin-right: calc(-50vw + 50%);
+        width: 100vw;
+      }
+      .tool-header h1 {
+        font-size: 2.5rem;
+        color: white!important;
+        -webkit-text-fill-color: white !important;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      }
+      .tool-header p {
+        color: white;
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+      }
+      .container {
+        max-width: 900px;
+        width: 100%;
+        background: var(--panel-bg);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        border-radius: 2.5rem;
+        padding: 2.5rem;
+        box-shadow:
+          0 25px 50px -12px rgba(0,0,0,0.7),
+          inset 0 1px 0 rgba(255,255,255,0.1);
+        border: 1px solid var(--glass-border);
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        position: relative;
+      }
+      h1 {
+        text-align: center;
+        font-weight: 900;
+        font-size: clamp(2rem, 5vw, 3rem);
+        letter-spacing: -1px;
+        background: linear-gradient(135deg, #fff 0%, #ffc470 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .controls-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+        background: rgba(0,0,0,0.2);
+        border-radius: 100px;
+        padding: 1rem 1.5rem;
+        border: 1px solid var(--glass-border);
+      }
+      .time-input {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(255,255,255,0.03);
+        border-radius: 50px;
+        padding: 0.5rem 1.5rem;
+        border: 1px solid var(--glass-border);
+        box-shadow: inset 0 2px 10px rgba(0,0,0,0.2);
+      }
+      .time-input input {
+        width: 70px;
+        background: transparent;
+        border: none;
+        color: var(--accent);
+        font-family: 'Space Mono', monospace;
+        font-size: 2.5rem;
+        font-weight: 700;
+        text-align: center;
+        outline: none;
+      }
+      .time-input input::-webkit-inner-spin-button { -webkit-appearance: none; }
+      .time-input span {
+        font-size: 1.1rem;
+        color: var(--text-muted);
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      .btn {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid var(--glass-border);
+        color: var(--text-main);
+        font-family: inherit;
+        font-weight: 700;
+        padding: 1rem 2rem;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+      }
+      .btn::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: linear-gradient(180deg, rgba(255,255,255,0.1), transparent);
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        border-color: rgba(255,255,255,0.2);
+      }
+      .btn:hover::before { opacity: 1; }
+      .btn:active { transform: translateY(1px); }
+      .btn.primary {
+        background: linear-gradient(135deg, #ff9d00, #e65c00);
+        border: none;
+        color: #000;
+        box-shadow: 0 8px 25px var(--accent-glow);
+      }
+      .btn.primary:hover {
+        box-shadow: 0 15px 35px var(--accent-glow);
+      }
+      .stage {
+        background: rgba(0,0,0,0.3);
+        border-radius: 2rem;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+        border: 1px solid rgba(255,255,255,0.05);
+        position: relative;
+        overflow: hidden;
+      }
+      .progress-track {
+        width: 100%;
+        height: 8px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+      }
+      .progress-fill {
+        height: 100%;
+        width: 100%;
+        background: linear-gradient(90deg, #ff9d00, #ffea00);
+        border-radius: 10px;
+        transform-origin: left;
+        box-shadow: 0 0 15px var(--accent-glow);
+      }
+      .svg-container {
+        width: 100%;
+        max-width: 400px;
+        height: 320px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        perspective: 1000px;
+      }
+      svg {
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+        transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .stage:hover svg {
+        transform: scale(1.05) translateY(-5px);
+      }
+      .stage-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        z-index: 10;
+      }
+      .object-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        color: #fff;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 0.5rem 1.5rem;
+        border-radius: 50px;
+        border: 1px solid rgba(255,255,255,0.1);
+        backdrop-filter: blur(10px);
+      }
+      .nav-arrow {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: #fff;
+        font-size: 1.5rem;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .nav-arrow:hover {
+        background: rgba(255,255,255,0.15);
+        transform: scale(1.1);
+      }
+      .object-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        gap: 1rem;
+      }
+      .obj-thumb {
+        background: rgba(0,0,0,0.2);
+        border-radius: 1.5rem;
+        padding: 1rem 0.5rem;
+        text-align: center;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: all 0.3s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .obj-thumb span { font-size: 1.8rem; transition: transform 0.3s; }
+      .obj-thumb small { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+      .obj-thumb:hover { background: rgba(255,255,255,0.05); }
+      .obj-thumb:hover span { transform: scale(1.2); }
+      .obj-thumb.active {
+        border-color: var(--accent);
+        background: linear-gradient(180deg, rgba(255,157,0,0.1), rgba(0,0,0,0.4));
+        box-shadow: 0 10px 20px rgba(0,0,0,0.3), inset 0 0 20px var(--accent-glow);
+      }
+      .obj-thumb.active small { color: #fff; }
+      /* ANIMACIONES GLOBALES SVGs */
+      @keyframes candleFlicker {
+        0%, 100% { transform: scaleY(1) scaleX(1) rotate(-1deg); }
+        20% { transform: scaleY(1.1) scaleX(0.95) rotate(1deg); }
+        40% { transform: scaleY(0.95) scaleX(1.05) rotate(-1deg); }
+        60% { transform: scaleY(1.05) scaleX(0.98) rotate(0.5deg); }
+        80% { transform: scaleY(0.98) scaleX(1.02) rotate(-0.5deg); }
+      }
+      @keyframes flicker {
+        0%, 100% { transform: scale(1) rotate(-1deg); opacity: 0.9; }
+        25% { transform: scale(1.1) rotate(2deg); opacity: 1; }
+        50% { transform: scale(0.95) rotate(-2deg); opacity: 0.8; }
+        75% { transform: scale(1.05) rotate(1deg); opacity: 0.95; }
+      }
+      @keyframes sandDrop {
+        0% { stroke-dashoffset: 0; }
+        100% { stroke-dashoffset: 20; }
+      }
+      @keyframes pulseHeart {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.15); }
+      }
+      @keyframes floatWater {
+        0% { d: path('M0,50 Q25,30 50,50 T100,50 L100,100 L0,100 Z'); }
+        50% { d: path('M0,50 Q25,70 50,50 T100,50 L100,100 L0,100 Z'); }
+        100% { d: path('M0,50 Q25,30 50,50 T100,50 L100,100 L0,100 Z'); }
+      }
+      @keyframes swing {
+        0% { transform: rotate(15deg); }
+        50% { transform: rotate(-15deg); }
+        100% { transform: rotate(15deg); }
+      }
+      @keyframes spin { 100% { transform: rotate(360deg); } }
+      @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px) rotate(-5deg); } 75% { transform: translateX(5px) rotate(5deg); } }
+      /* Tema Claro - Overrides */
+      .container {
+        max-width: 900px;
+        background: var(--panel-bg);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        border-radius: 2rem;
+        padding: 2rem;
+        box-shadow: 0 10px 40px -12px rgba(0,0,0,0.15);
+        border: 1px solid var(--glass-border);
+      }
+      h1 {
+        text-align: center;
+        font-weight: 900;
+        font-size: clamp(1.75rem, 5vw, 2.5rem);
+        letter-spacing: -0.5px;
+        background: linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 2px 8px rgba(79, 70, 229, 0.3));
+      }
+      .controls-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        background: rgba(79, 70, 229, 0.05);
+        border-radius: 50px;
+        padding: 1rem 1.5rem;
+        border: 1px solid var(--glass-border);
+      }
+      .time-input {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(255,255,255,0.8);
+        border-radius: 50px;
+        padding: 0.5rem 1.5rem;
+        border: 1px solid var(--border);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      }
+      .time-input input {
+        width: 60px;
+        background: transparent;
+        border: none;
+        color: var(--primary);
+        font-family: 'Space Mono', monospace;
+        font-size: 2rem;
+        font-weight: 700;
+        text-align: center;
+        outline: none;
+        text-shadow: 0 0 10px var(--accent-glow);
+      }
+      .time-input input::-webkit-inner-spin-button { -webkit-appearance: none; }
+      .time-input span {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+      .btn {
+        background: white;
+        border: 2px solid var(--glass-border);
+        color: var(--text-main);
+        font-family: inherit;
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        border-radius: 50px;
+        font-size: 1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        border-color: var(--primary);
+      }
+      .btn.primary {
+        background: linear-gradient(135deg, var(--primary), #7c3aed);
+        border: none;
+        color: white;
+        box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+      }
+      .btn.primary:hover {
+        box-shadow: 0 10px 30px rgba(79, 70, 229, 0.5);
+      }
+      .stage {
+        background: white;
+        border-radius: 1.5rem;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        margin-top: 1.5rem;
+      }
+      .progress-track {
+        width: 100%;
+        height: 8px;
+        background: rgba(79, 70, 229, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        width: 100%;
+        background: linear-gradient(90deg, var(--primary), #818cf8);
+        border-radius: 10px;
+      }
+      .stage-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+      }
+      .object-name {
+        font-size: 1.25rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--text-main);
+        background: rgba(79, 70, 229, 0.1);
+        padding: 0.5rem 1.25rem;
+        border-radius: 50px;
+        border: 1px solid rgba(79, 70, 229, 0.2);
+      }
+      .nav-arrow {
+        background: white;
+        border: 2px solid rgba(79, 70, 229, 0.2);
+        color: var(--primary);
+        font-size: 1.25rem;
+        border-radius: 50%;
+        width: 44px;
+        height: 44px;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .nav-arrow:hover {
+        background: var(--primary);
+        color: white;
+        transform: scale(1.05);
+      }
+      .object-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+        gap: 0.75rem;
+        margin-top: 1rem;
+      }
+      .obj-thumb {
+        background: white;
+        border-radius: 1rem;
+        padding: 0.75rem 0.5rem;
+        text-align: center;
+        cursor: pointer;
+        border: 2px solid var(--border);
+        transition: all 0.3s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.25rem;
+      }
+      .obj-thumb span { font-size: 1.5rem; }
+      .obj-thumb small { font-size: 0.65rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+      .obj-thumb:hover { border-color: var(--primary); background: rgba(79, 70, 229, 0.05); }
+      .obj-thumb:hover span { transform: scale(1.1); }
+      .obj-thumb.active {
+        border-color: var(--primary);
+        background: linear-gradient(180deg, rgba(79,70,229,0.1), rgba(79,70,229,0.05));
+        box-shadow: 0 6px 15px rgba(79, 70, 229, 0.2);
+      }
+      .obj-thumb.active small { color: var(--primary); }
+      .svg-container {
+        width: 100%;
+        max-width: 350px;
+        height: 280px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .sound-toggle {
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        background: white;
+        border: 2px solid var(--border);
+        border-radius: 50%;
+        width: 44px;
+        height: 44px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: all 0.2s;
+        z-index: 50;
+      }
+      .sound-toggle:hover {
+        transform: scale(1.05);
+        border-color: var(--primary);
+      }
+      .sound-toggle .sound-off {
+        display: none;
+      }
+      .sound-toggle.muted .sound-on {
+        display: none;
+      }
+      .sound-toggle.muted .sound-off {
+        display: inline;
+      }
+    </style>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Temporizador Visual | Educa y Juega",
+    "url": "https://educayjuega.com/temporizador.html",
+    "description": "Temporizador visual interactivo para el aula. Cuenta regresiva configurable y múltiples diseños.",
+    "inLanguage": "es-ES"
+  }
+  </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-container">
+        <a href="index.html" class="logo">
+          <span class="logo-icon">📚</span> Educa y Juega
+        </a>
+        <button class="menu-toggle" aria-label="Menú">☰</button>
+                  <nav class="nav-menu">
+            <a href="index.html">🏠 Inicio</a>
+            <a href="hora-mundial.html">🕐 Hora Mundial</a>
+            <a href="dados.html">🎲 Dados</a>
+            <a href="ruleta.html">🎰 Ruleta</a>
+            <a href="ruleta-preguntas.html">❓ Ruleta Preguntas</a>
+            <a href="temporizador.html">⏱️ Temporizador</a>
+            <a href="cronometro.html">⏱ Cronómetro</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="vocabulario.html">📝 Vocabulario</a>
+            <a href="conjugador.html">📝 Conjugador</a>
+            <a href="ejercicios.html">➕ Ejercicios</a>
+            <a href="fracciones.html">🍕 Fracciones</a>
+            <a href="tablas.html">✖️ Tablas</a>
+            <a href="calculadora.html">🧮 Calculadora</a>
+            <a href="calculadora-areas.html">📐 Calcular Áreas</a>
+            <a href="geometria.html">📐 Geometría</a>
+            <a href="convertidor.html">🔄 Convertir</a>
+            <a href="recta-numerica.html">📏 Recta</a>
+            <a href="linea-tiempo.html">⏳ Línea Tiempo</a>
+            <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
+            <a href="sistema-solar.html">🌍 Sistema Solar</a>
+            <a href="ciclo-agua.html">💧 Ciclo Agua</a>
+            <a href="cuerpo-humano.html">🧍 Cuerpo Humano</a>
+            <a href="grupos.html">👥 Grupos</a>
+            <a href="selector.html">🎯 Selector</a>
+            <a href="asistencias.html">📋 Asistencias</a>
+            <a href="horario.html">📅 Horario</a>
+            <a href="normas-aula.html">📜 Normas</a>
+            <a href="pizarra.html">🖍️ Pizarra</a>
+            <a href="bolsa-premios.html">🎁 Premios</a>
+            <a href="puntos.html">🏆 Puntos</a>
+            <a href="aciertos.html">✅ Aciertos</a>
+            <a href="ajedrez.html">♟️ Ajedrez</a>
+            <a href="bingo.html">🎱 Bingo</a>
+            <a href="buscaminas.html">💣 Buscaminas</a>
+            <a href="crucigrama.html">✏️ Crucigrama</a>
+            <a href="damas.html">🟡 Damas</a>
+            <a href="laberinto.html">🌀 Laberinto</a>
+            <a href="memoria.html">🧠 Memoria</a>
+            <a href="piedra-papel.html">🪨 PPT</a>
+            <a href="sopa-letras.html">🔍 Sopa Letras</a>
+            <a href="sudoku.html">🔢 Sudoku</a>
+            <a href="tangram.html">🔺 Tangram</a>
+            <a href="tres-en-raya.html">⭕ Tres Raya</a>
+            <a href="contacto.html">📧 Contacto</a>
+            <a href="sobre-nosotros.html">ℹ️ Nosotros</a>
+            <a href="privacidad.html">🔒 Privacidad</a>
+          </nav>
+      </div>
+    </header>
+    <button
+      class="sound-toggle"
+      id="soundToggle"
+      aria-label="Activar/desactivar sonido"
+    >
+      <span class="sound-on">🔊</span>
+      <span class="sound-off">🔇</span>
+    </button>
+    <main>
+      <div class="tool-page">
+        <div class="tool-header">
+          <h1>⏱️ Temporizador Visual</h1>
+          <p>
+            Temporizador con diseños visuales para gestionar el tiempo en clase
+          </p>
+        </div>
+        <div class="controls-wrapper">
+          <div class="time-input">
+            <input id="minutesInput" type="number" value="0" min="0" max="99" />
+            <span>min</span>
+          </div>
+          <div class="time-input">
+            <input
+              id="secondsInput"
+              type="number"
+              value="30"
+              min="0"
+              max="59"
+            />
+            <span>seg</span>
+          </div>
+          <button class="btn primary" id="startBtn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+            Iniciar
+          </button>
+          <button class="btn" id="pauseBtn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+            </svg>
+            Pausa
+          </button>
+          <button class="btn" id="resetBtn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"
+              />
+            </svg>
+            Reiniciar
+          </button>
+        </div>
+        <div class="stage">
+          <div class="progress-track">
+            <div
+              id="progressFill"
+              class="progress-fill"
+              style="transform: scaleX(1)"
+            ></div>
+          </div>
+          <div class="stage-header">
+            <button class="nav-arrow" id="prevObj">❮</button>
+            <div class="object-name" id="objectName">🕯️ Vela</div>
+            <button class="nav-arrow" id="nextObj">❯</button>
+          </div>
+          <div class="svg-container" id="svgContainer">
+            <!-- SVG Renderizado Dinámicamente -->
+          </div>
+        </div>
+        <div class="object-grid" id="objectGrid"></div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-links">
+          <a href="contacto.html">📧 Contacto</a>
+          <a href="privacidad.html">🔒 Política de Privacidad</a>
+          <a href="sobre-nosotros.html">ℹ️ Sobre Nosotros</a>
+        </div>
+        <p class="footer-copy">
+          &copy; 2026 Educa y Juega. Herramientas educativas gratuitas
+          para profesores.
+        </p>
+      </div>
+    </footer>
+    <script src="js/main.js"></script>
+    <script>
+      (() => {
+        // --- Estado del Sonido ---
+        let soundEnabled =
+          localStorage.getItem("Educa y Juega_sound") !== "false";
+        // Actualizar UI del botón de sonido
+        const soundToggle = document.getElementById("soundToggle");
+        if (soundEnabled) {
+          soundToggle.classList.remove("muted");
+        } else {
+          soundToggle.classList.add("muted");
+        }
+        soundToggle.addEventListener("click", () => {
+          soundEnabled = !soundEnabled;
+          localStorage.setItem("Educa y Juega_sound", soundEnabled);
+          soundToggle.classList.toggle("muted", !soundEnabled);
+        });
+        // --- Motor de Sonido Sintetizado ---
+        const SoundEngine = (() => {
+          let ctx = null;
+          const init = () => {
+            if (!ctx)
+              ctx = new (window.AudioContext || window.webkitAudioContext)();
+            if (ctx.state === "suspended") ctx.resume();
+          };
+          const playTone = (freq, type, dur, vol, delay = 0) => {
+            if (!soundEnabled || !ctx) return;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, ctx.currentTime + delay);
+            gain.gain.setValueAtTime(vol, ctx.currentTime + delay);
+            gain.gain.exponentialRampToValueAtTime(
+              0.01,
+              ctx.currentTime + delay + dur,
+            );
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(ctx.currentTime + delay);
+            osc.stop(ctx.currentTime + delay + dur);
+          };
+          return {
+            init,
+            click: () => {
+              if (!soundEnabled) return;
+              init();
+              playTone(600, "sine", 0.1, 0.1);
+            },
+            end: () => {
+              if (!soundEnabled) return;
+              init();
+              playTone(523.25, "sine", 1.0, 0.3, 0);
+              playTone(659.25, "sine", 1.0, 0.3, 0.15);
+              playTone(783.99, "sine", 1.0, 0.3, 0.3);
+              playTone(1046.5, "sine", 2.0, 0.4, 0.45);
+            },
+          };
+        })();
+        // --- Estado Global ---
+        let totalMs = 30000,
+          remainingMs = 30000;
+        let animationFrameId = null,
+          isRunning = false;
+        let lastTime = 0;
+        let currentObjectIndex = 0;
+        // --- Elementos del DOM ---
+        const els = {
+          min: document.getElementById("minutesInput"),
+          sec: document.getElementById("secondsInput"),
+          start: document.getElementById("startBtn"),
+          pause: document.getElementById("pauseBtn"),
+          reset: document.getElementById("resetBtn"),
+          progress: document.getElementById("progressFill"),
+          svgContainer: document.getElementById("svgContainer"),
+          name: document.getElementById("objectName"),
+          prev: document.getElementById("prevObj"),
+          next: document.getElementById("nextObj"),
+          grid: document.getElementById("objectGrid"),
+        };
+        const createSVG = (type, attrs = {}) => {
+          const el = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            type,
+          );
+          Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+          return el;
+        };
+        // --- Definición de Gráficos (Lógica de renderizado y actualización) ---
+        const visualizers = [
+          {
+            id: "candle",
+            name: "🕯️ Vela",
+            init: () => {
+              const svg = createSVG("svg", { viewBox: "0 0 200 300" });
+              const defs = createSVG("defs");
+              defs.innerHTML = `
+            <linearGradient id="waxGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#f5f0e6"/>
+              <stop offset="30%" stop-color="#fffaf0"/>
+              <stop offset="70%" stop-color="#e8dcc8"/>
+              <stop offset="100%" stop-color="#d4c4a8"/>
+            </linearGradient>
+            <linearGradient id="flameOuter" x1="0" y1="1" x2="0" y2="0">
+              <stop offset="0%" stop-color="#ff6b35"/>
+              <stop offset="60%" stop-color="#ffa500"/>
+              <stop offset="100%" stop-color="#ffcc00"/>
+            </linearGradient>
+            <linearGradient id="flameInner" x1="0" y1="1" x2="0" y2="0">
+              <stop offset="0%" stop-color="#fffacd"/>
+              <stop offset="100%" stop-color="#fff8dc"/>
+            </linearGradient>
+          `;
+              svg.appendChild(defs);
+              // Plato base elegante
+              const baseOuter = createSVG("ellipse", {
+                cx: 100,
+                cy: 285,
+                rx: 45,
+                ry: 10,
+                fill: "#a8a8a8",
+              });
+              svg.appendChild(baseOuter);
+              const baseInner = createSVG("ellipse", {
+                cx: 100,
+                cy: 283,
+                rx: 38,
+                ry: 7,
+                fill: "#c0c0c0",
+              });
+              svg.appendChild(baseInner);
+              // Cuerpo de vela con forma orgánica
+              const wax = createSVG("path", {
+                id: "v-wax",
+                d: "M75,80 Q68,160 72,270 Q100,278 128,270 Q132,160 125,80 Q100,75 75,80 Z",
+                fill: "url(#waxGrad)",
+              });
+              svg.appendChild(wax);
+              // Parte superior de la vela (elipse)
+              const top = createSVG("ellipse", {
+                id: "v-top",
+                cx: 100,
+                cy: 80,
+                rx: 25,
+                ry: 7,
+                fill: "#fffaf0",
+              });
+              svg.appendChild(top);
+              // Mecha
+              const wick = createSVG("rect", {
+                id: "v-wick",
+                x: 97,
+                y: 65,
+                width: 6,
+                height: 18,
+                fill: "#2d2d2d",
+              });
+              svg.appendChild(wick);
+              // Punto de fusión en la mecha
+              const wickTip = createSVG("circle", {
+                id: "v-wickTip",
+                cx: 100,
+                cy: 64,
+                r: 3,
+                fill: "#1a1a1a",
+              });
+              svg.appendChild(wickTip);
+              // Grupo de la llama
+              const flameGroup = createSVG("g", { id: "v-flameGroup" });
+              flameGroup.style.transition = "opacity 0.3s ease-out";
+              // Llama exterior
+              const flameOuter = createSVG("path", {
+                d: "M100,15 Q120,40 100,60 Q80,40 100,15 Z",
+                fill: "url(#flameOuter)",
+              });
+              flameOuter.style.transformOrigin = "100px 45px";
+              flameGroup.appendChild(flameOuter);
+              // Llama interior
+              const flameInner = createSVG("path", {
+                d: "M100,25 Q112,40 100,52 Q88,40 100,25 Z",
+                fill: "url(#flameInner)",
+              });
+              flameInner.style.transformOrigin = "100px 40px";
+              flameGroup.appendChild(flameInner);
+              // Animación de parpadeo
+              flameOuter.style.animation =
+                "candleFlicker 0.15s infinite alternate ease-in-out";
+              flameInner.style.animation =
+                "candleFlicker 0.12s infinite alternate-reverse ease-in-out";
+              svg.appendChild(flameGroup);
+              // Humo (oculto por defecto)
+              const smokeGroup = createSVG("g", { id: "v-smoke", opacity: 0 });
+              // Humo principal
+              const smoke1 = createSVG("path", {
+                d: "M95,50 Q85,30 95,10 Q105,-10 95,-30",
+                stroke: "#555555",
+                "stroke-width": 4,
+                fill: "none",
+                opacity: 0.6,
+              });
+              smokeGroup.appendChild(smoke1);
+              // Humo secundario
+              const smoke2 = createSVG("path", {
+                d: "M105,50 Q115,35 105,15 Q95,-5 105,-25",
+                stroke: "#777777",
+                "stroke-width": 3,
+                fill: "none",
+                opacity: 0.4,
+              });
+              smokeGroup.appendChild(smoke2);
+              smokeGroup.style.transition = "opacity 0.8s ease-out";
+              svg.appendChild(smokeGroup);
+              els.svgContainer.appendChild(svg);
+            },
+            update: (p, isRunning) => {
+              const vWax = document.getElementById("v-wax");
+              const vTop = document.getElementById("v-top");
+              const vFlameG = document.getElementById("v-flameGroup");
+              const vSmoke = document.getElementById("v-smoke");
+              const vWick = document.getElementById("v-wick");
+              const vWickTip = document.getElementById("v-wickTip");
+              if (!vWax) return;
+              const maxHeight = 195;
+              const currentHeight = Math.max(25, maxHeight * p);
+              const yPos = 275 - currentHeight;
+              // Actualizar cuerpo de vela
+              vWax.setAttribute(
+                "d",
+                `M75,${yPos} Q68,${yPos + 80} 72,${yPos + currentHeight} Q100,${yPos + currentHeight + 8} 128,${yPos + currentHeight} Q132,${yPos + 80} 125,${yPos} Q100,${yPos - 5} 75,${yPos} Z`,
+              );
+              vWax.setAttribute("fill", "url(#waxGrad)");
+              vTop.setAttribute("cy", yPos);
+              vTop.setAttribute("rx", 25 * p + 5);
+              // Ajustar mecha según nivel de vela
+              const wickY = yPos - 15;
+              vWick.setAttribute("y", wickY);
+              vWick.setAttribute("height", 18 * p + 2);
+              vWickTip.setAttribute("cy", wickY - 1);
+              // Mover la llama con la vela - solo en la mecha
+              const flameY = yPos - 60;
+              vFlameG.style.transform = `translateY(${flameY}px)`;
+              // Lógica de apagado de la vela
+              if (p === 0) {
+                vFlameG.style.opacity = "0";
+                if (vSmoke) {
+                  vSmoke.style.opacity = "0.8";
+                  setTimeout(() => {
+                    if (vSmoke) vSmoke.style.opacity = "0";
+                  }, 2500);
+                }
+              } else {
+                vFlameG.style.opacity = "1";
+                if (vSmoke) {
+                  vSmoke.style.opacity = "0";
+                }
+              }
+            },
+          },
+          {
+            id: "hourglass",
+            name: "⏳ Reloj de Arena",
+            init: () => {
+              const svg = createSVG("svg", { viewBox: "0 0 200 300" });
+              const defs = createSVG("defs");
+              defs.innerHTML = `
+            <linearGradient id="glass" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="rgba(255,255,255,0.1)"/><stop offset="50%" stop-color="rgba(255,255,255,0.4)"/><stop offset="100%" stop-color="rgba(255,255,255,0.1)"/></linearGradient>
+            <linearGradient id="sand" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#ffb347"/><stop offset="100%" stop-color="#ffcc33"/></linearGradient>
+            <clipPath id="topGlass"><path d="M40,30 C40,30 40,110 90,140 L110,140 C160,110 160,30 160,30 Z"/></clipPath>
+            <clipPath id="botGlass"><path d="M90,160 L110,160 C160,190 160,270 160,270 L40,270 C40,270 40,190 90,160 Z"/></clipPath>
+          `;
+              svg.appendChild(defs);
+              svg.appendChild(
+                createSVG("rect", {
+                  x: 30,
+                  y: 10,
+                  width: 140,
+                  height: 20,
+                  rx: 5,
+                  fill: "#3d2b1f",
+                }),
+              );
+              svg.appendChild(
+                createSVG("rect", {
+                  x: 30,
+                  y: 270,
+                  width: 140,
+                  height: 20,
+                  rx: 5,
+                  fill: "#3d2b1f",
+                }),
+              );
+              const topSandBox = createSVG("g", {
+                "clip-path": "url(#topGlass)",
+              });
+              const topSand = createSVG("rect", {
+                id: "hg-topSand",
+                x: 30,
+                y: 30,
+                width: 140,
+                height: 110,
+                fill: "url(#sand)",
+              });
+              topSandBox.appendChild(topSand);
+              svg.appendChild(topSandBox);
+              const botSandBox = createSVG("g", {
+                "clip-path": "url(#botGlass)",
+              });
+              const botSand = createSVG("rect", {
+                id: "hg-botSand",
+                x: 30,
+                y: 270,
+                width: 140,
+                height: 110,
+                fill: "url(#sand)",
+              });
+              botSandBox.appendChild(botSand);
+              svg.appendChild(botSandBox);
+              const stream = createSVG("line", {
+                id: "hg-stream",
+                x1: 100,
+                y1: 140,
+                x2: 100,
+                y2: 270,
+                stroke: "#ffcc33",
+                "stroke-width": 4,
+                "stroke-dasharray": "4 4",
+              });
+              stream.style.opacity = "0";
+              stream.style.animation = "sandDrop 0.5s linear infinite";
+              svg.appendChild(stream);
+              const glassPath =
+                "M40,30 C40,30 40,110 90,140 L90,160 C40,190 40,270 40,270 L160,270 C160,270 160,190 110,160 L110,140 C160,110 160,30 160,30 Z";
+              svg.appendChild(
+                createSVG("path", {
+                  d: glassPath,
+                  fill: "url(#glass)",
+                  stroke: "rgba(255,255,255,0.4)",
+                  "stroke-width": 3,
+                }),
+              );
+              els.svgContainer.appendChild(svg);
+            },
+            update: (p, isRunning) => {
+              const tSand = document.getElementById("hg-topSand");
+              const bSand = document.getElementById("hg-botSand");
+              const stream = document.getElementById("hg-stream");
+              if (!tSand) return;
+              const topY = 30 + (1 - p) * 110;
+              tSand.setAttribute("y", topY);
+              const botY = 270 - (1 - p) * 110;
+              bSand.setAttribute("y", botY);
+              bSand.setAttribute("height", 270 - botY);
+              stream.style.opacity = isRunning && p > 0 ? "1" : "0";
+              stream.setAttribute("y2", botY);
+            },
+          },
+          {
+            id: "analog",
+            name: "🕰️ Esfera Minimalista",
+            init: () => {
+              const svg = createSVG("svg", { viewBox: "0 0 200 200" });
+              const defs = createSVG("defs");
+              defs.innerHTML = `<filter id="innerShadow"><feOffset dx="0" dy="5"/><feGaussianBlur stdDeviation="5" result="offset-blur"/><feComposite operator="out" in="SourceGraphic" in2="offset-blur" result="inverse"/><feFlood flood-color="black" flood-opacity="0.5" result="color"/><feComposite operator="in" in="color" in2="inverse" result="shadow"/><feComposite operator="over" in="shadow" in2="SourceGraphic"/></filter>`;
+              svg.appendChild(defs);
+              svg.appendChild(
+                createSVG("circle", {
+                  cx: 100,
+                  cy: 100,
+                  r: 90,
+                  fill: "#1a1625",
+                  stroke: "#352c4a",
+                  "stroke-width": 10,
+                  filter: "url(#innerShadow)",
+                }),
+              );
+              for (let i = 0; i < 12; i++) {
+                const angle = ((i * 30 - 90) * Math.PI) / 180;
+                const r1 = i % 3 === 0 ? 70 : 80;
+                const x1 = 100 + r1 * Math.cos(angle),
+                  y1 = 100 + r1 * Math.sin(angle);
+                const x2 = 100 + 85 * Math.cos(angle),
+                  y2 = 100 + 85 * Math.sin(angle);
+                svg.appendChild(
+                  createSVG("line", {
+                    x1,
+                    y1,
+                    x2,
+                    y2,
+                    stroke: i % 3 === 0 ? "#ff9d00" : "#8e87a6",
+                    "stroke-width": i % 3 === 0 ? 4 : 2,
+                    "stroke-linecap": "round",
+                  }),
+                );
+              }
+              const handGroup = createSVG("g", { id: "al-handGroup" });
+              handGroup.style.transformOrigin = "100px 100px";
+              const sector = createSVG("path", {
+                id: "al-sector",
+                d: "",
+                fill: "rgba(255, 157, 0, 0.15)",
+              });
+              svg.appendChild(sector);
+              handGroup.appendChild(
+                createSVG("line", {
+                  x1: 100,
+                  y1: 100,
+                  x2: 100,
+                  y2: 25,
+                  stroke: "#ffea00",
+                  "stroke-width": 4,
+                  "stroke-linecap": "round",
+                }),
+              );
+              handGroup.appendChild(
+                createSVG("circle", { cx: 100, cy: 100, r: 6, fill: "#fff" }),
+              );
+              svg.appendChild(handGroup);
+              els.svgContainer.appendChild(svg);
+            },
+            update: (p) => {
+              const hGroup = document.getElementById("al-handGroup");
+              const sector = document.getElementById("al-sector");
+              if (!hGroup) return;
+              const angle = (1 - p) * 360;
+              hGroup.style.transform = `rotate(${angle}deg)`;
+              const startRad = ((angle - 90) * Math.PI) / 180;
+              const endRad = (-90 * Math.PI) / 180;
+              const x1 = 100 + 85 * Math.cos(startRad);
+              const y1 = 100 + 85 * Math.sin(startRad);
+              const x2 = 100 + 85 * Math.cos(endRad);
+              const y2 = 100 + 85 * Math.sin(endRad);
+              const largeArc = p > 0.5 ? 1 : 0;
+              if (p === 1)
+                sector.setAttribute(
+                  "d",
+                  "M100,100 L100,15 A85,85 0 1,1 99.9,15 Z",
+                );
+              else if (p === 0) sector.setAttribute("d", "");
+              else
+                sector.setAttribute(
+                  "d",
+                  `M100,100 L${x1},${y1} A85,85 0 ${largeArc},1 ${x2},${y2} Z`,
+                );
+            },
+          },
+          {
+            id: "digital",
+            name: "💻 Neón Digital",
+            init: () => {
+              const svg = createSVG("svg", { viewBox: "0 0 300 150" });
+              const defs = createSVG("defs");
+              defs.innerHTML = ``;
+              svg.appendChild(defs);
+              svg.appendChild(
+                createSVG("rect", {
+                  x: 10,
+                  y: 10,
+                  width: 280,
+                  height: 130,
+                  rx: 15,
+                  fill: "#0a0a0a",
+                  stroke: "#333",
+                  "stroke-width": 4,
+                }),
+              );
+              const text = createSVG("text", {
+                id: "dg-text",
+                x: 150,
+                y: 100,
+                "text-anchor": "middle",
+                fill: "#00ffcc",
+                "font-family": "'Space Mono', monospace",
+                "font-size": "70",
+                "font-weight": "bold",
+              });
+              svg.appendChild(text);
+              els.svgContainer.appendChild(svg);
+            },
+            update: (p) => {
+              const txt = document.getElementById("dg-text");
+              if (!txt) return;
+              const totalSecs = Math.ceil(remainingMs / 1000);
+              const m = Math.floor(totalSecs / 60)
+                .toString()
+                .padStart(2, "0");
+              const s = (totalSecs % 60).toString().padStart(2, "0");
+              txt.textContent = `${m}:${s}`;
+              txt.setAttribute("fill", p > 0.2 ? "#00ffcc" : "#ff3366");
+            },
+          },
+          {
+            id: "sunmoon",
+            name: "🌞 Ciclo Celeste",
+            init: () => {
+              const svg = createSVG("svg", { viewBox: "0 0 300 200" });
+              const sky = createSVG("rect", {
+                id: "sm-sky",
+                width: 300,
+                height: 200,
+                rx: 20,
+              });
+              sky.style.transition = "fill 0.5s linear";
+              svg.appendChild(sky);
+              const stars = createSVG("g", { id: "sm-stars" });
+              stars.style.transition = "opacity 0.5s linear";
+              for (let i = 0; i < 20; i++) {
+                stars.appendChild(
+                  createSVG("circle", {
+                    cx: Math.random() * 300,
+                    cy: Math.random() * 150,
+                    r: Math.random() * 2 + 0.5,
+                    fill: "#fff",
+                    opacity: Math.random(),
+                  }),
+                );
+              }
+              svg.appendChild(stars);
+              const sun = createSVG("circle", {
+                id: "sm-sun",
+                r: 25,
+                fill: "#ffdb58",
+              });
+              svg.appendChild(sun);
+              const moon = createSVG("path", {
+                id: "sm-moon",
+                d: "M0,-20 A20,20 0 1,0 15,15 A25,25 0 0,1 0,-20 Z",
+                fill: "#f4f6f0",
+              });
+              moon.style.transition = "opacity 0.5s linear";
+              svg.appendChild(moon);
+              svg.appendChild(
+                createSVG("path", {
+                  d: "M0,150 Q75,120 150,160 T300,140 L300,200 L0,200 Z",
+                  fill: "#141a29",
+                }),
+              );
+              els.svgContainer.appendChild(svg);
+            },
+            update: (p) => {
+              const sky = document.getElementById("sm-sky");
+              const sun = document.getElementById("sm-sun");
+              const moon = document.getElementById("sm-moon");
+              const stars = document.getElementById("sm-stars");
+              if (!sky) return;
+              sky.setAttribute(
+                "fill",
+                p > 0.4 ? "#4eb3e7" : p > 0.2 ? "#e77b4e" : "#0f172a",
+              );
+              stars.style.opacity = p < 0.3 ? "1" : "0";
+              const angleSun = (1 - p) * Math.PI;
+              sun.setAttribute("cx", 150 - Math.cos(angleSun) * 120);
+              sun.setAttribute("cy", 170 - Math.sin(angleSun) * 100);
+              const angleMoon = (1 - p - 1) * Math.PI;
+              moon.style.transform = `translate(${150 - Math.cos(angleMoon) * 120}px, ${170 - Math.sin(angleMoon) * 100}px)`;
+              moon.style.opacity = p < 0.5 ? "1" : "0";
+            },
+          },
+          {
+            id: "water",
+            name: "💧 Clepsidra",
+            init: () => {
+              const svg = createSVG("svg", { viewBox: "0 0 200 300" });
+              const defs = createSVG("defs");
+              defs.innerHTML = `<clipPath id="jar"><path d="M60,40 L140,40 L150,260 L50,260 Z"/></clipPath>
+                            <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4facfe"/><stop offset="100%" stop-color="#00f2fe"/></linearGradient>`;
+              svg.appendChild(defs);
+              const waterGroup = createSVG("g", { "clip-path": "url(#jar)" });
+              const waterFill = createSVG("rect", {
+                id: "wt-fill",
+                x: 0,
+                y: 300,
+                width: 200,
+                height: 300,
+                fill: "url(#waterGrad)",
+              });
+              waterGroup.appendChild(waterFill);
+              const wave = createSVG("path", {
+                id: "wt-wave",
+                fill: "#4facfe",
+              });
+              wave.style.animation = "floatWater 3s infinite linear";
+              waterGroup.appendChild(wave);
+              svg.appendChild(waterGroup);
+              svg.appendChild(
+                createSVG("path", {
+                  d: "M60,40 L140,40 L150,260 L50,260 Z",
+                  fill: "none",
+                  stroke: "rgba(255,255,255,0.5)",
+                  "stroke-width": 4,
+                }),
+              );
+              const drop = createSVG("circle", {
+                id: "wt-drop",
+                cx: 100,
+                cy: 40,
+                r: 4,
+                fill: "#00f2fe",
+              });
+              svg.appendChild(drop);
+              els.svgContainer.appendChild(svg);
+            },
+            update: (p, isRunning) => {
+              const fill = document.getElementById("wt-fill");
+              const wave = document.getElementById("wt-wave");
+              const drop = document.getElementById("wt-drop");
+              if (!fill) return;
+              const waterY = 260 - 220 * p;
+              fill.setAttribute("y", waterY);
+              wave.style.transform = `translate(0px, ${waterY - 50}px) scaleX(2)`;
+              if (isRunning && p > 0) {
+                drop.style.opacity = "1";
+                const dropProgress = (performance.now() % 600) / 600;
+                drop.setAttribute("cy", 40 + dropProgress * (waterY - 40));
+              } else {
+                drop.style.opacity = "0";
+              }
+            },
+          },
+          {
+            id: "tree",
+            name: "🌳 Árbol Vital",
+            init: () => {
+              const svg = createSVG("svg", { viewBox: "0 0 200 250" });
+              svg.appendChild(
+                createSVG("path", {
+                  d: "M90,230 Q95,150 70,100 Q95,120 100,160 Q105,120 130,100 Q105,150 110,230 Z",
+                  fill: "#5c4033",
+                }),
+              );
+              const foliage = createSVG("g", { id: "tr-foliage" });
+              foliage.style.transition = "fill 0.5s ease-in-out";
+              const leaves = [
+                [100, 60, 40],
+                [70, 100, 35],
+                [130, 100, 35],
+                [50, 140, 25],
+                [150, 140, 25],
+                [100, 120, 45],
+              ];
+              leaves.forEach(([cx, cy, r]) => {
+                foliage.appendChild(
+                  createSVG("circle", {
+                    cx,
+                    cy,
+                    r,
+                    fill: "inherit",
+                    opacity: 0.9,
+                  }),
+                );
+              });
+              svg.appendChild(foliage);
+              els.svgContainer.appendChild(svg);
+            },
+            update: (p) => {
+              const foliage = document.getElementById("tr-foliage");
+              if (!foliage) return;
+              let color = "#4ade80";
+              let scale = 1;
+              if (p < 0.6 && p >= 0.3) color = "#facc15";
+              else if (p < 0.3 && p > 0) color = "#f97316";
+              else if (p === 0) {
+                color = "#78350f";
+                scale = 0.8;
+              }
+              foliage.style.fill = color;
+              foliage.style.transform = `scale(${scale})`;
+              foliage.style.transformOrigin = "100px 160px";
+            },
+          },
+          {
+            id: "heart",
+            name: "❤️ Latido",
+            init: () => {
+              const svg = createSVG("svg", { viewBox: "0 0 200 200" });
+              const defs = createSVG("defs");
+              defs.innerHTML = `<radialGradient id="heartGrad" cx="30%" cy="30%" r="70%"><stop offset="0%" stop-color="#ff758c"/><stop offset="100%" stop-color="#ff7eb3"/></radialGradient>`;
+              svg.appendChild(defs);
+              const heart = createSVG("path", {
+                id: "ht-path",
+                d: "M100,170 C40,110 -20,60 20,20 C45,-5 80,10 100,40 C120,10 155,-5 180,20 C220,60 160,110 100,170 Z",
+                fill: "url(#heartGrad)",
+                stroke: "#ff0844",
+                "stroke-width": 3,
+              });
+              heart.style.transformOrigin = "100px 100px";
+              heart.style.animation =
+                "pulseHeart 1s infinite cubic-bezier(0.25, 1, 0.5, 1)";
+              svg.appendChild(heart);
+              els.svgContainer.appendChild(svg);
+            },
+            update: (p, isRunning) => {
+              const heart = document.getElementById("ht-path");
+              if (!heart) return;
+              let duration = isRunning ? Math.max(0.2, p * 1.5) : 0;
+              heart.style.animationDuration =
+                duration > 0 ? `${duration}s` : "0s";
+              const grayscale = (1 - p) * 100;
+              heart.style.filter = `grayscale(${grayscale}%)`;
+            },
+          },
+          {
+            id: "pendulum",
+            name: "⚖️ Péndulo Hipnótico",
+            init: () => {
+              const svg = createSVG("svg", { viewBox: "0 0 200 300" });
+              svg.appendChild(
+                createSVG("path", {
+                  d: "M50,20 L150,20 L140,50 L60,50 Z",
+                  fill: "#3d2b1f",
+                }),
+              );
+              const pendGroup = createSVG("g", { id: "pd-group" });
+              pendGroup.style.transformOrigin = "100px 35px";
+              pendGroup.style.animation = "swing 2s infinite ease-in-out";
+              pendGroup.appendChild(
+                createSVG("line", {
+                  x1: 100,
+                  y1: 35,
+                  x2: 100,
+                  y2: 240,
+                  stroke: "#d4af37",
+                  "stroke-width": 4,
+                }),
+              );
+              const defs = createSVG("defs");
+              defs.innerHTML = `<radialGradient id="gold" cx="30%" cy="30%" r="70%"><stop offset="0%" stop-color="#fff6cc"/><stop offset="50%" stop-color="#d4af37"/><stop offset="100%" stop-color="#997a00"/></radialGradient>`;
+              svg.appendChild(defs);
+              pendGroup.appendChild(
+                createSVG("circle", {
+                  cx: 100,
+                  cy: 240,
+                  r: 30,
+                  fill: "url(#gold)",
+                }),
+              );
+              svg.appendChild(pendGroup);
+              els.svgContainer.appendChild(svg);
+            },
+            update: (p, isRunning) => {
+              const pGroup = document.getElementById("pd-group");
+              if (!pGroup) return;
+              if (!isRunning || p === 0) {
+                pGroup.style.animationPlayState = "paused";
+                pGroup.style.transform = "rotate(0deg)";
+              } else {
+                pGroup.style.animationPlayState = "running";
+              }
+            },
+          },
+          {
+            id: "kitchen",
+            name: "⏲️ Temporizador Retro",
+            init: () => {
+              const svg = createSVG("svg", { viewBox: "0 0 200 200" });
+              const defs = createSVG("defs");
+              defs.innerHTML = `<linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e2e8f0"/><stop offset="100%" stop-color="#94a3b8"/></linearGradient>`;
+              svg.appendChild(defs);
+              svg.appendChild(
+                createSVG("circle", {
+                  cx: 100,
+                  cy: 100,
+                  r: 90,
+                  fill: "#ef4444",
+                }),
+              );
+              svg.appendChild(
+                createSVG("circle", {
+                  cx: 100,
+                  cy: 100,
+                  r: 70,
+                  fill: "#f8fafc",
+                  stroke: "#cbd5e1",
+                  "stroke-width": 5,
+                }),
+              );
+              for (let i = 0; i < 60; i += 5) {
+                const angle = ((i * 6 - 90) * Math.PI) / 180;
+                const r1 = i % 15 === 0 ? 55 : 62;
+                const x1 = 100 + r1 * Math.cos(angle),
+                  y1 = 100 + r1 * Math.sin(angle);
+                const x2 = 100 + 68 * Math.cos(angle),
+                  y2 = 100 + 68 * Math.sin(angle);
+                svg.appendChild(
+                  createSVG("line", {
+                    x1,
+                    y1,
+                    x2,
+                    y2,
+                    stroke: "#334155",
+                    "stroke-width": i % 15 === 0 ? 3 : 1,
+                  }),
+                );
+              }
+              const knob = createSVG("g", { id: "kt-knob" });
+              knob.style.transformOrigin = "100px 100px";
+              knob.appendChild(
+                createSVG("circle", {
+                  cx: 100,
+                  cy: 100,
+                  r: 40,
+                  fill: "url(#metal)",
+                }),
+              );
+              knob.appendChild(
+                createSVG("circle", {
+                  cx: 100,
+                  cy: 100,
+                  r: 35,
+                  fill: "#f1f5f9",
+                }),
+              );
+              knob.appendChild(
+                createSVG("polygon", {
+                  points: "95,100 105,100 100,65",
+                  fill: "#ef4444",
+                }),
+              );
+              svg.appendChild(knob);
+              els.svgContainer.appendChild(svg);
+            },
+            update: (p) => {
+              const knob = document.getElementById("kt-knob");
+              if (knob) knob.style.transform = `rotate(${p * 360}deg)`;
+            },
+          },
+        ];
+        // --- Funciones Principales ---
+        const buildGrid = () => {
+          els.grid.innerHTML = "";
+          visualizers.forEach((obj, idx) => {
+            const div = document.createElement("div");
+            div.className =
+              "obj-thumb" + (idx === currentObjectIndex ? " active" : "");
+            const iconSpan = document.createElement("span");
+            iconSpan.textContent = obj.name.split(" ")[0];
+            const textSmall = document.createElement("small");
+            textSmall.textContent = obj.name.split(" ").slice(1).join(" ");
+            div.appendChild(iconSpan);
+            div.appendChild(textSmall);
+            div.addEventListener("click", () => {
+              SoundEngine.click();
+              selectObject(idx);
+            });
+            els.grid.appendChild(div);
+          });
+        };
+        const selectObject = (index) => {
+          currentObjectIndex = index;
+          document
+            .querySelectorAll(".obj-thumb")
+            .forEach((el, i) =>
+              el.classList.toggle("active", i === currentObjectIndex),
+            );
+          els.name.textContent = visualizers[index].name;
+          els.svgContainer.innerHTML = "";
+          visualizers[currentObjectIndex].init();
+          forceUpdateVisuals();
+        };
+        const getProgress = () => (totalMs > 0 ? remainingMs / totalMs : 0);
+        const forceUpdateVisuals = () => {
+          const p = getProgress();
+          els.progress.style.transform = `scaleX(${p})`;
+          visualizers[currentObjectIndex].update(p, isRunning);
+        };
+        // --- Efectos Finales ---
+        const triggerEndEffect = () => {
+          SoundEngine.end(); // Disparar melodía final
+          els.svgContainer.querySelector("svg").style.animation =
+            "shake 0.5s cubic-bezier(.36,.07,.19,.97) both";
+          setTimeout(
+            () => (els.svgContainer.querySelector("svg").style.animation = ""),
+            500,
+          );
+          for (let i = 0; i < 100; i++) {
+            const conf = document.createElement("div");
+            const color = ["#ff9d00", "#ffea00", "#ff3366", "#00ffcc"][
+              Math.floor(Math.random() * 4)
+            ];
+            conf.style.cssText = `
+          position: fixed; top: 50%; left: 50%; width: 10px; height: 10px; 
+          background: ${color}; border-radius: ${Math.random() > 0.5 ? "50%" : "0"};
+          pointer-events: none; z-index: 9999;
+          transform: translate(-50%, -50%) rotate(0deg);
+        `;
+            document.body.appendChild(conf);
+            const tx = (Math.random() - 0.5) * window.innerWidth;
+            const ty = (Math.random() - 0.5) * window.innerHeight - 200;
+            const rot = Math.random() * 720;
+            conf.animate(
+              [
+                {
+                  transform: "translate(-50%, -50%) scale(1) rotate(0deg)",
+                  opacity: 1,
+                },
+                {
+                  transform: `translate(${tx}px, ${ty}px) scale(0) rotate(${rot}deg)`,
+                  opacity: 0,
+                },
+              ],
+              {
+                duration: 1500 + Math.random() * 1000,
+                easing: "cubic-bezier(0.25, 1, 0.5, 1)",
+                fill: "forwards",
+              },
+            );
+            setTimeout(() => conf.remove(), 3000);
+          }
+        };
+        // --- Control del Temporizador de Alta Precisión ---
+        const tick = (now) => {
+          if (!isRunning) return;
+          const delta = now - lastTime;
+          lastTime = now;
+          remainingMs -= delta;
+          if (remainingMs <= 0) {
+            remainingMs = 0;
+            stopTimer();
+            forceUpdateVisuals();
+            triggerEndEffect(); // Explota en el milisegundo exacto
+          } else {
+            forceUpdateVisuals();
+            animationFrameId = requestAnimationFrame(tick);
+          }
+        };
+        const stopTimer = () => {
+          if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+            animationFrameId = null;
+          }
+          isRunning = false;
+          forceUpdateVisuals();
+        };
+        const startTimer = () => {
+          if (isRunning) return;
+          if (remainingMs <= 0) resetTimer();
+          SoundEngine.init(); // Permite audio tras interactuar con la página
+          SoundEngine.click();
+          isRunning = true;
+          lastTime = performance.now();
+          animationFrameId = requestAnimationFrame(tick);
+          forceUpdateVisuals();
+        };
+        const resetTimer = () => {
+          stopTimer();
+          const mins = parseInt(els.min.value) || 0;
+          const secs = parseInt(els.sec.value) || 0;
+          totalMs = (mins * 60 + secs) * 1000;
+          if (totalMs < 1000) totalMs = 30000;
+          remainingMs = totalMs;
+          forceUpdateVisuals();
+        };
+        // --- Event Listeners ---
+        els.start.addEventListener("click", startTimer);
+        els.pause.addEventListener("click", () => {
+          SoundEngine.click();
+          stopTimer();
+        });
+        els.reset.addEventListener("click", () => {
+          SoundEngine.click();
+          resetTimer();
+        });
+        els.min.addEventListener("change", () => {
+          SoundEngine.click();
+          resetTimer();
+        });
+        els.sec.addEventListener("change", () => {
+          SoundEngine.click();
+          resetTimer();
+        });
+        els.prev.addEventListener("click", () => {
+          SoundEngine.click();
+          selectObject(
+            (currentObjectIndex - 1 + visualizers.length) % visualizers.length,
+          );
+        });
+        els.next.addEventListener("click", () => {
+          SoundEngine.click();
+          selectObject((currentObjectIndex + 1) % visualizers.length);
+        });
+        buildGrid();
+        resetTimer();
+        selectObject(0);
+      })();
+    </script>
+  </body>
+</html>

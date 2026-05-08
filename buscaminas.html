@@ -1,0 +1,811 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Buscaminas | Educa y Juega</title>
+    <meta name="description" content="Juego de buscaminas clásico con tres niveles de dificultad. Entrena la lógica y el razonamiento." />
+    <meta name="keywords" content="buscaminas, juego de lógica, buscaminas gratis, juego clásico, minas" />
+    <link rel="canonical" href="https://educayjuega.com/buscaminas.html" />
+    <meta property="og:title" content="Buscaminas | Educa y Juega" />
+    <meta property="og:description" content="Juego de buscaminas clásico con tres niveles de dificultad. Entrena la lógica y el razonamiento." />
+    <meta property="og:url" content="https://educayjuega.com/buscaminas.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://educayjuega.com/favicon.svg" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Buscaminas | Educa y Juega" />
+    <meta name="twitter:description" content="Juego de buscaminas clásico con tres niveles de dificultad. Entrena la lógica y el razonamiento." />
+
+<link rel="stylesheet" href="css/styles.css" />
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+    <style>
+      .tool-header h1 {
+        color: white;
+      }
+      :root {
+        --primary: #6366f1;
+        --primary-hover: #4f46e5;
+        --bg-color: #0f172a;
+        --panel-bg: rgba(30, 41, 59, 0.7);
+        --cell-bg: #334155;
+        --cell-hover: #475569;
+        --cell-revealed: #1e293b;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --accent-mine: #ef4444;
+        --accent-flag: #f59e0b;
+      }
+      .tool-header {
+        background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+      .game-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .controls-panel {
+        background: var(--panel-bg);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      .stats-group {
+        display: flex;
+        gap: 2rem;
+        font-size: 1.25rem;
+        font-weight: 600;
+      }
+      .stat-box {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(0, 0, 0, 0.2);
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        min-width: 80px;
+        justify-content: center;
+        color: white;
+      }
+      .stat-icon {
+        font-size: 1.5rem;
+      }
+      .difficulty-select {
+        background: rgba(0, 0, 0, 0.2);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        cursor: pointer;
+        outline: none;
+      }
+      .difficulty-select:focus {
+        border-color: var(--primary);
+      }
+      .difficulty-select option {
+        background: var(--bg-color);
+      }
+      .tablero {
+        display: grid;
+        gap: 4px;
+        background: var(--panel-bg);
+        padding: 1rem;
+        border-radius: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        user-select: none;
+        transition: all 0.3s ease;
+      }
+      .celda {
+        width: 100%;
+        aspect-ratio: 1;
+        background: var(--cell-bg);
+        border-radius: 0.3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 1.2rem;
+        cursor: pointer;
+        border: 2px solid rgba(255, 255, 255, 0.05);
+        box-shadow:
+          inset 0 2px 0 rgba(255, 255, 255, 0.1),
+          0 2px 4px rgba(0, 0, 0, 0.2);
+        transition: all 0.1s ease;
+        color: var(--text-main); /* Fix for invisible emojis on Windows */
+      }
+      .celda:hover:not(.revelada) {
+        background: var(--cell-hover);
+        transform: translateY(-2px);
+        box-shadow:
+          inset 0 2px 0 rgba(255, 255, 255, 0.1),
+          0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+      .celda:active:not(.revelada) {
+        transform: translateY(0);
+      }
+      .celda.revelada {
+        background: var(--cell-revealed);
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+        border-color: rgba(0, 0, 0, 0.2);
+        cursor: default;
+        color: var(--text-main);
+        animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+      .celda.bandera::before {
+        content: "🚩";
+        font-size: 1.2rem;
+        color: initial;
+        animation: popIn 0.2s ease-out;
+      }
+      .celda.mina {
+        background: rgba(239, 68, 68, 0.2);
+        border-color: var(--accent-mine);
+      }
+      .celda.mina::before {
+        content: "💣";
+        font-size: 1.5rem;
+        animation: shake 0.5s ease-in-out;
+      }
+      .celda.mina-explotada {
+        background: var(--accent-mine);
+        box-shadow: 0 0 15px var(--accent-mine);
+        z-index: 2;
+      } /* Number Colors */
+      .celda[data-n="1"] {
+        color: #60a5fa;
+        text-shadow: 0 0 10px rgba(96, 165, 250, 0.3);
+      }
+      .celda[data-n="2"] {
+        color: #34d399;
+        text-shadow: 0 0 10px rgba(52, 211, 153, 0.3);
+      }
+      .celda[data-n="3"] {
+        color: #f87171;
+        text-shadow: 0 0 10px rgba(248, 113, 113, 0.3);
+      }
+      .celda[data-n="4"] {
+        color: #c084fc;
+        text-shadow: 0 0 10px rgba(192, 132, 252, 0.3);
+      }
+      .celda[data-n="5"] {
+        color: #facc15;
+        text-shadow: 0 0 10px rgba(250, 204, 21, 0.3);
+      }
+      .celda[data-n="6"] {
+        color: #2dd4bf;
+        text-shadow: 0 0 10px rgba(45, 212, 191, 0.3);
+      }
+      .celda[data-n="7"] {
+        color: #fb923c;
+        text-shadow: 0 0 10px rgba(251, 146, 60, 0.3);
+      }
+      .celda[data-n="8"] {
+        color: #e879f9;
+        text-shadow: 0 0 10px rgba(232, 121, 249, 0.3);
+      }
+      .action-btn {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+      }
+      .action-btn:hover {
+        background: var(--primary-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(99, 102, 241, 0.5);
+      }
+      .mensaje-container {
+        margin-top: 2rem;
+        height: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 2rem;
+      }
+      #mensaje {
+        font-size: 1.5rem;
+        font-weight: 800;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.4s ease;
+        text-align: center;
+      }
+      #mensaje.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .game-over {
+        pointer-events: none;
+      }
+      .game-over .tablero {
+        opacity: 0.9;
+        filter: saturate(0.5);
+      }
+      @keyframes popIn {
+        0% {
+          transform: scale(0.5);
+          opacity: 0;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(-4px) rotate(-5deg);
+        }
+        75% {
+          transform: translateX(4px) rotate(5deg);
+        }
+      }
+      @keyframes winPulse {
+        0% {
+          box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.4);
+        }
+        70% {
+          box-shadow: 0 0 0 20px rgba(52, 211, 153, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(52, 211, 153, 0);
+        }
+      }
+      .win-glow {
+        animation: winPulse 2s infinite;
+        border-color: #34d399;
+      }
+      .game-layout {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+        width: 100%;
+      }
+      .mascot-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100px;
+        height: 100px;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.1) 0%,
+          rgba(255, 255, 255, 0) 70%
+        );
+        border-radius: 50%;
+        font-size: 5rem;
+        filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.4));
+        transition: all 0.2s ease;
+        user-select: none;
+        text-shadow:
+          2px 2px 4px rgba(0, 0, 0, 0.3),
+          -1px -1px 0 rgba(255, 255, 255, 0.2);
+        font-family: "Segoe UI Emoji", "Apple Color Emoji", sans-serif;
+        margin-bottom: 2rem;
+      }
+      .mascot-container.anim-bounce {
+        animation: mascotBounce 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+      @keyframes mascotBounce {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.2) rotate(5deg);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      @media (max-width: 768px) {
+        .tablero {
+          padding: 0.5rem;
+          gap: 2px;
+        }
+        .celda {
+          font-size: 1rem;
+        }
+        .controls-panel {
+          flex-direction: column;
+        }
+        .game-layout {
+          flex-direction: column;
+        }
+        .mascot-container {
+          margin-bottom: 0;
+          margin-top: 1rem;
+        }
+      }
+    </style>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Buscaminas | Educa y Juega",
+    "url": "https://educayjuega.com/buscaminas.html",
+    "description": "Juego de buscaminas clásico con tres niveles de dificultad. Entrena la lógica y el razonamiento.",
+    "inLanguage": "es-ES"
+  }
+  </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-container">
+        <a href="index.html" class="logo">
+          <span class="logo-icon">📚</span> Educa y Juega
+        </a>
+        <button class="menu-toggle" aria-label="Menú">☰</button>
+                  <nav class="nav-menu">
+            <a href="index.html">🏠 Inicio</a>
+            <a href="hora-mundial.html">🕐 Hora Mundial</a>
+            <a href="dados.html">🎲 Dados</a>
+            <a href="ruleta.html">🎰 Ruleta</a>
+            <a href="ruleta-preguntas.html">❓ Ruleta Preguntas</a>
+            <a href="temporizador.html">⏱️ Temporizador</a>
+            <a href="cronometro.html">⏱ Cronómetro</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="vocabulario.html">📝 Vocabulario</a>
+            <a href="conjugador.html">📝 Conjugador</a>
+            <a href="ejercicios.html">➕ Ejercicios</a>
+            <a href="fracciones.html">🍕 Fracciones</a>
+            <a href="tablas.html">✖️ Tablas</a>
+            <a href="calculadora.html">🧮 Calculadora</a>
+            <a href="calculadora-areas.html">📐 Calcular Áreas</a>
+            <a href="geometria.html">📐 Geometría</a>
+            <a href="convertidor.html">🔄 Convertir</a>
+            <a href="recta-numerica.html">📏 Recta</a>
+            <a href="linea-tiempo.html">⏳ Línea Tiempo</a>
+            <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
+            <a href="sistema-solar.html">🌍 Sistema Solar</a>
+            <a href="ciclo-agua.html">💧 Ciclo Agua</a>
+            <a href="cuerpo-humano.html">🧍 Cuerpo Humano</a>
+            <a href="grupos.html">👥 Grupos</a>
+            <a href="selector.html">🎯 Selector</a>
+            <a href="asistencias.html">📋 Asistencias</a>
+            <a href="horario.html">📅 Horario</a>
+            <a href="normas-aula.html">📜 Normas</a>
+            <a href="pizarra.html">🖍️ Pizarra</a>
+            <a href="bolsa-premios.html">🎁 Premios</a>
+            <a href="puntos.html">🏆 Puntos</a>
+            <a href="aciertos.html">✅ Aciertos</a>
+            <a href="ajedrez.html">♟️ Ajedrez</a>
+            <a href="bingo.html">🎱 Bingo</a>
+            <a href="buscaminas.html">💣 Buscaminas</a>
+            <a href="crucigrama.html">✏️ Crucigrama</a>
+            <a href="damas.html">🟡 Damas</a>
+            <a href="laberinto.html">🌀 Laberinto</a>
+            <a href="memoria.html">🧠 Memoria</a>
+            <a href="piedra-papel.html">🪨 PPT</a>
+            <a href="sopa-letras.html">🔍 Sopa Letras</a>
+            <a href="sudoku.html">🔢 Sudoku</a>
+            <a href="tangram.html">🔺 Tangram</a>
+            <a href="tres-en-raya.html">⭕ Tres Raya</a>
+            <a href="contacto.html">📧 Contacto</a>
+            <a href="sobre-nosotros.html">ℹ️ Nosotros</a>
+            <a href="privacidad.html">🔒 Privacidad</a>
+          </nav>
+      </div>
+    </header>
+    <main>
+      <div class="tool-header">
+        <h1>💣 Buscaminas</h1>
+        <p>Click izquierdo para revelar, Click derecho para poner bandera</p>
+      </div>
+      <div class="game-container">
+        <div class="controls-panel">
+          <select
+            id="dificultad"
+            class="difficulty-select"
+            onchange="cambiarDificultad()"
+          >
+            <option value="facil">Nivel: Fácil (9x9, 10 Minas)</option>
+            <option value="medio">Nivel: Medio (16x16, 40 Minas)</option>
+            <option value="dificil">Nivel: Difícil (16x30, 99 Minas)</option>
+          </select>
+          <div class="stats-group">
+            <div class="stat-box">
+              <span class="stat-icon">🚩</span> <span id="flagCount">10</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-icon">⏱️</span> <span id="timer">000</span>
+            </div>
+          </div>
+          <button class="action-btn" onclick="iniciar()">
+            <span>🔄</span> Reiniciar
+          </button>
+        </div>
+        <div id="gameWrapper" class="game-layout">
+          <div
+            class="tablero"
+            id="tablero"
+            oncontextmenu="return false;"
+            onmouseleave="resetearMascota()"
+          ></div>
+          <div class="mascot-container" id="mascot">😃</div>
+        </div>
+        <div class="mensaje-container"><div id="mensaje"></div></div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-links">
+          <a href="contacto.html">📧 Contacto</a>
+          <a href="privacidad.html">🔒 Política de Privacidad</a>
+          <a href="sobre-nosotros.html">ℹ️ Sobre Nosotros</a>
+        </div>
+        <p class="footer-copy">
+          &copy; 2026 Educa y Juega. Herramientas educativas gratuitas
+          para profesores.
+        </p>
+      </div>
+    </footer>
+    <script>
+      let grid = [];
+      let minas = 10;
+      let filas = 9;
+      let columnas = 9;
+      let gameOver = false;
+      let banderas = 0;
+      let celdasReveladas = 0;
+      let timerInterval = null;
+      let tiempo = 0;
+      let primerClick = true;
+      const niveles = {
+        facil: { f: 9, c: 9, m: 10 },
+        medio: { f: 16, c: 16, m: 40 },
+        dificil: { f: 16, c: 30, m: 99 },
+      };
+      function cambiarDificultad() {
+        const nivel = document.getElementById("dificultad").value;
+        filas = niveles[nivel].f;
+        columnas = niveles[nivel].c;
+        minas = niveles[nivel].m;
+        iniciar();
+      }
+      function actualizarTimer() {
+        tiempo++;
+        document.getElementById("timer").textContent = tiempo
+          .toString()
+          .padStart(3, "0");
+      }
+      function detenerTimer() {
+        if (timerInterval) clearInterval(timerInterval);
+      }
+      function iniciar() {
+        detenerTimer();
+        tiempo = 0;
+        primerClick = true;
+        gameOver = false;
+        banderas = 0;
+        celdasReveladas = 0;
+        document.getElementById("timer").textContent = "000";
+        document.getElementById("flagCount").textContent = minas;
+        const msj = document.getElementById("mensaje");
+        msj.className = "";
+        msj.textContent = "";
+        const gameWrapper = document.getElementById("gameWrapper");
+        gameWrapper.classList.remove("game-over");
+        const tableroEl = document.getElementById("tablero");
+        tableroEl.classList.remove("win-glow");
+        // Inicializar matriz de estado
+        grid = Array(filas)
+          .fill(null)
+          .map(() =>
+            Array(columnas)
+              .fill(null)
+              .map(() => ({
+                mina: false,
+                revelada: false,
+                bandera: false,
+                vecinas: 0,
+                elemento: null,
+              })),
+          );
+        renderizarTablero();
+      }
+      function generarMinas(fExcluida, cExcluida) {
+        let colocadas = 0;
+        while (colocadas < minas) {
+          let r = Math.floor(Math.random() * filas);
+          let c = Math.floor(Math.random() * columnas);
+          // Evitar poner mina en el primer click o donde ya hay
+          if (!grid[r][c].mina && !(r === fExcluida && c === cExcluida)) {
+            // Evitar minas adyacentes al primer click para asegurar una apertura
+            if (Math.abs(r - fExcluida) <= 1 && Math.abs(c - cExcluida) <= 1)
+              continue;
+            grid[r][c].mina = true;
+            colocadas++;
+          }
+        }
+        // Calcular minas vecinas
+        for (let r = 0; r < filas; r++) {
+          for (let c = 0; c < columnas; c++) {
+            if (!grid[r][c].mina) {
+              let count = 0;
+              for (let dr = -1; dr <= 1; dr++) {
+                for (let dc = -1; dc <= 1; dc++) {
+                  let nr = r + dr,
+                    nc = c + dc;
+                  if (
+                    nr >= 0 &&
+                    nr < filas &&
+                    nc >= 0 &&
+                    nc < columnas &&
+                    grid[nr][nc].mina
+                  ) {
+                    count++;
+                  }
+                }
+              }
+              grid[r][c].vecinas = count;
+            }
+          }
+        }
+      }
+      function renderizarTablero() {
+        const tablero = document.getElementById("tablero");
+        tablero.innerHTML = "";
+        // Ajustar el tamaño máximo de celda dependiendo de la dificultad
+        const maxCellSize =
+          columnas > 16 ? "25px" : columnas > 9 ? "30px" : "40px";
+        tablero.style.gridTemplateColumns = `repeat(${columnas}, ${maxCellSize})`;
+        for (let r = 0; r < filas; r++) {
+          for (let c = 0; c < columnas; c++) {
+            const btn = document.createElement("div");
+            btn.className = "celda";
+            btn.addEventListener("click", (e) => {
+              if (e.detail === 2) {
+                // Doble click
+                revelarAdyacentes(r, c);
+              } else {
+                revelar(r, c);
+              }
+            });
+            btn.addEventListener("contextmenu", (e) => toggleBandera(e, r, c));
+            btn.addEventListener("mouseenter", () => actualizarMascota(r, c));
+            // Click rueda para revelar adyacentes si ya están las banderas
+            btn.addEventListener("auxclick", (e) => {
+              if (e.button === 1) {
+                e.preventDefault();
+                revelarAdyacentes(r, c);
+              }
+            });
+            grid[r][c].elemento = btn;
+            tablero.appendChild(btn);
+          }
+        }
+      }
+      function actualizarCeldaDOM(r, c) {
+        const celda = grid[r][c];
+        const el = celda.elemento;
+        el.className = "celda";
+        if (celda.revelada) {
+          el.classList.add("revelada");
+          if (celda.mina) {
+            el.classList.add("mina");
+          } else if (celda.vecinas > 0) {
+            el.setAttribute("data-n", celda.vecinas);
+            el.textContent = celda.vecinas;
+          }
+        } else if (celda.bandera) {
+          el.classList.add("bandera");
+        }
+      }
+      function revelar(r, c) {
+        if (gameOver || grid[r][c].revelada || grid[r][c].bandera) return;
+        if (primerClick) {
+          generarMinas(r, c);
+          primerClick = false;
+          timerInterval = setInterval(actualizarTimer, 1000);
+        }
+        const celda = grid[r][c];
+        celda.revelada = true;
+        celdasReveladas++;
+        if (celda.mina) {
+          celda.elemento.classList.add("mina-explotada");
+          perder();
+          return;
+        }
+        actualizarCeldaDOM(r, c);
+        if (celda.vecinas === 0) {
+          // Flood fill
+          for (let dr = -1; dr <= 1; dr++) {
+            for (let dc = -1; dc <= 1; dc++) {
+              let nr = r + dr,
+                nc = c + dc;
+              if (
+                nr >= 0 &&
+                nr < filas &&
+                nc >= 0 &&
+                nc < columnas &&
+                !grid[nr][nc].revelada
+              ) {
+                revelar(nr, nc);
+              }
+            }
+          }
+        }
+        if (!gameOver) verificarVictoria();
+      }
+      function revelarAdyacentes(r, c) {
+        if (gameOver || !grid[r][c].revelada || grid[r][c].vecinas === 0)
+          return;
+        let banderasAlrededor = 0;
+        for (let dr = -1; dr <= 1; dr++) {
+          for (let dc = -1; dc <= 1; dc++) {
+            let nr = r + dr,
+              nc = c + dc;
+            if (
+              nr >= 0 &&
+              nr < filas &&
+              nc >= 0 &&
+              nc < columnas &&
+              grid[nr][nc].bandera
+            ) {
+              banderasAlrededor++;
+            }
+          }
+        }
+        if (banderasAlrededor === grid[r][c].vecinas) {
+          for (let dr = -1; dr <= 1; dr++) {
+            for (let dc = -1; dc <= 1; dc++) {
+              let nr = r + dr,
+                nc = c + dc;
+              if (
+                nr >= 0 &&
+                nr < filas &&
+                nc >= 0 &&
+                nc < columnas &&
+                !grid[nr][nc].revelada &&
+                !grid[nr][nc].bandera
+              ) {
+                revelar(nr, nc);
+              }
+            }
+          }
+        }
+      }
+      function toggleBandera(e, r, c) {
+        e.preventDefault();
+        if (gameOver || grid[r][c].revelada) return;
+        const celda = grid[r][c];
+        if (!celda.bandera && banderas < minas) {
+          celda.bandera = true;
+          banderas++;
+        } else if (celda.bandera) {
+          celda.bandera = false;
+          banderas--;
+        }
+        document.getElementById("flagCount").textContent = minas - banderas;
+        actualizarCeldaDOM(r, c);
+      }
+      function perder() {
+        gameOver = true;
+        detenerTimer();
+        document.getElementById("gameWrapper").classList.add("game-over");
+        setMascotFace("🤯");
+        // Mostrar mensaje
+        const msj = document.getElementById("mensaje");
+        msj.innerHTML = "💥 ¡Has pisado una mina! 💥";
+        msj.style.color = "#ef4444";
+        msj.classList.add("show");
+        // Revelar todas las minas con un efecto en cascada
+        let delay = 0;
+        for (let r = 0; r < filas; r++) {
+          for (let c = 0; c < columnas; c++) {
+            const celda = grid[r][c];
+            if (celda.mina && !celda.revelada && !celda.bandera) {
+              setTimeout(() => {
+                celda.revelada = true;
+                actualizarCeldaDOM(r, c);
+              }, delay);
+              delay += 30;
+            } else if (!celda.mina && celda.bandera) {
+              // Bandera incorrecta
+              setTimeout(() => {
+                celda.elemento.style.background = "rgba(239, 68, 68, 0.5)";
+                celda.elemento.style.borderColor = "red";
+                celda.elemento.classList.add("revelada");
+                celda.elemento.innerHTML = "❌";
+              }, delay);
+              delay += 30;
+            }
+          }
+        }
+      }
+      function verificarVictoria() {
+        if (celdasReveladas === filas * columnas - minas) {
+          gameOver = true;
+          detenerTimer();
+          document.getElementById("gameWrapper").classList.add("game-over");
+          document.getElementById("tablero").classList.add("win-glow");
+          setMascotFace("😎");
+          const msj = document.getElementById("mensaje");
+          msj.innerHTML = `🎉 ¡Victoria! Tiempo: ${tiempo}s 🎉`;
+          msj.style.color = "#34d399";
+          msj.classList.add("show");
+          // Poner banderas en las minas restantes
+          for (let r = 0; r < filas; r++) {
+            for (let c = 0; c < columnas; c++) {
+              if (grid[r][c].mina && !grid[r][c].bandera) {
+                grid[r][c].bandera = true;
+                actualizarCeldaDOM(r, c);
+              }
+            }
+          }
+          document.getElementById("flagCount").textContent = "0";
+        }
+      }
+      function actualizarMascota(r, c) {
+        if (gameOver) return;
+        const celda = grid[r][c];
+        if (celda.revelada) {
+          setMascotFace("😃");
+          return;
+        }
+        const miente = Math.random() < 0.15;
+        let esPeligro = celda.mina || celda.vecinas >= 3;
+        if (miente) esPeligro = !esPeligro;
+        if (esPeligro) {
+          const carasMiedo = ["😱", "😰", "🥶", "😬", "😵‍💫"];
+          setMascotFace(
+            carasMiedo[Math.floor(Math.random() * carasMiedo.length)],
+          );
+        } else {
+          const carasAlivio = ["😌", "🙂", "😋", "😏", "🤔"];
+          setMascotFace(
+            carasAlivio[Math.floor(Math.random() * carasAlivio.length)],
+          );
+        }
+      }
+      function resetearMascota() {
+        if (!gameOver) setMascotFace("😃");
+      }
+      function setMascotFace(face) {
+        const mascot = document.getElementById("mascot");
+        if (!mascot || mascot.textContent === face) return;
+        mascot.textContent = face;
+        mascot.classList.remove("anim-bounce");
+        void mascot.offsetWidth; // Trigger reflow
+        mascot.classList.add("anim-bounce");
+      }
+      // Inicializar el juego
+      document.addEventListener("DOMContentLoaded", iniciar);
+    </script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,254 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Juego de Aciertos | Educa y Juega</title>
+    <meta name="description" content="Contador de aciertos interactivo para el aula. Registra respuestas correctas e incorrectas en tiempo real." />
+    <meta name="keywords" content="contador de aciertos, registro de notas, evaluación interactiva, herramientas educativas" />
+    <link rel="canonical" href="https://educayjuega.com/aciertos.html" />
+    <meta property="og:title" content="Contador de Aciertos | Educa y Juega" />
+    <meta property="og:description" content="Contador de aciertos interactivo para el aula. Registra respuestas correctas e incorrectas en tiempo real." />
+    <meta property="og:url" content="https://educayjuega.com/aciertos.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://educayjuega.com/favicon.svg" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Contador de Aciertos | Educa y Juega" />
+    <meta name="twitter:description" content="Contador de aciertos interactivo para el aula. Registra respuestas correctas e incorrectas en tiempo real." />
+
+    <link rel="stylesheet" href="css/styles.css" />
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+    <style>
+      .tool-header h1 {
+        color: white;
+      }
+      .tool-header {
+        background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+      }
+      .tablero {
+        display: grid;
+        grid-template-columns: repeat(4, 80px);
+        gap: 10px;
+        width: fit-content;
+        margin: 0 auto;
+      }
+      .carta {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        border-radius: 0.5rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        transition:
+          transform 0.3s,
+          background 0.3s;
+      }
+      .carta:hover {
+        transform: scale(1.05);
+      }
+      .carta.abierta {
+        background: white;
+        border: 3px solid #4f46e5;
+        transform: rotateY(180deg);
+      }
+      .carta.encontrada {
+        background: #d1fae5;
+        border-color: #10b981;
+        opacity: 0.7;
+      }
+      .stats {
+        text-align: center;
+        margin: 1rem 0;
+        font-size: 1.1rem;
+      }
+      .ganador {
+        text-align: center;
+        padding: 1rem;
+        background: #d1fae5;
+        color: #065f46;
+        border-radius: 0.5rem;
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-top: 1rem;
+      }
+    </style>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Contador de Aciertos | Educa y Juega",
+    "url": "https://educayjuega.com/aciertos.html",
+    "description": "Contador de aciertos interactivo para el aula. Registra respuestas correctas e incorrectas en tiempo real.",
+    "inLanguage": "es-ES"
+  }
+  </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-container">
+        <a href="index.html" class="logo">
+          <span class="logo-icon">📚</span> Educa y Juega
+        </a>
+        <button class="menu-toggle" aria-label="Menú">☰</button>
+                  <nav class="nav-menu">
+            <a href="index.html">🏠 Inicio</a>
+            <a href="hora-mundial.html">🕐 Hora Mundial</a>
+            <a href="dados.html">🎲 Dados</a>
+            <a href="ruleta.html">🎰 Ruleta</a>
+            <a href="ruleta-preguntas.html">❓ Ruleta Preguntas</a>
+            <a href="temporizador.html">⏱️ Temporizador</a>
+            <a href="cronometro.html">⏱ Cronómetro</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="vocabulario.html">📝 Vocabulario</a>
+            <a href="conjugador.html">📝 Conjugador</a>
+            <a href="ejercicios.html">➕ Ejercicios</a>
+            <a href="fracciones.html">🍕 Fracciones</a>
+            <a href="tablas.html">✖️ Tablas</a>
+            <a href="calculadora.html">🧮 Calculadora</a>
+            <a href="calculadora-areas.html">📐 Calcular Áreas</a>
+            <a href="geometria.html">📐 Geometría</a>
+            <a href="convertidor.html">🔄 Convertir</a>
+            <a href="recta-numerica.html">📏 Recta</a>
+            <a href="linea-tiempo.html">⏳ Línea Tiempo</a>
+            <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
+            <a href="sistema-solar.html">🌍 Sistema Solar</a>
+            <a href="ciclo-agua.html">💧 Ciclo Agua</a>
+            <a href="cuerpo-humano.html">🧍 Cuerpo Humano</a>
+            <a href="grupos.html">👥 Grupos</a>
+            <a href="selector.html">🎯 Selector</a>
+            <a href="asistencias.html">📋 Asistencias</a>
+            <a href="horario.html">📅 Horario</a>
+            <a href="normas-aula.html">📜 Normas</a>
+            <a href="pizarra.html">🖍️ Pizarra</a>
+            <a href="bolsa-premios.html">🎁 Premios</a>
+            <a href="puntos.html">🏆 Puntos</a>
+            <a href="aciertos.html">✅ Aciertos</a>
+            <a href="ajedrez.html">♟️ Ajedrez</a>
+            <a href="bingo.html">🎱 Bingo</a>
+            <a href="buscaminas.html">💣 Buscaminas</a>
+            <a href="crucigrama.html">✏️ Crucigrama</a>
+            <a href="damas.html">🟡 Damas</a>
+            <a href="laberinto.html">🌀 Laberinto</a>
+            <a href="memoria.html">🧠 Memoria</a>
+            <a href="piedra-papel.html">🪨 PPT</a>
+            <a href="sopa-letras.html">🔍 Sopa Letras</a>
+            <a href="sudoku.html">🔢 Sudoku</a>
+            <a href="tangram.html">🔺 Tangram</a>
+            <a href="tres-en-raya.html">⭕ Tres Raya</a>
+            <a href="contacto.html">📧 Contacto</a>
+            <a href="sobre-nosotros.html">ℹ️ Nosotros</a>
+            <a href="privacidad.html">🔒 Privacidad</a>
+          </nav>
+      </div>
+    </header>
+    <main>
+      <div class="tool-header">
+        <h1>🎯 Juego de Aciertos</h1>
+        <p>Encuentra las parejas de frutas</p>
+      </div>
+      <div class="tool-content">
+        <div class="stats">
+          <span>Intentos: <strong id="intentos">0</strong></span> |
+          <span>Parejas: <strong id="parejas">0</strong>/8</span>
+        </div>
+        <div class="tablero" id="tablero"></div>
+        <div id="resultado"></div>
+        <button class="btn" onclick="iniciar()">🔄 Nuevo Juego</button>
+      </div>
+    </main>
+    <script>
+      const emojis = ["🍎", "🍌", "🍇", "🍊", "🍓", "🥝", "🍍", "🍒"];
+      let cartas = [];
+      let primeraCarta = null;
+      let segundaCarta = null;
+      let bloqueado = false;
+      let intentos = 0;
+      let parejas = 0;
+      function iniciar() {
+        primeraCarta = null;
+        segundaCarta = null;
+        bloqueado = false;
+        intentos = 0;
+        parejas = 0;
+        document.getElementById("intentos").textContent = "0";
+        document.getElementById("parejas").textContent = "0";
+        document.getElementById("resultado").innerHTML = "";
+        cartas = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
+        const tablero = document.getElementById("tablero");
+        tablero.innerHTML = cartas
+          .map(
+            (c, i) =>
+              `<div class="carta" data-index="${i}" data-emoji="${c}" onclick="seleccionar(this)">?</div>`,
+          )
+          .join("");
+      }
+      function seleccionar(carta) {
+        if (
+          bloqueado ||
+          carta === primeraCarta ||
+          carta.classList.contains("encontrada")
+        )
+          return;
+        carta.classList.add("abierta");
+        carta.textContent = carta.dataset.emoji;
+        if (!primeraCarta) {
+          primeraCarta = carta;
+        } else {
+          segundaCarta = carta;
+          intentos++;
+          document.getElementById("intentos").textContent = intentos;
+          verificarPareja();
+        }
+      }
+      function verificarPareja() {
+        bloqueado = true;
+        if (primeraCarta.dataset.emoji === segundaCarta.dataset.emoji) {
+          primeraCarta.classList.add("encontrada");
+          segundaCarta.classList.add("encontrada");
+          parejas++;
+          document.getElementById("parejas").textContent = parejas;
+          if (parejas === 8) {
+            document.getElementById("resultado").innerHTML =
+              `<div class="ganador">🎉 ¡Felicidades! Ganaste en ${intentos} intentos</div>`;
+          }
+          primeraCarta = null;
+          segundaCarta = null;
+          bloqueado = false;
+        } else {
+          setTimeout(() => {
+            primeraCarta.classList.remove("abierta");
+            primeraCarta.textContent = "?";
+            segundaCarta.classList.remove("abierta");
+            segundaCarta.textContent = "?";
+            primeraCarta = null;
+            segundaCarta = null;
+            bloqueado = false;
+          }, 1000);
+        }
+      }
+      iniciar();
+    </script>
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-links">
+          <a href="contacto.html">📧 Contacto</a>
+          <a href="privacidad.html">🔒 Política de Privacidad</a>
+          <a href="sobre-nosotros.html">ℹ️ Sobre Nosotros</a>
+        </div>
+        <p class="footer-copy">
+          &copy; 2026 Educa y Juega. Herramientas educativas gratuitas
+          para profesores.
+        </p>
+      </div>
+    </footer>
+    <script src="js/main.js"></script>
+  </body>
+</html>

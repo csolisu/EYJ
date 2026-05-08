@@ -1,0 +1,730 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Conjugador de Verbos | Educa y Juega</title>
+    <meta name="description" content="Conjuga verbos regulares e irregulares en español en todos los tiempos verbales. Herramienta educativa gratuita." />
+    <meta name="keywords" content="conjugador, verbos, conjugación, gramática, español, lengua" />
+    <link rel="canonical" href="https://educayjuega.com/conjugador.html" />
+    <meta property="og:title" content="Conjugador de Verbos | Educa y Juega" />
+    <meta property="og:description" content="Conjuga verbos regulares e irregulares en español en todos los tiempos verbales. Herramienta educativa gratuita." />
+    <meta property="og:url" content="https://educayjuega.com/conjugador.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://educayjuega.com/favicon.svg" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Conjugador de Verbos | Educa y Juega" />
+    <meta name="twitter:description" content="Conjuga verbos regulares e irregulares en español en todos los tiempos verbales. Herramienta educativa gratuita." />
+
+<link rel="stylesheet" href="css/styles.css" />
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+    <style>
+      .tool-header h1 {
+        color: white;
+      }
+      .tool-header {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+      }
+      .verb-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+        background: white;
+        border-radius: 1rem;
+        overflow: hidden;
+      }
+      .verb-table th,
+      .verb-table td {
+        padding: 1rem;
+        border: 1px solid #e5e7eb;
+        text-align: left;
+      }
+      .verb-table th {
+        background: var(--primary);
+        color: white;
+      }
+      .verb-table tr:nth-child(even) {
+        background: #f9fafb;
+      }
+      .input-group {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+      .input-group input {
+        flex: 1;
+        padding: 0.75rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 0.5rem;
+      }
+    </style>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Conjugador de Verbos | Educa y Juega",
+    "url": "https://educayjuega.com/conjugador.html",
+    "description": "Conjuga verbos regulares e irregulares en español en todos los tiempos verbales. Herramienta educativa gratuita.",
+    "inLanguage": "es-ES"
+  }
+  </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-container">
+        <a href="index.html" class="logo">
+          <span class="logo-icon">📚</span> Educa y Juega
+        </a>
+        <button class="menu-toggle" aria-label="Menú">☰</button>
+                  <nav class="nav-menu">
+            <a href="index.html">🏠 Inicio</a>
+            <a href="hora-mundial.html">🕐 Hora Mundial</a>
+            <a href="dados.html">🎲 Dados</a>
+            <a href="ruleta.html">🎰 Ruleta</a>
+            <a href="ruleta-preguntas.html">❓ Ruleta Preguntas</a>
+            <a href="temporizador.html">⏱️ Temporizador</a>
+            <a href="cronometro.html">⏱ Cronómetro</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="vocabulario.html">📝 Vocabulario</a>
+            <a href="conjugador.html">📝 Conjugador</a>
+            <a href="ejercicios.html">➕ Ejercicios</a>
+            <a href="fracciones.html">🍕 Fracciones</a>
+            <a href="tablas.html">✖️ Tablas</a>
+            <a href="calculadora.html">🧮 Calculadora</a>
+            <a href="calculadora-areas.html">📐 Calcular Áreas</a>
+            <a href="geometria.html">📐 Geometría</a>
+            <a href="convertidor.html">🔄 Convertir</a>
+            <a href="recta-numerica.html">📏 Recta</a>
+            <a href="linea-tiempo.html">⏳ Línea Tiempo</a>
+            <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
+            <a href="sistema-solar.html">🌍 Sistema Solar</a>
+            <a href="ciclo-agua.html">💧 Ciclo Agua</a>
+            <a href="cuerpo-humano.html">🧍 Cuerpo Humano</a>
+            <a href="grupos.html">👥 Grupos</a>
+            <a href="selector.html">🎯 Selector</a>
+            <a href="asistencias.html">📋 Asistencias</a>
+            <a href="horario.html">📅 Horario</a>
+            <a href="normas-aula.html">📜 Normas</a>
+            <a href="pizarra.html">🖍️ Pizarra</a>
+            <a href="bolsa-premios.html">🎁 Premios</a>
+            <a href="puntos.html">🏆 Puntos</a>
+            <a href="aciertos.html">✅ Aciertos</a>
+            <a href="ajedrez.html">♟️ Ajedrez</a>
+            <a href="bingo.html">🎱 Bingo</a>
+            <a href="buscaminas.html">💣 Buscaminas</a>
+            <a href="crucigrama.html">✏️ Crucigrama</a>
+            <a href="damas.html">🟡 Damas</a>
+            <a href="laberinto.html">🌀 Laberinto</a>
+            <a href="memoria.html">🧠 Memoria</a>
+            <a href="piedra-papel.html">🪨 PPT</a>
+            <a href="sopa-letras.html">🔍 Sopa Letras</a>
+            <a href="sudoku.html">🔢 Sudoku</a>
+            <a href="tangram.html">🔺 Tangram</a>
+            <a href="tres-en-raya.html">⭕ Tres Raya</a>
+            <a href="contacto.html">📧 Contacto</a>
+            <a href="sobre-nosotros.html">ℹ️ Nosotros</a>
+            <a href="privacidad.html">🔒 Privacidad</a>
+          </nav>
+      </div>
+    </header>
+    <main>
+      <div class="tool-header">
+        <h1>📝 Conjugador de Verbos</h1>
+        <p>Escribe un verbo en infinitivo y conjúgalo</p>
+      </div>
+      <div class="tool-content">
+        <div class="input-group">
+          <input
+            type="text"
+            id="verbo"
+            placeholder="Escribe un verbo (ej: comer, hablar, vivir)"
+          />
+          <button class="btn" onclick="conjugar()">Conjugar</button>
+        </div>
+        <div
+          id="tiempo"
+          style="
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+          "
+        ></div>
+        <table class="verb-table" id="tabla">
+          <tr>
+            <th>Persona</th>
+            <th>Presente</th>
+            <th>Pretérito</th>
+            <th>Futuro</th>
+          </tr>
+          <tr>
+            <td>Yo</td>
+            <td id="p1">-</td>
+            <td id="pr1">-</td>
+            <td id="f1">-</td>
+          </tr>
+          <tr>
+            <td>Tú</td>
+            <td id="p2">-</td>
+            <td id="pr2">-</td>
+            <td id="f2">-</td>
+          </tr>
+          <tr>
+            <td>Él/Ella/Ud</td>
+            <td id="p3">-</td>
+            <td id="pr3">-</td>
+            <td id="f3">-</td>
+          </tr>
+          <tr>
+            <td>Nosotros</td>
+            <td id="p4">-</td>
+            <td id="pr4">-</td>
+            <td id="f4">-</td>
+          </tr>
+          <tr>
+            <td>Ellos/Uds</td>
+            <td id="p5">-</td>
+            <td id="pr5">-</td>
+            <td id="f5">-</td>
+          </tr>
+          <tr>
+            <td>Vosotros</td>
+            <td id="p6">-</td>
+            <td id="pr6">-</td>
+            <td id="f6">-</td>
+          </tr>
+        </table>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-links">
+          <a href="contacto.html">📧 Contacto</a>
+          <a href="privacidad.html">🔒 Política de Privacidad</a>
+          <a href="sobre-nosotros.html">ℹ️ Sobre Nosotros</a>
+        </div>
+        <p class="footer-copy">
+          &copy; 2026 Educa y Juega. Herramientas educativas gratuitas
+          para profesores.
+        </p>
+      </div>
+    </footer>
+    <script>
+      const verbosIrregulares = {
+        ser: {
+          irregular: true,
+          presente: {
+            p1: "soy",
+            p2: "eres",
+            p3: "es",
+            p4: "somos",
+            p5: "son",
+            p6: "sois",
+          },
+          preterito: {
+            p1: "fui",
+            p2: "fuiste",
+            p3: "fue",
+            p4: "fuimos",
+            p5: "fueron",
+            p6: "fuisteis",
+          },
+          futuro: {
+            p1: "seré",
+            p2: "serás",
+            p3: "será",
+            p4: "seremos",
+            p5: "serán",
+            p6: "seréis",
+          },
+        },
+        estar: {
+          irregular: true,
+          presente: {
+            p1: "estoy",
+            p2: "estás",
+            p3: "está",
+            p4: "estamos",
+            p5: "están",
+            p6: "estáis",
+          },
+          preterito: {
+            p1: "estuve",
+            p2: "estuviste",
+            p3: "estuvo",
+            p4: "estuvimos",
+            p5: "estuvieron",
+            p6: "estuvisteis",
+          },
+          futuro: {
+            p1: "estaré",
+            p2: "estarás",
+            p3: "estará",
+            p4: "estaremos",
+            p5: "estarán",
+            p6: "estaréis",
+          },
+        },
+        haber: {
+          irregular: true,
+          presente: {
+            p1: "he",
+            p2: "has",
+            p3: "ha",
+            p4: "hemos",
+            p5: "han",
+            p6: "habéis",
+          },
+          preterito: {
+            p1: "hube",
+            p2: "hubiste",
+            p3: "hubo",
+            p4: "hubimos",
+            p5: "hubieron",
+            p6: "hubisteis",
+          },
+          futuro: {
+            p1: "habré",
+            p2: "habrás",
+            p3: "habrá",
+            p4: "habremos",
+            p5: "habrán",
+            p6: "habréis",
+          },
+        },
+        hacer: {
+          irregular: true,
+          presente: {
+            p1: "hago",
+            p2: "haces",
+            p3: "hace",
+            p4: "hacemos",
+            p5: "hacen",
+            p6: "hacéis",
+          },
+          preterito: {
+            p1: "hice",
+            p2: "hiciste",
+            p3: "hizo",
+            p4: "hicimos",
+            p5: "hicieron",
+            p6: "hicisteis",
+          },
+          futuro: {
+            p1: "haré",
+            p2: "harás",
+            p3: "hará",
+            p4: "haremos",
+            p5: "harán",
+            p6: "haréis",
+          },
+        },
+        ir: {
+          irregular: true,
+          presente: {
+            p1: "voy",
+            p2: "vas",
+            p3: "va",
+            p4: "vamos",
+            p5: "van",
+            p6: "vais",
+          },
+          preterito: {
+            p1: "fui",
+            p2: "fuiste",
+            p3: "fue",
+            p4: "fuimos",
+            p5: "fueron",
+            p6: "fuisteis",
+          },
+          futuro: {
+            p1: "iré",
+            p2: "irás",
+            p3: "irá",
+            p4: "iremos",
+            p5: "irán",
+            p6: "iréis",
+          },
+        },
+        poder: {
+          irregular: true,
+          presente: {
+            p1: "puedo",
+            p2: "puedes",
+            p3: "puede",
+            p4: "podemos",
+            p5: "pueden",
+            p6: "podéis",
+          },
+          preterito: {
+            p1: "pude",
+            p2: "pudiste",
+            p3: "pudo",
+            p4: "pudimos",
+            p5: "pudieron",
+            p6: "pudisteis",
+          },
+          futuro: {
+            p1: "podré",
+            p2: "podrás",
+            p3: "podrá",
+            p4: "podremos",
+            p5: "podrán",
+            p6: "podréis",
+          },
+        },
+        querer: {
+          irregular: true,
+          presente: {
+            p1: "quiero",
+            p2: "quieres",
+            p3: "quiere",
+            p4: "queremos",
+            p5: "quieren",
+            p6: "queréis",
+          },
+          preterito: {
+            p1: "quise",
+            p2: "quisiste",
+            p3: "quiso",
+            p4: "quisimos",
+            p5: "quisieron",
+            p6: "quisisteis",
+          },
+          futuro: {
+            p1: "querré",
+            p2: "querrás",
+            p3: "querrá",
+            p4: "querremos",
+            p5: "querrán",
+            p6: "querréis",
+          },
+        },
+        saber: {
+          irregular: true,
+          presente: {
+            p1: "sé",
+            p2: "sabes",
+            p3: "sabe",
+            p4: "sabemos",
+            p5: "saben",
+            p6: "sabéis",
+          },
+          preterito: {
+            p1: "supe",
+            p2: "supiste",
+            p3: "supo",
+            p4: "supimos",
+            p5: "supieron",
+            p6: "supisteis",
+          },
+          futuro: {
+            p1: "sabré",
+            p2: "sabrás",
+            p3: "sabrá",
+            p4: "sabremos",
+            p5: "sabrán",
+            p6: "sabréis",
+          },
+        },
+        tener: {
+          irregular: true,
+          presente: {
+            p1: "tengo",
+            p2: "tienes",
+            p3: "tiene",
+            p4: "tenemos",
+            p5: "tienen",
+            p6: "tenéis",
+          },
+          preterito: {
+            p1: "tuve",
+            p2: "tuviste",
+            p3: "tuvo",
+            p4: "tuvimos",
+            p5: "tuvieron",
+            p6: "tuvisteis",
+          },
+          futuro: {
+            p1: "tendré",
+            p2: "tendrás",
+            p3: "tendrá",
+            p4: "tendremos",
+            p5: "tendrán",
+            p6: "tendréis",
+          },
+        },
+        venir: {
+          irregular: true,
+          presente: {
+            p1: "vengo",
+            p2: "vienes",
+            p3: "viene",
+            p4: "venimos",
+            p5: "vienen",
+            p6: "venís",
+          },
+          preterito: {
+            p1: "vine",
+            p2: "viniste",
+            p3: "vino",
+            p4: "vinimos",
+            p5: "vinieron",
+            p6: "vinisteis",
+          },
+          futuro: {
+            p1: "vendré",
+            p2: "vendrás",
+            p3: "vendrá",
+            p4: "vendremos",
+            p5: "vendrán",
+            p6: "vendréis",
+          },
+        },
+        decir: {
+          irregular: true,
+          presente: {
+            p1: "digo",
+            p2: "dices",
+            p3: "dice",
+            p4: "decimos",
+            p5: "dicen",
+            p6: "decís",
+          },
+          preterito: {
+            p1: "dije",
+            p2: "dijiste",
+            p3: "dijo",
+            p4: "dijimos",
+            p5: "dijeron",
+            p6: "dijisteis",
+          },
+          futuro: {
+            p1: "diré",
+            p2: "dirás",
+            p3: "dirá",
+            p4: "diremos",
+            p5: "dirán",
+            p6: "diréis",
+          },
+        },
+        poner: {
+          irregular: true,
+          presente: {
+            p1: "pongo",
+            p2: "pones",
+            p3: "pone",
+            p4: "ponemos",
+            p5: "ponen",
+            p6: "ponéis",
+          },
+          preterito: {
+            p1: "puse",
+            p2: "pusiste",
+            p3: "puso",
+            p4: "pusimos",
+            p5: "pusieron",
+            p6: "pusisteis",
+          },
+          futuro: {
+            p1: "pondré",
+            p2: "pondrás",
+            p3: "pondrá",
+            p4: "pondremos",
+            p5: "pondrán",
+            p6: "pondréis",
+          },
+        },
+        ver: {
+          irregular: true,
+          presente: {
+            p1: "veo",
+            p2: "ves",
+            p3: "ve",
+            p4: "vemos",
+            p5: "ven",
+            p6: "veis",
+          },
+          preterito: {
+            p1: "vi",
+            p2: "viste",
+            p3: "vio",
+            p4: "vimos",
+            p5: "vieron",
+            p6: "visteis",
+          },
+          futuro: {
+            p1: "veré",
+            p2: "verás",
+            p3: "verá",
+            p4: "veremos",
+            p5: "verán",
+            p6: "veréis",
+          },
+        },
+        dar: {
+          irregular: true,
+          presente: {
+            p1: "doy",
+            p2: "das",
+            p3: "da",
+            p4: "damos",
+            p5: "dan",
+            p6: "dais",
+          },
+          preterito: {
+            p1: "di",
+            p2: "diste",
+            p3: "dio",
+            p4: "dimos",
+            p5: "dieron",
+            p6: "disteis",
+          },
+          futuro: {
+            p1: "daré",
+            p2: "darás",
+            p3: "dará",
+            p4: "daremos",
+            p5: "darán",
+            p6: "daréis",
+          },
+        },
+      };
+      function conjugar() {
+        let verbo = document.getElementById("verbo").value.toLowerCase().trim();
+        if (!verbo) {
+          alert("Escribe un verbo");
+          return;
+        }
+        if (verbosIrregulares[verbo]) {
+          conjugarIrregular(verbosIrregulares[verbo], verbo);
+          return;
+        }
+        let raiz, tipo;
+        if (verbo.endsWith("ar")) {
+          raiz = verbo.slice(0, -2);
+          tipo = "ar";
+        } else if (verbo.endsWith("er")) {
+          raiz = verbo.slice(0, -2);
+          tipo = "er";
+        } else if (verbo.endsWith("ir")) {
+          raiz = verbo.slice(0, -2);
+          tipo = "ir";
+        } else {
+          alert("El verbo debe terminar en -ar, -er o -ir");
+          return;
+        }
+        document.getElementById("tiempo").textContent = "Verbo: " + verbo;
+        let presente, preterito, futuro;
+        if (tipo === "ar") {
+          presente = {
+            p1: raiz + "o",
+            p2: raiz + "as",
+            p3: raiz + "a",
+            p4: raiz + "amos",
+            p5: raiz + "an",
+            p6: raiz + "áis",
+          };
+          preterito = {
+            p1: raiz + "é",
+            p2: raiz + "aste",
+            p3: raiz + "ó",
+            p4: raiz + "amos",
+            p5: raiz + "aron",
+            p6: raiz + "asteis",
+          };
+          futuro = {
+            p1: raiz + "aré",
+            p2: raiz + "arás",
+            p3: raiz + "ará",
+            p4: raiz + "aremos",
+            p5: raiz + "arán",
+            p6: raiz + "aréis",
+          };
+        } else if (tipo === "er") {
+          presente = {
+            p1: raiz + "o",
+            p2: raiz + "es",
+            p3: raiz + "e",
+            p4: raiz + "emos",
+            p5: raiz + "en",
+            p6: raiz + "éis",
+          };
+          preterito = {
+            p1: raiz + "í",
+            p2: raiz + "iste",
+            p3: raiz + "ió",
+            p4: raiz + "imos",
+            p5: raiz + "ieron",
+            p6: raiz + "isteis",
+          };
+          futuro = {
+            p1: raiz + "eré",
+            p2: raiz + "erás",
+            p3: raiz + "erá",
+            p4: raiz + "eremos",
+            p5: raiz + "erán",
+            p6: raiz + "eréis",
+          };
+        } else {
+          presente = {
+            p1: raiz + "o",
+            p2: raiz + "es",
+            p3: raiz + "e",
+            p4: raiz + "imos",
+            p5: raiz + "en",
+            p6: raiz + "ís",
+          };
+          preterito = {
+            p1: raiz + "í",
+            p2: raiz + "iste",
+            p3: raiz + "ió",
+            p4: raiz + "imos",
+            p5: raiz + "ieron",
+            p6: raiz + "isteis",
+          };
+          futuro = {
+            p1: raiz + "iré",
+            p2: raiz + "irás",
+            p3: raiz + "irá",
+            p4: raiz + "iremos",
+            p5: raiz + "irán",
+            p6: raiz + "iréis",
+          };
+        }
+        aplicarConjugacion(presente, preterito, futuro);
+      }
+      function conjugarIrregular(datos, verbo) {
+        document.getElementById("tiempo").textContent =
+          "Verbo (irregular): " + verbo;
+        aplicarConjugacion(datos.presente, datos.preterito, datos.futuro);
+      }
+      function aplicarConjugacion(presente, preterito, futuro) {
+        document.getElementById("p1").textContent = presente.p1;
+        document.getElementById("p2").textContent = presente.p2;
+        document.getElementById("p3").textContent = presente.p3;
+        document.getElementById("p4").textContent = presente.p4;
+        document.getElementById("p5").textContent = presente.p5;
+        document.getElementById("p6").textContent = presente.p6;
+        document.getElementById("pr1").textContent = preterito.p1;
+        document.getElementById("pr2").textContent = preterito.p2;
+        document.getElementById("pr3").textContent = preterito.p3;
+        document.getElementById("pr4").textContent = preterito.p4;
+        document.getElementById("pr5").textContent = preterito.p5;
+        document.getElementById("pr6").textContent = preterito.p6;
+        document.getElementById("f1").textContent = futuro.p1;
+        document.getElementById("f2").textContent = futuro.p2;
+        document.getElementById("f3").textContent = futuro.p3;
+        document.getElementById("f4").textContent = futuro.p4;
+        document.getElementById("f5").textContent = futuro.p5;
+        document.getElementById("f6").textContent = futuro.p6;
+      }
+    </script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

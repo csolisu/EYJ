@@ -1,0 +1,671 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Horario Escolar | Educa y Juega</title>
+    <meta name="description" content="Crea y organiza tu horario escolar online. Editor semanal personalizable para profesores." />
+    <meta name="keywords" content="horario escolar, horario de clases, organizador, planificador escolar" />
+    <link rel="canonical" href="https://educayjuega.com/horario.html" />
+    <meta property="og:title" content="Horario Escolar | Educa y Juega" />
+    <meta property="og:description" content="Crea y organiza tu horario escolar online. Editor semanal personalizable para profesores." />
+    <meta property="og:url" content="https://educayjuega.com/horario.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://educayjuega.com/favicon.svg" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Horario Escolar | Educa y Juega" />
+    <meta name="twitter:description" content="Crea y organiza tu horario escolar online. Editor semanal personalizable para profesores." />
+
+<link rel="stylesheet" href="css/styles.css" />
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+    <style>
+      :root {
+        --bg-color: #f8fafc;
+        --primary: #4f46e5;
+        --primary-hover: #4338ca;
+        --card-bg: #ffffff;
+        --border-color: #e2e8f0;
+        --text-main: #1e293b;
+        --text-muted: #64748b;
+      }
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-main);
+      }
+      .tool-header {
+        background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        color: white;
+        padding: 2.5rem 1rem;
+        text-align: center;
+      }
+      .tool-header h1 {
+        color: white;
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+      }
+      .main-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        max-width: 1300px;
+        margin: 1rem auto 4rem;
+        padding: 0 1rem;
+        position: relative;
+        z-index: 10;
+      }
+      /* Sidebar - Palette */
+      .sidebar {
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 1.5rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        border: 1px solid var(--border-color);
+        flex: 1 1 300px;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+      .section-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        border-bottom: 2px solid var(--border-color);
+        padding-bottom: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .subject-creator {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      .subject-creator input[type="text"] {
+        flex: 1;
+        padding: 0.75rem;
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        outline: none;
+        font-family: inherit;
+      }
+      .subject-creator input[type="color"] {
+        width: 40px;
+        height: 40px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        background: none;
+      }
+      .subject-creator input[type="color"]::-webkit-color-swatch-wrapper {
+        padding: 0;
+      }
+      .subject-creator input[type="color"]::-webkit-color-swatch {
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+      }
+      .btn-add {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 0.75rem 1rem;
+        border-radius: 10px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .btn-add:hover {
+        background: var(--primary-hover);
+      }
+      .palette-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        max-height: 400px;
+        overflow-y: auto;
+        padding-right: 5px;
+      }
+      .palette-list::-webkit-scrollbar {
+        width: 6px;
+      }
+      .palette-list::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+      }
+      .subject-btn {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 1rem;
+        border-radius: 12px;
+        border: 2px solid transparent;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: #f1f5f9;
+        font-weight: 600;
+      }
+      .subject-btn:hover {
+        transform: translateX(5px);
+      }
+      .subject-btn.active {
+        border-color: var(--primary);
+        box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);
+        transform: scale(1.02);
+      }
+      .subject-color-dot {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        margin-right: 10px;
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+      }
+      .subject-info {
+        display: flex;
+        align-items: center;
+        flex: 1;
+      }
+      .btn-del-subject {
+        background: none;
+        border: none;
+        color: #ef4444;
+        cursor: pointer;
+        font-size: 1.2rem;
+        opacity: 0.5;
+      }
+      .btn-del-subject:hover {
+        opacity: 1;
+      }
+      /* Main Grid */
+      .schedule-container {
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        border: 1px solid var(--border-color);
+        flex: 1 1 800px;
+        display: flex;
+        flex-direction: column;
+        overflow-x: auto;
+      }
+      .controls {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        border: none;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .btn-print {
+        background: #10b981;
+        color: white;
+      }
+      .btn-print:hover {
+        background: #059669;
+      }
+      .btn-clear {
+        background: #ef4444;
+        color: white;
+        margin-left: auto;
+      }
+      .btn-clear:hover {
+        background: #dc2626;
+      }
+      .btn-add-row {
+        background: #f1f5f9;
+        color: var(--text-main);
+        border: 1px solid var(--border-color);
+      }
+      .btn-add-row:hover {
+        background: #e2e8f0;
+      }
+      .schedule-grid {
+        display: grid;
+        grid-template-columns: 120px repeat(5, 1fr);
+        gap: 4px;
+        background: var(--border-color);
+        border: 4px solid var(--border-color);
+        border-radius: 12px;
+        overflow: hidden;
+        min-width: 700px;
+      }
+      .cell {
+        background: white;
+        min-height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 0.5rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        transition: all 0.2s;
+        position: relative;
+      }
+      .cell.header {
+        background: #f8fafc;
+        font-weight: 800;
+        color: var(--text-main);
+        min-height: 50px;
+      }
+      .cell.time-cell {
+        background: #f8fafc;
+      }
+      .time-input {
+        width: 90%;
+        border: 1px dashed #cbd5e1;
+        border-radius: 6px;
+        padding: 4px;
+        background: transparent;
+        text-align: center;
+        font-weight: 700;
+        font-family: inherit;
+        color: var(--text-muted);
+        outline: none;
+        cursor: text;
+        transition: all 0.2s;
+      }
+      .time-input:hover {
+        border-color: #94a3b8;
+        background: #ffffff;
+      }
+      .time-input:focus {
+        color: var(--primary);
+        border-color: var(--primary);
+        border-style: solid;
+        background: #ffffff;
+      }
+      .slot-cell {
+        cursor: pointer;
+      }
+      .slot-cell:hover {
+        opacity: 0.8;
+        box-shadow: inset 0 0 0 2px var(--border-color);
+      }
+      .slot-cell.filled {
+        color: white;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      }
+      .instruction {
+        margin-top: 1rem;
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        text-align: center;
+      }
+      /* Print Styles */
+      @media print {
+        body {
+          background: white;
+        }
+        .site-header,
+        .site-footer,
+        .tool-header,
+        .sidebar,
+        .controls,
+        .instruction,
+        .menu-toggle {
+          display: none !important;
+        }
+        .main-container {
+          margin: 0;
+          padding: 0;
+          max-width: 100%;
+        }
+        .schedule-container {
+          box-shadow: none;
+          border: none;
+          padding: 0;
+          margin: 0;
+        }
+        .schedule-grid {
+          border: 2px solid #000;
+          gap: 2px;
+          background: #000;
+        }
+        .cell {
+          min-height: 60px;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+        .time-input {
+          color: black;
+        }
+      }
+    </style>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Horario Escolar | Educa y Juega",
+    "url": "https://educayjuega.com/horario.html",
+    "description": "Crea y organiza tu horario escolar online. Editor semanal personalizable para profesores.",
+    "inLanguage": "es-ES"
+  }
+  </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-container">
+        <a href="index.html" class="logo">
+          <span class="logo-icon">📚</span> Educa y Juega
+        </a>
+        <button class="menu-toggle" aria-label="Menú">☰</button>
+                  <nav class="nav-menu">
+            <a href="index.html">🏠 Inicio</a>
+            <a href="hora-mundial.html">🕐 Hora Mundial</a>
+            <a href="dados.html">🎲 Dados</a>
+            <a href="ruleta.html">🎰 Ruleta</a>
+            <a href="ruleta-preguntas.html">❓ Ruleta Preguntas</a>
+            <a href="temporizador.html">⏱️ Temporizador</a>
+            <a href="cronometro.html">⏱ Cronómetro</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="vocabulario.html">📝 Vocabulario</a>
+            <a href="conjugador.html">📝 Conjugador</a>
+            <a href="ejercicios.html">➕ Ejercicios</a>
+            <a href="fracciones.html">🍕 Fracciones</a>
+            <a href="tablas.html">✖️ Tablas</a>
+            <a href="calculadora.html">🧮 Calculadora</a>
+            <a href="calculadora-areas.html">📐 Calcular Áreas</a>
+            <a href="geometria.html">📐 Geometría</a>
+            <a href="convertidor.html">🔄 Convertir</a>
+            <a href="recta-numerica.html">📏 Recta</a>
+            <a href="linea-tiempo.html">⏳ Línea Tiempo</a>
+            <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
+            <a href="sistema-solar.html">🌍 Sistema Solar</a>
+            <a href="ciclo-agua.html">💧 Ciclo Agua</a>
+            <a href="cuerpo-humano.html">🧍 Cuerpo Humano</a>
+            <a href="grupos.html">👥 Grupos</a>
+            <a href="selector.html">🎯 Selector</a>
+            <a href="asistencias.html">📋 Asistencias</a>
+            <a href="horario.html">📅 Horario</a>
+            <a href="normas-aula.html">📜 Normas</a>
+            <a href="pizarra.html">🖍️ Pizarra</a>
+            <a href="bolsa-premios.html">🎁 Premios</a>
+            <a href="puntos.html">🏆 Puntos</a>
+            <a href="aciertos.html">✅ Aciertos</a>
+            <a href="ajedrez.html">♟️ Ajedrez</a>
+            <a href="bingo.html">🎱 Bingo</a>
+            <a href="buscaminas.html">💣 Buscaminas</a>
+            <a href="crucigrama.html">✏️ Crucigrama</a>
+            <a href="damas.html">🟡 Damas</a>
+            <a href="laberinto.html">🌀 Laberinto</a>
+            <a href="memoria.html">🧠 Memoria</a>
+            <a href="piedra-papel.html">🪨 PPT</a>
+            <a href="sopa-letras.html">🔍 Sopa Letras</a>
+            <a href="sudoku.html">🔢 Sudoku</a>
+            <a href="tangram.html">🔺 Tangram</a>
+            <a href="tres-en-raya.html">⭕ Tres Raya</a>
+            <a href="contacto.html">📧 Contacto</a>
+            <a href="sobre-nosotros.html">ℹ️ Nosotros</a>
+            <a href="privacidad.html">🔒 Privacidad</a>
+          </nav>
+      </div>
+    </header>
+    <main>
+      <div class="tool-header">
+        <h1>📅 Horario Escolar</h1>
+        <p>
+          Pinta tu semana. Crea materias, elige su color y haz clic en la tabla.
+        </p>
+      </div>
+      <div class="main-container">
+        <!-- Sidebar: Gestor de Materias -->
+        <div class="sidebar">
+          <div class="section-title">Materias / Colores</div>
+          <div class="subject-creator">
+            <input type="color" id="subColor" value="#ef4444" />
+            <input
+              type="text"
+              id="subName"
+              placeholder="Ej: Matemáticas"
+              maxlength="20"
+            />
+            <button class="btn-add" id="btnAddSub">➕</button>
+          </div>
+          <div class="palette-list" id="paletteList">
+            <!-- Dinámico -->
+          </div>
+          <div
+            style="
+              margin-top: auto;
+              background: #f8fafc;
+              padding: 1rem;
+              border-radius: 10px;
+              font-size: 0.85rem;
+              color: var(--text-muted);
+            "
+          >
+            <strong>💡 Tip:</strong> Selecciona una materia aquí y haz clic en
+            la cuadrícula para "pintar" esa hora. Haz
+            <strong>clic derecho</strong> en la tabla para borrar una hora.
+          </div>
+        </div>
+        <!-- Main Grid -->
+        <div class="schedule-container">
+          <div class="controls">
+            <button class="btn btn-print" onclick="window.print()">
+              🖨️ Imprimir / Guardar PDF
+            </button>
+            <button class="btn btn-add-row" id="btnAddRow">
+              ➕ Añadir Fila
+            </button>
+            <button class="btn btn-clear" id="btnClear">🗑️ Limpiar Todo</button>
+          </div>
+          <div class="schedule-grid" id="scheduleGrid">
+            <!-- Headers -->
+            <div class="cell header">Hora</div>
+            <div class="cell header">Lunes</div>
+            <div class="cell header">Martes</div>
+            <div class="cell header">Miércoles</div>
+            <div class="cell header">Jueves</div>
+            <div class="cell header">Viernes</div>
+            <!-- Rows generated by JS -->
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-links">
+          <a href="contacto.html">📧 Contacto</a>
+          <a href="privacidad.html">🔒 Política de Privacidad</a>
+          <a href="sobre-nosotros.html">ℹ️ Sobre Nosotros</a>
+        </div>
+        <p class="footer-copy">
+          &copy; 2026 Educa y Juega. Herramientas educativas gratuitas
+          para profesores.
+        </p>
+      </div>
+    </footer>
+    <script src="js/main.js"></script>
+    <script>
+      // State
+      const STORAGE_KEY = "horario_data_v2";
+      let state = {
+        subjects: [
+          { id: "sub_1", name: "Matemáticas", color: "#ef4444" },
+          { id: "sub_2", name: "Lengua", color: "#3b82f6" },
+          { id: "sub_3", name: "Ciencias", color: "#10b981" },
+          { id: "sub_4", name: "Recreo", color: "#f59e0b" },
+        ],
+        timeSlots: [
+          "08:00 - 09:00",
+          "09:00 - 10:00",
+          "10:00 - 11:00",
+          "11:00 - 11:30",
+          "11:30 - 12:30",
+          "12:30 - 13:30",
+        ],
+        gridData: {}, // key: "rowIdx-colIdx" -> value: "subjectId"
+      };
+      let selectedSubjectId = null;
+      // Load from localStorage
+      function loadState() {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          try {
+            state = JSON.parse(saved);
+          } catch (e) {
+            console.error("Error loading schedule data");
+          }
+        }
+      }
+      function saveState() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      }
+      // DOM Elements
+      const paletteList = document.getElementById("paletteList");
+      const scheduleGrid = document.getElementById("scheduleGrid");
+      const subColor = document.getElementById("subColor");
+      const subName = document.getElementById("subName");
+      const btnAddSub = document.getElementById("btnAddSub");
+      const btnAddRow = document.getElementById("btnAddRow");
+      const btnClear = document.getElementById("btnClear");
+      // Initializer
+      function init() {
+        loadState();
+        if (state.subjects.length > 0) {
+          selectedSubjectId = state.subjects[0].id;
+        }
+        renderPalette();
+        renderGrid();
+      }
+      // --- PALETTE LOGIC ---
+      function renderPalette() {
+        paletteList.innerHTML = "";
+        state.subjects.forEach((sub) => {
+          const div = document.createElement("div");
+          div.className = `subject-btn ${selectedSubjectId === sub.id ? "active" : ""}`;
+          div.onclick = () => {
+            selectedSubjectId = sub.id;
+            renderPalette(); // re-render to update active class
+          };
+          const info = document.createElement("div");
+          info.className = "subject-info";
+          const dot = document.createElement("div");
+          dot.className = "subject-color-dot";
+          dot.style.background = sub.color;
+          const name = document.createElement("span");
+          name.textContent = sub.name;
+          const delBtn = document.createElement("button");
+          delBtn.className = "btn-del-subject";
+          delBtn.innerHTML = "×";
+          delBtn.title = "Eliminar materia";
+          delBtn.onclick = (e) => {
+            e.stopPropagation();
+            deleteSubject(sub.id);
+          };
+          info.appendChild(dot);
+          info.appendChild(name);
+          div.appendChild(info);
+          div.appendChild(delBtn);
+          paletteList.appendChild(div);
+        });
+      }
+      btnAddSub.onclick = () => {
+        const name = subName.value.trim();
+        const color = subColor.value;
+        if (!name) return;
+        const id = "sub_" + Date.now();
+        state.subjects.push({ id, name, color });
+        subName.value = "";
+        selectedSubjectId = id;
+        saveState();
+        renderPalette();
+      };
+      function deleteSubject(id) {
+        state.subjects = state.subjects.filter((s) => s.id !== id);
+        // Clear from grid
+        Object.keys(state.gridData).forEach((key) => {
+          if (state.gridData[key] === id) {
+            delete state.gridData[key];
+          }
+        });
+        if (selectedSubjectId === id) {
+          selectedSubjectId =
+            state.subjects.length > 0 ? state.subjects[0].id : null;
+        }
+        saveState();
+        renderPalette();
+        renderGrid();
+      }
+      // --- GRID LOGIC ---
+      function renderGrid() {
+        // Keep headers, remove rest
+        while (scheduleGrid.children.length > 6) {
+          scheduleGrid.removeChild(scheduleGrid.lastChild);
+        }
+        state.timeSlots.forEach((time, rowIdx) => {
+          // Time cell
+          const tCell = document.createElement("div");
+          tCell.className = "cell time-cell";
+          const tInput = document.createElement("input");
+          tInput.className = "time-input";
+          tInput.value = time;
+          tInput.onchange = (e) => {
+            state.timeSlots[rowIdx] = e.target.value;
+            saveState();
+          };
+          tCell.appendChild(tInput);
+          scheduleGrid.appendChild(tCell);
+          // 5 Days cells
+          for (let colIdx = 0; colIdx < 5; colIdx++) {
+            const cell = document.createElement("div");
+            cell.className = "cell slot-cell";
+            const key = `${rowIdx}-${colIdx}`;
+            const subId = state.gridData[key];
+            if (subId) {
+              const subject = state.subjects.find((s) => s.id === subId);
+              if (subject) {
+                cell.textContent = subject.name;
+                cell.style.background = subject.color;
+                cell.classList.add("filled");
+              }
+            }
+            // Painting event
+            cell.onmousedown = (e) => {
+              // Right click to erase
+              if (e.button === 2) {
+                delete state.gridData[key];
+              } else {
+                // Left click to paint
+                if (!selectedSubjectId) return;
+                state.gridData[key] = selectedSubjectId;
+              }
+              saveState();
+              renderGrid();
+            };
+            // Prevent context menu
+            cell.oncontextmenu = (e) => e.preventDefault();
+            scheduleGrid.appendChild(cell);
+          }
+        });
+      }
+      btnAddRow.onclick = () => {
+        state.timeSlots.push("13:30 - 14:30");
+        saveState();
+        renderGrid();
+      };
+      btnClear.onclick = () => {
+        if (
+          confirm(
+            "¿Estás seguro de limpiar todo el horario? (Las materias no se borrarán)",
+          )
+        ) {
+          state.gridData = {};
+          saveState();
+          renderGrid();
+        }
+      };
+      init();
+    </script>
+  </body>
+</html>

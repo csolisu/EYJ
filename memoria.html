@@ -1,0 +1,430 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Juego de Memoria | Educa y Juega</title>
+    <meta name="description" content="Juego de memoria interactivo para niños. Encuentra las parejas y ejercita la mente." />
+    <meta name="keywords" content="juego de memoria, memory, memoria visual, juegos infantiles, estimulación" />
+    <link rel="canonical" href="https://educayjuega.com/memoria.html" />
+    <meta property="og:title" content="Juego de Memoria | Educa y Juega" />
+    <meta property="og:description" content="Juego de memoria interactivo para niños. Encuentra las parejas y ejercita la mente." />
+    <meta property="og:url" content="https://educayjuega.com/memoria.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://educayjuega.com/favicon.svg" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Juego de Memoria | Educa y Juega" />
+    <meta name="twitter:description" content="Juego de memoria interactivo para niños. Encuentra las parejas y ejercita la mente." />
+
+<link rel="stylesheet" href="css/styles.css" />
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+    <style>
+      .tool-header {
+        background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+        color: white;
+        padding: 2rem 1rem;
+        text-align: center;
+      }
+      .tool-header h1 {
+        color: white;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+      .tool-content {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+      }
+      .game-stats {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+      }
+      .stat-item {
+        text-align: center;
+      }
+      .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary);
+      }
+      .stat-label {
+        color: var(--gray);
+        font-size: 0.9rem;
+      }
+      .difficulty-selector {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+      }
+      .diff-btn {
+        padding: 0.75rem 1.5rem;
+        border: 2px solid #e5e7eb;
+        background: white;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-weight: 500;
+      }
+      .diff-btn:hover {
+        border-color: var(--primary);
+      }
+      .diff-btn.active {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+      }
+      .cards-grid {
+        display: grid;
+        gap: 1rem;
+        justify-content: center;
+        margin-bottom: 2rem;
+      }
+      .cards-grid.easy {
+        grid-template-columns: repeat(4, 1fr);
+        max-width: 500px;
+        margin: 0 auto;
+      }
+      .cards-grid.medium {
+        grid-template-columns: repeat(5, 1fr);
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      .cards-grid.hard {
+        grid-template-columns: repeat(6, 1fr);
+        max-width: 700px;
+        margin: 0 auto;
+      }
+      .card {
+        aspect-ratio: 1;
+        background: white;
+        border-radius: 0.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        cursor: pointer;
+        box-shadow: var(--shadow);
+        transition: all 0.3s;
+        border: 3px solid transparent;
+      }
+      .card:hover {
+        transform: scale(1.05);
+      }
+      .card.flipped {
+        background: #e0e7ff;
+        border-color: var(--primary);
+      }
+      .card.matched {
+        background: #d1fae5;
+        border-color: #10b981;
+        animation: match 0.5s ease;
+      }
+      @keyframes match {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+      }
+      .card.hidden {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        color: white;
+        font-size: 1.5rem;
+      }
+      .game-controls {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .win-message {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        text-align: center;
+        margin-top: 2rem;
+        display: none;
+      }
+      .win-message.show {
+        display: block;
+      }
+      .win-message h2 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+      @media (max-width: 600px) {
+        .cards-grid {
+          grid-template-columns: repeat(3, 1fr) !important;
+        }
+        .card {
+          font-size: 2rem;
+        }
+      }
+    </style>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Juego de Memoria | Educa y Juega",
+    "url": "https://educayjuega.com/memoria.html",
+    "description": "Juego de memoria interactivo para niños. Encuentra las parejas y ejercita la mente.",
+    "inLanguage": "es-ES"
+  }
+  </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-container">
+        <a href="index.html" class="logo">
+          <span class="logo-icon">📚</span> Educa y Juega
+        </a>
+        <button class="menu-toggle" aria-label="Menú">☰</button>
+                  <nav class="nav-menu">
+            <a href="index.html">🏠 Inicio</a>
+            <a href="hora-mundial.html">🕐 Hora Mundial</a>
+            <a href="dados.html">🎲 Dados</a>
+            <a href="ruleta.html">🎰 Ruleta</a>
+            <a href="ruleta-preguntas.html">❓ Ruleta Preguntas</a>
+            <a href="temporizador.html">⏱️ Temporizador</a>
+            <a href="cronometro.html">⏱ Cronómetro</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="vocabulario.html">📝 Vocabulario</a>
+            <a href="conjugador.html">📝 Conjugador</a>
+            <a href="ejercicios.html">➕ Ejercicios</a>
+            <a href="fracciones.html">🍕 Fracciones</a>
+            <a href="tablas.html">✖️ Tablas</a>
+            <a href="calculadora.html">🧮 Calculadora</a>
+            <a href="calculadora-areas.html">📐 Calcular Áreas</a>
+            <a href="geometria.html">📐 Geometría</a>
+            <a href="convertidor.html">🔄 Convertir</a>
+            <a href="recta-numerica.html">📏 Recta</a>
+            <a href="linea-tiempo.html">⏳ Línea Tiempo</a>
+            <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
+            <a href="sistema-solar.html">🌍 Sistema Solar</a>
+            <a href="ciclo-agua.html">💧 Ciclo Agua</a>
+            <a href="cuerpo-humano.html">🧍 Cuerpo Humano</a>
+            <a href="grupos.html">👥 Grupos</a>
+            <a href="selector.html">🎯 Selector</a>
+            <a href="asistencias.html">📋 Asistencias</a>
+            <a href="horario.html">📅 Horario</a>
+            <a href="normas-aula.html">📜 Normas</a>
+            <a href="pizarra.html">🖍️ Pizarra</a>
+            <a href="bolsa-premios.html">🎁 Premios</a>
+            <a href="puntos.html">🏆 Puntos</a>
+            <a href="aciertos.html">✅ Aciertos</a>
+            <a href="ajedrez.html">♟️ Ajedrez</a>
+            <a href="bingo.html">🎱 Bingo</a>
+            <a href="buscaminas.html">💣 Buscaminas</a>
+            <a href="crucigrama.html">✏️ Crucigrama</a>
+            <a href="damas.html">🟡 Damas</a>
+            <a href="laberinto.html">🌀 Laberinto</a>
+            <a href="memoria.html">🧠 Memoria</a>
+            <a href="piedra-papel.html">🪨 PPT</a>
+            <a href="sopa-letras.html">🔍 Sopa Letras</a>
+            <a href="sudoku.html">🔢 Sudoku</a>
+            <a href="tangram.html">🔺 Tangram</a>
+            <a href="tres-en-raya.html">⭕ Tres Raya</a>
+            <a href="contacto.html">📧 Contacto</a>
+            <a href="sobre-nosotros.html">ℹ️ Nosotros</a>
+            <a href="privacidad.html">🔒 Privacidad</a>
+          </nav>
+      </div>
+    </header>
+    <main>
+      <div class="tool-header">
+        <h1>🧠 Juego de Memoria</h1>
+        <p>Encuentra los pares de tarjetas</p>
+      </div>
+      <div class="tool-content">
+        <div class="difficulty-selector">
+          <button class="diff-btn active" onclick="setDifficulty('easy')">
+            Fácil (8 pares)
+          </button>
+          <button class="diff-btn" onclick="setDifficulty('medium')">
+            Medio (10 pares)
+          </button>
+          <button class="diff-btn" onclick="setDifficulty('hard')">
+            Difícil (12 pares)
+          </button>
+        </div>
+        <div class="game-stats">
+          <div class="stat-item">
+            <div class="stat-value" id="moves">0</div>
+            <div class="stat-label">Movimientos</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="pairs">0</div>
+            <div class="stat-label">Pares encontrados</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="time">0:00</div>
+            <div class="stat-label">Tiempo</div>
+          </div>
+        </div>
+        <div class="cards-grid easy" id="cardsGrid"></div>
+        <div class="game-controls">
+          <button class="btn" onclick="startGame()">🔄 Reiniciar Juego</button>
+        </div>
+        <div class="win-message" id="winMessage">
+          <h2>🎉 ¡Felicidades!</h2>
+          <p>
+            Completaste el juego en <span id="finalMoves">0</span> movimientos y
+            <span id="finalTime">0:00</span>
+          </p>
+          <button class="btn" onclick="startGame()" style="margin-top: 1rem">
+            Jugar de nuevo
+          </button>
+        </div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-links">
+          <a href="contacto.html">📧 Contacto</a>
+          <a href="privacidad.html">🔒 Política de Privacidad</a>
+          <a href="sobre-nosotros.html">ℹ️ Sobre Nosotros</a>
+        </div>
+        <p class="footer-copy">
+          &copy; 2026 Educa y Juega. Herramientas educativas gratuitas
+          para profesores.
+        </p>
+      </div>
+    </footer>
+    <script>
+      const emojis = [
+        "🍎",
+        "🍌",
+        "🍇",
+        "🍊",
+        "🍓",
+        "🥝",
+        "🍍",
+        "🥭",
+        "🍒",
+        "🫐",
+        "🍉",
+        "🍋",
+      ];
+      let cards = [];
+      let flippedCards = [];
+      let matchedPairs = 0;
+      let moves = 0;
+      let timer = null;
+      let seconds = 0;
+      let gameStarted = false;
+      let canFlip = true;
+      let difficulty = "easy";
+      const pairsMap = { easy: 8, medium: 10, hard: 12 };
+      function setDifficulty(diff) {
+        difficulty = diff;
+        document
+          .querySelectorAll(".diff-btn")
+          .forEach((btn) => btn.classList.remove("active"));
+        document
+          .querySelector(`[onclick="setDifficulty('${diff}')"]`)
+          .classList.add("active");
+        startGame();
+      }
+      function startGame() {
+        const numPairs = pairsMap[difficulty];
+        const selectedEmojis = emojis.slice(0, numPairs);
+        cards = [...selectedEmojis, ...selectedEmojis]
+          .map((emoji, i) => ({ id: i, emoji, flipped: false, matched: false }))
+          .sort(() => Math.random() - 0.5);
+        flippedCards = [];
+        matchedPairs = 0;
+        moves = 0;
+        seconds = 0;
+        gameStarted = false;
+        canFlip = true;
+        clearInterval(timer);
+        document.getElementById("moves").textContent = "0";
+        document.getElementById("pairs").textContent = "0";
+        document.getElementById("time").textContent = "0:00";
+        document.getElementById("winMessage").classList.remove("show");
+        renderCards();
+      }
+      function renderCards() {
+        const grid = document.getElementById("cardsGrid");
+        grid.className = `cards-grid ${difficulty}`;
+        grid.innerHTML = cards
+          .map(
+            (card) =>
+              `
+<div class="card ${card.flipped ? "flipped" : ""} ${card.matched ? "matched" : ""} ${!card.flipped && !card.matched ? "hidden" : ""}"
+data-id="${card.id}" onclick="flipCard(${card.id})">
+${card.flipped || card.matched ? card.emoji : "❓"}
+</div>
+`,
+          )
+          .join("");
+      }
+      function flipCard(id) {
+        if (!canFlip) return;
+        const card = cards.find((c) => c.id === id);
+        if (card.flipped || card.matched) return;
+        if (!gameStarted) {
+          gameStarted = true;
+          timer = setInterval(() => {
+            seconds++;
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            document.getElementById("time").textContent =
+              `${mins}:${secs.toString().padStart(2, "0")}`;
+          }, 1000);
+        }
+        card.flipped = true;
+        flippedCards.push(card);
+        renderCards();
+        if (flippedCards.length === 2) {
+          moves++;
+          document.getElementById("moves").textContent = moves;
+          checkMatch();
+        }
+      }
+      function checkMatch() {
+        canFlip = false;
+        const [card1, card2] = flippedCards;
+        if (card1.emoji === card2.emoji) {
+          card1.matched = true;
+          card2.matched = true;
+          matchedPairs++;
+          document.getElementById("pairs").textContent = matchedPairs;
+          flippedCards = [];
+          canFlip = true;
+          if (matchedPairs === pairsMap[difficulty]) {
+            setTimeout(showWin, 500);
+          }
+        } else {
+          setTimeout(() => {
+            card1.flipped = false;
+            card2.flipped = false;
+            flippedCards = [];
+            canFlip = true;
+            renderCards();
+          }, 1000);
+        }
+      }
+      function showWin() {
+        clearInterval(timer);
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        document.getElementById("finalMoves").textContent = moves;
+        document.getElementById("finalTime").textContent =
+          `${mins}:${secs.toString().padStart(2, "0")}`;
+        document.getElementById("winMessage").classList.add("show");
+      }
+      startGame();
+    </script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,547 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz Interactivo | Educa y Juega</title>
+    <meta name="description" content="Crea quizzes con preguntas y respuestas personalizadas. Evalúa a tus alumnos de forma divertida." />
+    <meta name="keywords" content="quiz interactivo, creador de quizzes, cuestionarios, evaluación educativa" />
+    <link rel="canonical" href="https://educayjuega.com/quiz.html" />
+    <meta property="og:title" content="Creador de Quizzes Interactivos | Educa y Juega" />
+    <meta property="og:description" content="Crea quizzes con preguntas y respuestas personalizadas. Evalúa a tus alumnos de forma divertida." />
+    <meta property="og:url" content="https://educayjuega.com/quiz.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://educayjuega.com/favicon.svg" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Creador de Quizzes Interactivos | Educa y Juega" />
+    <meta name="twitter:description" content="Crea quizzes con preguntas y respuestas personalizadas. Evalúa a tus alumnos de forma divertida." />
+
+<link rel="stylesheet" href="css/styles.css" />
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+    <style>
+      .tool-header {
+        background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);
+        color: white;
+        padding: 2rem 1rem;
+        text-align: center;
+      }
+      .tool-header h1 {
+        color: white;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+      .tool-content {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+      }
+      .quiz-tabs {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+      }
+      .quiz-tab {
+        flex: 1;
+        padding: 1rem;
+        border: 2px solid #e5e7eb;
+        background: white;
+        border-radius: 0.75rem;
+        cursor: pointer;
+        text-align: center;
+        font-weight: 500;
+        transition: all 0.2s;
+      }
+      .quiz-tab:hover {
+        border-color: var(--primary);
+      }
+      .quiz-tab.active {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: white;
+      }
+      .create-panel,
+      .play-panel {
+        display: none;
+      }
+      .create-panel.active,
+      .play-panel.active {
+        display: block;
+      }
+      .question-form {
+        background: white;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        box-shadow: var(--shadow);
+        margin-bottom: 2rem;
+      }
+      .question-form h3 {
+        margin-bottom: 1rem;
+        color: var(--dark);
+      }
+      .form-group {
+        margin-bottom: 1rem;
+      }
+      .form-group label {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: var(--dark);
+      }
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+      }
+      .form-group input:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+      .options-editor {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .option-row {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+      }
+      .option-row input {
+        flex: 1;
+      }
+      .correct-check {
+        width: 30px;
+        height: 30px;
+      }
+      .questions-list {
+        background: white;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        box-shadow: var(--shadow);
+      }
+      .questions-list h3 {
+        margin-bottom: 1rem;
+        color: var(--dark);
+      }
+      .question-item {
+        padding: 1rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.75rem;
+        margin-bottom: 1rem;
+      }
+      .question-item:last-child {
+        margin-bottom: 0;
+      }
+      .question-text {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+      .question-options {
+        font-size: 0.9rem;
+        color: var(--gray);
+      }
+      .correct-answer {
+        color: #10b981;
+        font-weight: 500;
+      }
+      .question-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+      }
+      .play-panel .question-display {
+        background: white;
+        border-radius: 1rem;
+        padding: 2rem;
+        box-shadow: var(--shadow);
+        margin-bottom: 2rem;
+        text-align: center;
+        min-height: 200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .question-number {
+        font-size: 1rem;
+        color: var(--gray);
+        margin-bottom: 1rem;
+      }
+      .question-content {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 2rem;
+      }
+      .answer-options {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+      .answer-option {
+        padding: 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 0.75rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: left;
+      }
+      .answer-option:hover {
+        border-color: var(--primary);
+        background: #f3f4f6;
+      }
+      .answer-option.selected {
+        border-color: var(--primary);
+        background: #e0e7ff;
+      }
+      .answer-option.correct {
+        border-color: #10b981;
+        background: #d1fae5;
+      }
+      .answer-option.incorrect {
+        border-color: #ef4444;
+        background: #fee2e2;
+      }
+      .reveal-btn {
+        margin-top: 1rem;
+      }
+      .score-display {
+        text-align: center;
+        padding: 2rem;
+        background: white;
+        border-radius: 1rem;
+        box-shadow: var(--shadow);
+      }
+      .score-number {
+        font-size: 4rem;
+        font-weight: 700;
+        color: var(--primary);
+      }
+      .empty-state {
+        text-align: center;
+        padding: 2rem;
+        color: var(--gray);
+      }
+      @media (max-width: 600px) {
+        .answer-options {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Creador de Quizzes Interactivos | Educa y Juega",
+    "url": "https://educayjuega.com/quiz.html",
+    "description": "Crea quizzes con preguntas y respuestas personalizadas. Evalúa a tus alumnos de forma divertida.",
+    "inLanguage": "es-ES"
+  }
+  </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-container">
+        <a href="index.html" class="logo">
+          <span class="logo-icon">📚</span> Educa y Juega
+        </a>
+        <button class="menu-toggle" aria-label="Menú">☰</button>
+                  <nav class="nav-menu">
+            <a href="index.html">🏠 Inicio</a>
+            <a href="hora-mundial.html">🕐 Hora Mundial</a>
+            <a href="dados.html">🎲 Dados</a>
+            <a href="ruleta.html">🎰 Ruleta</a>
+            <a href="ruleta-preguntas.html">❓ Ruleta Preguntas</a>
+            <a href="temporizador.html">⏱️ Temporizador</a>
+            <a href="cronometro.html">⏱ Cronómetro</a>
+            <a href="quiz.html">📝 Quiz</a>
+            <a href="vocabulario.html">📝 Vocabulario</a>
+            <a href="conjugador.html">📝 Conjugador</a>
+            <a href="ejercicios.html">➕ Ejercicios</a>
+            <a href="fracciones.html">🍕 Fracciones</a>
+            <a href="tablas.html">✖️ Tablas</a>
+            <a href="calculadora.html">🧮 Calculadora</a>
+            <a href="calculadora-areas.html">📐 Calcular Áreas</a>
+            <a href="geometria.html">📐 Geometría</a>
+            <a href="convertidor.html">🔄 Convertir</a>
+            <a href="recta-numerica.html">📏 Recta</a>
+            <a href="linea-tiempo.html">⏳ Línea Tiempo</a>
+            <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
+            <a href="sistema-solar.html">🌍 Sistema Solar</a>
+            <a href="ciclo-agua.html">💧 Ciclo Agua</a>
+            <a href="cuerpo-humano.html">🧍 Cuerpo Humano</a>
+            <a href="grupos.html">👥 Grupos</a>
+            <a href="selector.html">🎯 Selector</a>
+            <a href="asistencias.html">📋 Asistencias</a>
+            <a href="horario.html">📅 Horario</a>
+            <a href="normas-aula.html">📜 Normas</a>
+            <a href="pizarra.html">🖍️ Pizarra</a>
+            <a href="bolsa-premios.html">🎁 Premios</a>
+            <a href="puntos.html">🏆 Puntos</a>
+            <a href="aciertos.html">✅ Aciertos</a>
+            <a href="ajedrez.html">♟️ Ajedrez</a>
+            <a href="bingo.html">🎱 Bingo</a>
+            <a href="buscaminas.html">💣 Buscaminas</a>
+            <a href="crucigrama.html">✏️ Crucigrama</a>
+            <a href="damas.html">🟡 Damas</a>
+            <a href="laberinto.html">🌀 Laberinto</a>
+            <a href="memoria.html">🧠 Memoria</a>
+            <a href="piedra-papel.html">🪨 PPT</a>
+            <a href="sopa-letras.html">🔍 Sopa Letras</a>
+            <a href="sudoku.html">🔢 Sudoku</a>
+            <a href="tangram.html">🔺 Tangram</a>
+            <a href="tres-en-raya.html">⭕ Tres Raya</a>
+            <a href="contacto.html">📧 Contacto</a>
+            <a href="sobre-nosotros.html">ℹ️ Nosotros</a>
+            <a href="privacidad.html">🔒 Privacidad</a>
+          </nav>
+      </div>
+    </header>
+    <main>
+      <div class="tool-header">
+        <h1>📝 Quiz Interactivo</h1>
+        <p>Crea y presenta cuestionarios interactivos</p>
+      </div>
+      <div class="tool-content">
+        <div class="quiz-tabs">
+          <button
+            class="quiz-tab active"
+            onclick="setQuizTab('create')"
+            id="createTab"
+          >
+            ✏️ Crear Quiz
+          </button>
+          <button class="quiz-tab" onclick="setQuizTab('play')" id="playTab">
+            ▶️ Presentar Quiz
+          </button>
+        </div>
+        <div class="create-panel active" id="createPanel">
+          <div class="question-form">
+            <h3>Nueva Pregunta</h3>
+            <div class="form-group">
+              <label>Pregunta</label>
+              <textarea
+                id="newQuestion"
+                rows="2"
+                placeholder="Escribe tu pregunta"
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label>Opciones (marca la correcta)</label>
+              <div class="options-editor">
+                <div class="option-row">
+                  <input type="radio" name="correct" value="0" checked />
+                  <input type="text" id="opt0" placeholder="Opción 1" />
+                </div>
+                <div class="option-row">
+                  <input type="radio" name="correct" value="1" />
+                  <input type="text" id="opt1" placeholder="Opción 2" />
+                </div>
+                <div class="option-row">
+                  <input type="radio" name="correct" value="2" />
+                  <input type="text" id="opt2" placeholder="Opción 3" />
+                </div>
+                <div class="option-row">
+                  <input type="radio" name="correct" value="3" />
+                  <input type="text" id="opt3" placeholder="Opción 4" />
+                </div>
+              </div>
+            </div>
+            <button class="btn" onclick="addQuestion()">
+              ➕ Agregar Pregunta
+            </button>
+          </div>
+          <div class="questions-list" id="questionsList">
+            <h3>Preguntas Creadas (<span id="questionCount">0</span>)</h3>
+            <div id="questionsContainer">
+              <div class="empty-state">No hay preguntas aún</div>
+            </div>
+          </div>
+        </div>
+        <div class="play-panel" id="playPanel">
+          <div id="playContent">
+            <div class="empty-state">
+              Crea al menos una pregunta para comenzar el quiz
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-links">
+          <a href="contacto.html">📧 Contacto</a>
+          <a href="privacidad.html">🔒 Política de Privacidad</a>
+          <a href="sobre-nosotros.html">ℹ️ Sobre Nosotros</a>
+        </div>
+        <p class="footer-copy">
+          &copy; 2026 Educa y Juega. Herramientas educativas gratuitas
+          para profesores.
+        </p>
+      </div>
+    </footer>
+    <script>
+      let questions = JSON.parse(localStorage.getItem("quizQuestions") || "[]");
+      let currentQuestion = 0;
+      let score = 0;
+      let showingAnswer = false;
+      function saveQuestions() {
+        localStorage.setItem("quizQuestions", JSON.stringify(questions));
+      }
+      function renderQuestions() {
+        const container = document.getElementById("questionsContainer");
+        const count = document.getElementById("questionCount");
+        count.textContent = questions.length;
+        if (questions.length === 0) {
+          container.innerHTML =
+            '<div class="empty-state">No hay preguntas aún</div>';
+          return;
+        }
+        container.innerHTML = questions
+          .map(
+            (q, i) =>
+              `
+<div class="question-item">
+<div class="question-text">${i + 1}. ${q.question}</div>
+<div class="question-options">
+${q.options
+  .map(
+    (o, j) => `
+<span class="${j === q.correct ? "correct-answer" : ""}">${j === q.correct ? "✓" : "○"} ${o}</span>
+`,
+  )
+  .join(" | ")}
+</div>
+<div class="question-actions">
+<button class="btn" style="padding:0.25rem 0.5rem;font-size:0.8rem" onclick="deleteQuestion(${i})">🗑️</button>
+</div>
+</div>
+`,
+          )
+          .join("");
+      }
+      function addQuestion() {
+        const question = document.getElementById("newQuestion").value.trim();
+        const options = [
+          document.getElementById("opt0").value.trim(),
+          document.getElementById("opt1").value.trim(),
+          document.getElementById("opt2").value.trim(),
+          document.getElementById("opt3").value.trim(),
+        ];
+        const correct = parseInt(
+          document.querySelector('input[name="correct"]:checked').value,
+        );
+        if (!question) {
+          alert("Escribe una pregunta");
+          return;
+        }
+        if (options.filter((o) => o).length < 2) {
+          alert("Escribe al menos 2 opciones");
+          return;
+        }
+        questions.push({
+          question,
+          options: options.filter((o) => o),
+          correct,
+        });
+        saveQuestions();
+        renderQuestions();
+        document.getElementById("newQuestion").value = "";
+        document.getElementById("opt0").value = "";
+        document.getElementById("opt1").value = "";
+        document.getElementById("opt2").value = "";
+        document.getElementById("opt3").value = "";
+      }
+      function deleteQuestion(index) {
+        questions.splice(index, 1);
+        saveQuestions();
+        renderQuestions();
+      }
+      function setQuizTab(tab) {
+        document
+          .querySelectorAll(".quiz-tab")
+          .forEach((t) => t.classList.remove("active"));
+        document.getElementById(tab + "Tab").classList.add("active");
+        document
+          .querySelectorAll(".create-panel, .play-panel")
+          .forEach((p) => p.classList.remove("active"));
+        document.getElementById(tab + "Panel").classList.add("active");
+        if (tab === "play") startQuiz();
+      }
+      function startQuiz() {
+        if (questions.length === 0) {
+          document.getElementById("playContent").innerHTML =
+            '<div class="empty-state">Crea al menos una pregunta para comenzar el quiz</div>';
+          return;
+        }
+        currentQuestion = 0;
+        score = 0;
+        showQuestion();
+      }
+      function showQuestion() {
+        const q = questions[currentQuestion];
+        const content = document.getElementById("playContent");
+        showingAnswer = false;
+        content.innerHTML = `
+<div class="question-display">
+<div class="question-number">Pregunta ${currentQuestion + 1} de ${questions.length}</div>
+<div class="question-content">${q.question}</div>
+<div class="answer-options">
+${q.options
+  .map(
+    (o, i) => `
+<div class="answer-option" onclick="selectAnswer(${i})" id="option-${i}">${o}</div>
+`,
+  )
+  .join("")}
+</div>
+</div>
+`;
+      }
+      function selectAnswer(index) {
+        if (showingAnswer) return;
+        const q = questions[currentQuestion];
+        const options = document.querySelectorAll(".answer-option");
+        options.forEach((opt) => opt.classList.remove("selected"));
+        document.getElementById(`option-${index}`).classList.add("selected");
+        if (index === q.correct) {
+          score++;
+          document.getElementById(`option-${index}`).classList.add("correct");
+        } else {
+          document.getElementById(`option-${index}`).classList.add("incorrect");
+          document
+            .getElementById(`option-${q.correct}`)
+            .classList.add("correct");
+        }
+        showingAnswer = true;
+        setTimeout(() => {
+          currentQuestion++;
+          if (currentQuestion < questions.length) {
+            showQuestion();
+          } else {
+            showFinalScore();
+          }
+        }, 1500);
+      }
+      function showFinalScore() {
+        const content = document.getElementById("playContent");
+        const percentage = Math.round((score / questions.length) * 100);
+        content.innerHTML = `
+<div class="score-display">
+<h2>¡Quiz Completado!</h2>
+<div class="score-number">${score}/${questions.length}</div>
+<p>${percentage}% correctas</p>
+<button class="btn" onclick="startQuiz()" style="margin-top:1rem;">🔄 Repetir Quiz</button>
+</div>
+`;
+      }
+      renderQuestions();
+    </script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
