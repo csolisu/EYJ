@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
@@ -194,13 +194,60 @@
         border-radius: 0.5rem;
       }
       .competitor-time input {
-        width: 150px;
+        width: 120px;
         padding: 0.5rem;
         border: 1px solid #d1d5db;
         border-radius: 0.25rem;
         font-family: "Courier New", monospace;
-        font-size: 1.25rem;
+        font-size: 1.1rem;
         text-align: center;
+        background: #fff;
+      }
+      .competitor-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+      .btn-capture {
+        background: var(--accent-blue);
+        color: white;
+        border: none;
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: background 0.2s;
+      }
+      .btn-capture:hover {
+        background: #2563eb;
+      }
+      .btn-clear-time {
+        background: #9ca3af;
+        color: white;
+        border: none;
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+      .btn-clear-time:hover {
+        background: #6b7280;
+      }
+      .competitive-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+      .btn-clear-all {
+        background: var(--accent-red);
+        color: white;
+        padding: 0.4rem 0.8rem;
+        border-radius: 0.5rem;
+        font-size: 0.8rem;
+        border: none;
+        cursor: pointer;
       }
       .empty-message {
         text-align: center;
@@ -324,7 +371,10 @@
           </ul>
         </div>
         <div class="competitive-section">
-          <h3>🏆Modo Competitivo</h3>
+          <div class="competitive-header">
+            <h3>🏆 Modo Competitivo</h3>
+            <button class="btn-clear-all" onclick="clearAllCompetitors()" id="clearAllBtn" style="display: none;">Limpiar Todo</button>
+          </div>
           <div class="competitors-input">
             <input
               type="text"
@@ -421,6 +471,10 @@
       function renderCompetitors() {
         const listContainer = document.getElementById("competitorList");
         const timesContainer = document.getElementById("competitorsTimes");
+        const clearAllBtn = document.getElementById("clearAllBtn");
+
+        clearAllBtn.style.display = competitors.length > 0 ? "block" : "none";
+
         listContainer.innerHTML = competitors
           .map(
             (c, i) =>
@@ -431,13 +485,35 @@
           .map(
             (c, i) =>
               `
-<div class="competitor-time">
-<span>${c}</span>
-<input type="text" placeholder="00:00:00" id="time-${i}">
-</div>
-`,
+        <div class="competitor-time">
+          <span style="font-weight: 500;">${c}</span>
+          <div class="competitor-actions">
+            <input type="text" placeholder="00:00:00" id="time-${i}" readonly>
+            <button class="btn-capture" onclick="captureTime(${i})">⏱️ Registrar</button>
+            <button class="btn-clear-time" onclick="clearTime(${i})">🗑️</button>
+          </div>
+        </div>
+        `,
           )
           .join("");
+      }
+      function captureTime(index) {
+        const timeInput = document.getElementById(`time-${index}`);
+        timeInput.value = formatTime(seconds);
+        // Highlight effect
+        timeInput.style.backgroundColor = "#d1fae5";
+        setTimeout(() => {
+          timeInput.style.backgroundColor = "#fff";
+        }, 500);
+      }
+      function clearTime(index) {
+        document.getElementById(`time-${index}`).value = "";
+      }
+      function clearAllCompetitors() {
+        if (confirm("¿Estás seguro de que quieres eliminar todos los competidores?")) {
+          competitors = [];
+          renderCompetitors();
+        }
       }
     </script>
     <script src="js/main.js"></script>
