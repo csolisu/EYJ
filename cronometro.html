@@ -50,7 +50,7 @@
       .timer-display {
         background: var(--timer-bg);
         color: var(--timer-text);
-        font-size: 5rem;
+        font-size: 4rem;
         font-weight: 700;
         text-align: center;
         padding: 2rem;
@@ -58,6 +58,11 @@
         font-family: "Courier New", monospace;
         margin-bottom: 2rem;
         box-shadow: var(--shadow-lg);
+        letter-spacing: 2px;
+      }
+      .timer-display .milisegundos {
+        font-size: 2.5rem;
+        color: #10b981;
       }
       .timer-controls {
         display: flex;
@@ -346,7 +351,9 @@
         </p>
       </div>
       <div class="tool-content">
-        <div class="timer-display" id="timerDisplay">00:00:00</div>
+        <div class="timer-display" id="timerDisplay">
+          <span id="tiempo-principal">00:00:00</span><span class="milisegundos" id="milisegundos">.000</span>
+        </div>
         <div class="timer-controls">
           <button class="timer-btn start" id="startBtn" onclick="startTimer()">
             Iniciar
@@ -404,31 +411,40 @@
     </footer>
     <script>
       let timerInterval;
-      let seconds = 0;
+      let startTime = 0;
+      let elapsedMs = 0;
       let isRunning = false;
       let laps = [];
       let competitors = [];
+      let lastLapTime = 0;
+
       function formatTime(totalSeconds) {
         const hours = Math.floor(totalSeconds / 3600);
         const minutes = Math.floor((totalSeconds % 3600) / 60);
         const secs = totalSeconds % 60;
         return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
       }
+
       function updateDisplay() {
-        document.getElementById("timerDisplay").textContent =
-          formatTime(seconds);
+        const totalSecs = Math.floor(elapsedMs / 1000);
+        const ms = elapsedMs % 1000;
+        document.getElementById("tiempo-principal").textContent = formatTime(totalSecs);
+        document.getElementById("milisegundos").textContent = '.' + ms.toString().padStart(3, "0");
       }
+
       function startTimer() {
         if (!isRunning) {
           isRunning = true;
+          startTime = Date.now() - elapsedMs;
           timerInterval = setInterval(() => {
-            seconds++;
+            elapsedMs = Date.now() - startTime;
             updateDisplay();
-          }, 1000);
+          }, 10);
           document.getElementById("startBtn").disabled = true;
           document.getElementById("pauseBtn").disabled = false;
         }
       }
+
       function pauseTimer() {
         if (isRunning) {
           isRunning = false;
@@ -437,24 +453,33 @@
           document.getElementById("pauseBtn").disabled = true;
         }
       }
+
       function resetTimer() {
         pauseTimer();
-        seconds = 0;
+        elapsedMs = 0;
         laps = [];
+        lastLapTime = 0;
         updateDisplay();
-        document.getElementById("lapsList").innerHTML =
-          '<li class="empty-message">Sin vueltas registradas</li>';
+        document.getElementById("lapsList").innerHTML = '<li class="empty-message">Sin vueltas registradas</li>';
       }
+
       function recordLap() {
-        if (seconds > 0) {
-          laps.push({ number: laps.length + 1, time: formatTime(seconds) });
+        if (elapsedMs > 0) {
+          const lapTime = elapsedMs - lastLapTime;
+          lastLapTime = elapsedMs;
+          laps.push({ number: laps.length + 1, total: elapsedMs, lap: lapTime });
           const lapsList = document.getElementById("lapsList");
           if (laps.length === 1) {
             lapsList.innerHTML = "";
           }
-          lapsList.innerHTML += `<li><span class="lap-number">Vuelta ${laps.length}</span><span class="lap-time">${formatTime(seconds)}</span></li>`;
+          const totalSecs = Math.floor(elapsedMs / 1000);
+          const totalMs = elapsedMs % 1000;
+          const lapSecs = Math.floor(lapTime / 1000);
+          const lapMs = lapTime % 1000;
+          lapsList.innerHTML += `<li><span class="lap-number">Vuelta ${laps.length}</span><span class="lap-time">${formatTime(totalSecs)}.${totalMs.toString().padStart(3, "0")} <small>(+${formatTime(lapSecs)}.${lapMs.toString().padStart(3, "0")})</small></span></li>`;
         }
       }
+
       function addCompetitor() {
         const input = document.getElementById("competitorName");
         const name = input.value.trim();
@@ -464,53 +489,40 @@
           renderCompetitors();
         }
       }
+
       function removeCompetitor(index) {
         competitors.splice(index, 1);
         renderCompetitors();
       }
+
+      function formatTimeMs(ms) {
+        const totalSecs = Math.floor(ms / 1000);
+        const milis = ms % 1000;
+        return formatTime(totalSecs) + '.' + milis.toString().padStart(3, "0");
+      }
+
       function renderCompetitors() {
         const listContainer = document.getElementById("competitorList");
         const timesContainer = document.getElementById("competitorsTimes");
         const clearAllBtn = document.getElementById("clearAllBtn");
-
         clearAllBtn.style.display = competitors.length > 0 ? "block" : "none";
-
-        listContainer.innerHTML = competitors
-          .map(
-            (c, i) =>
-              `<span class="competitor-tag">${c} <button onclick="removeCompetitor(${i})">×</button></span>`,
-          )
-          .join("");
-        timesContainer.innerHTML = competitors
-          .map(
-            (c, i) =>
-              `
-        <div class="competitor-time">
-          <span style="font-weight: 500;">${c}</span>
-          <div class="competitor-actions">
-            <input type="text" placeholder="00:00:00" id="time-${i}" readonly>
-            <button class="btn-capture" onclick="captureTime(${i})">⏱️ Registrar</button>
-            <button class="btn-clear-time" onclick="clearTime(${i})">🗑️</button>
-          </div>
-        </div>
-        `,
-          )
-          .join("");
+        listContainer.innerHTML = competitors.map((c, i) => `<span class="competitor-tag">${c} <button onclick="removeCompetitor(${i})">×</button></span>`).join("");
+        timesContainer.innerHTML = competitors.map((c, i) => `<div class="competitor-time"><span style="font-weight: 500;">${c}</span><div class="competitor-actions"><input type="text" placeholder="00:00:00.000" id="time-${i}" readonly><button class="btn-capture" onclick="captureTime(${i})">⏱️ Registrar</button><button class="btn-clear-time" onclick="clearTime(${i})">🗑️</button></div></div>`).join("");
       }
+
       function captureTime(index) {
         const timeInput = document.getElementById(`time-${index}`);
-        timeInput.value = formatTime(seconds);
-        // Highlight effect
+        timeInput.value = formatTimeMs(elapsedMs);
         timeInput.style.backgroundColor = "#d1fae5";
-        setTimeout(() => {
-          timeInput.style.backgroundColor = "#fff";
-        }, 500);
+        setTimeout(() => { timeInput.style.backgroundColor = "#fff"; }, 500);
       }
+
       function clearTime(index) {
         document.getElementById(`time-${index}`).value = "";
       }
+
       function clearAllCompetitors() {
-        if (confirm("¿Estás seguro de que quieres eliminar todos los competidores?")) {
+        if (confirm("¿Eliminar todos los competidores?")) {
           competitors = [];
           renderCompetitors();
         }
