@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
@@ -103,11 +103,20 @@
       .btn:hover {
         background: var(--primary-hover);
       }
-      .btn-secondary {
+        .btn-secondary {
         background: #64748b;
       }
       .btn-secondary:hover {
         background: #475569;
+      }
+      .btn-slow {
+        background: #64748b;
+      }
+      .btn-slow:hover {
+        background: #475569;
+      }
+      .btn-slow.active {
+        background: #f97316;
       }
       .instruction {
         text-align: center;
@@ -283,10 +292,16 @@
         <div style="text-align: center; margin-bottom: 1rem">
           <strong style="color: #475569; margin-right: 1rem">Velocidad:</strong>
           <button
+            class="btn btn-slow active"
+            id="btnSlow"
+            onclick="setSpeed('slow')"
+          >
+            🐌 Lenta
+          </button>
+          <button
             class="btn"
             id="btnNormal"
             onclick="setSpeed('normal')"
-            style="background: #65a30d"
           >
             🐢 Normal
           </button>
@@ -337,7 +352,7 @@
       let nextDir = { dx: 0, dy: 0 };
       let isMoving = false;
       let animationSpeed = 4;
-      let speedMode = "normal"; // normal (50%) or fast (100%)
+      let speedMode = "slow"; // slow (25%), normal (50%), or fast (100%)
       let hintPath = [];
       let deactivatedTraps = new Set();
       let lastVisitedCell = "";
@@ -350,16 +365,26 @@
       }
       function setSpeed(mode) {
         speedMode = mode;
+        document.getElementById("btnSlow").style.background =
+          mode === "slow" ? "#f97316" : "#64748b";
+        document.getElementById("btnSlow").classList.toggle("active", mode === "slow");
         document.getElementById("btnNormal").style.background =
           mode === "normal" ? "#65a30d" : "#64748b";
+        document.getElementById("btnNormal").classList.toggle("active", mode === "normal");
         document.getElementById("btnFast").style.background =
           mode === "fast" ? "#65a30d" : "#64748b";
+        document.getElementById("btnFast").classList.toggle("active", mode === "fast");
         if (cellSize > 0) updateSpeed(); // Update immediately if game is running
       }
       function updateSpeed() {
         let baseSpeed = Math.max(3, Math.floor(cellSize / 3)); // 100% speed
-        animationSpeed =
-          speedMode === "normal" ? Math.max(1.5, baseSpeed * 0.5) : baseSpeed;
+        if (speedMode === "slow") {
+          animationSpeed = Math.max(1, baseSpeed * 0.25);
+        } else if (speedMode === "normal") {
+          animationSpeed = Math.max(1.5, baseSpeed * 0.5);
+        } else {
+          animationSpeed = baseSpeed;
+        }
       }
       function resetGameFull() {
         level = 1;
