@@ -1,205 +1,344 @@
-﻿<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Recta Numérica | Educa y Juega</title>
-    <meta name="description" content="Recta numérica interactiva para aprender los números. Visualiza la posición de cada número." />
-    <meta name="keywords" content="recta numérica, números, matemáticas básicas, aprender números" />
-    <link rel="canonical" href="https://educayjuega.com/recta-numerica.html" />
-    <meta property="og:title" content="Recta Numérica Interactiva | Educa y Juega" />
-    <meta property="og:description" content="Recta numérica interactiva para aprender los números. Visualiza la posición de cada número." />
-    <meta property="og:url" content="https://educayjuega.com/recta-numerica.html" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://educayjuega.com/favicon.svg" />
-    <meta property="og:locale" content="es_ES" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Recta Numérica Interactiva | Educa y Juega" />
-    <meta name="twitter:description" content="Recta numérica interactiva para aprender los números. Visualiza la posición de cada número." />
-
-    <link rel="stylesheet" href="css/styles.css" />
-        <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recta Numérica Interactiva | Recursos Educativos</title>
+    <meta name="description" content="Recta numérica interactiva con zoom, niveles y modo evaluación">
+    <link rel="stylesheet" href="css/styles.css">
     <style>
-      .tool-header h1 {
-        color: white;
-      }
-      .tool-header {
-        background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-        color: white;
-        padding: 2rem;
-        text-align: center;
-      }
-      .tool-content {
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 2rem;
-      }
-      .recta-container {
-        position: relative;
-        height: 150px;
-        background: white;
-        border-radius: 1rem;
-        padding: 2rem;
-        box-shadow: var(--shadow);
-        overflow-x: auto;
-      }
-      .recta-line {
-        position: absolute;
-        top: 60px;
-        left: 50px;
-        right: 50px;
-        height: 4px;
-        background: #1f2937;
-      }
-      .numero {
-        position: absolute;
-        top: 30px;
-        width: 40px;
-        text-align: center;
-        cursor: pointer;
-        font-weight: 600;
-      }
-      .numero::after {
-        content: "";
-        position: absolute;
-        top: 25px;
-        left: 50%;
-        width: 2px;
-        height: 30px;
-        background: #1f2937;
-      }
-      .operacion {
-        text-align: center;
-        font-size: 2rem;
-        margin: 2rem 0;
-      }
-      .controles {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        flex-wrap: wrap;
-      }
+        .tool-header { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 2rem; text-align: center; }
+        .tool-content { max-width: 1000px; margin: 0 auto; padding: 2rem 1rem; }
+        
+        .level-selector { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .level-btn { padding: 0.6rem 1.2rem; border: 2px solid #e5e7eb; background: white; border-radius: 0.5rem; cursor: pointer; font-weight: 500; }
+        .level-btn:hover { border-color: #8b5cf6; color: #8b5cf6; }
+        .level-btn.active { background: #8b5cf6; border-color: #8b5cf6; color: white; }
+        
+        .mode-selector { display: flex; justify-content: center; gap: 1rem; margin-bottom: 1.5rem; }
+        .mode-btn { padding: 0.75rem 1.5rem; border: 2px solid #8b5cf6; background: white; color: #8b5cf6; border-radius: 0.5rem; cursor: pointer; font-weight: 600; }
+        .mode-btn.active { background: #8b5cf6; color: white; }
+        
+        .operacion-actual { text-align: center; font-size: 2.5rem; font-weight: bold; color: #1f2937; margin: 1.5rem 0; padding: 1rem; background: white; border-radius: 1rem; box-shadow: var(--shadow); }
+        
+        .recta-wrapper { position: relative; background: white; border-radius: 1rem; padding: 2rem 1rem; box-shadow: var(--shadow); margin-bottom: 1.5rem; overflow: hidden; min-height: 200px; }
+        .zoom-controls { position: absolute; top: 0.5rem; right: 0.5rem; display: flex; gap: 0.25rem; z-index: 10; }
+        .zoom-btn { width: 32px; height: 32px; border: none; background: #8b5cf6; color: white; border-radius: 0.25rem; cursor: pointer; font-size: 1.2rem; }
+        .zoom-btn:hover { background: #7c3aed; }
+        #recta-container { position: relative; height: 200px; overflow-x: auto; overflow-y: hidden; }
+        #recta-scroll { position: relative; height: 100%; }
+        .num-pos { position: absolute; top: 50%; transform: translate(-50%, -50%); text-align: center; cursor: pointer; padding: 4px 6px; border-radius: 4px; }
+        .num-pos:hover { background: #8b5cf620; }
+        .num-pos .tick { width: 2px; height: 20px; background: #1f2937; margin: 0 auto 5px; }
+        .num-pos .label { font-size: 0.85rem; font-weight: 600; color: #1f2937; }
+        
+        .bola { display: none; position: absolute; top: 50%; width: 28px; height: 28px; background: #3b82f6; border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 15px #3b82f6; z-index: 5; }
+        .bola.show { display: block; }
+        
+        .respuesta-input { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1rem; }
+        .respuesta-input input { padding: 0.75rem 1rem; border: 2px solid #8b5cf6; border-radius: 0.5rem; font-size: 1.2rem; width: 120px; text-align: center; }
+        .respuesta-input input:focus { outline: none; border-color: #7c3aed; }
+        
+        .btn-corregir { padding: 0.75rem 2rem; border: none; border-radius: 0.5rem; font-size: 1.1rem; font-weight: 600; cursor: pointer; }
+        .btn-corregir.verde { background: #10b981; color: white; }
+        .btn-corregir.rojo { background: #ef4444; color: white; }
+        
+        .stats-panel { display: flex; justify-content: center; gap: 2rem; margin: 1.5rem 0; flex-wrap: wrap; }
+        .stat-card { background: white; padding: 1rem 2rem; border-radius: 1rem; box-shadow: var(--shadow); text-align: center; min-width: 120px; }
+        .stat-label { font-size: 0.8rem; color: #6b7280; text-transform: uppercase; }
+        .stat-value { font-size: 2rem; font-weight: bold; color: #8b5cf6; }
+        .stat-value.puntos { color: #f59e0b; }
+        .stat-value.aciertos { color: #10b981; }
+        
+        .feedback { text-align: center; font-size: 1.5rem; font-weight: bold; padding: 1rem; border-radius: 0.5rem; margin: 1rem 0; display: none; }
+        .feedback.ok { display: block; background: #d1fae5; color: #065f46; }
+        .feedback.mal { display: block; background: #fee2e2; color: #991b1b; }
+        
+        .btn-nueva { display: block; margin: 1rem auto; padding: 0.75rem 2rem; background: #8b5cf6; color: white; border: none; border-radius: 0.5rem; font-size: 1rem; font-weight: 600; cursor: pointer; }
+        .btn-nueva:hover { background: #7c3aed; }
+        
+        .instruccion { text-align: center; color: #6b7280; font-size: 0.9rem; margin-bottom: 1rem; }
+        .config-panel { background: white; padding: 1rem; border-radius: 1rem; margin-bottom: 1rem; display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; align-items: center; }
+        .config-item { display: flex; align-items: center; gap: 0.5rem; }
+        .config-item label { font-weight: 500; color: #4b5563; }
+        .config-item input { padding: 0.5rem; border: 2px solid #e5e7eb; border-radius: 0.5rem; font-size: 1rem; width: 70px; }
     </style>
-  
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Recta Numérica Interactiva | Educa y Juega",
-    "url": "https://educayjuega.com/recta-numerica.html",
-    "description": "Recta numérica interactiva para aprender los números. Visualiza la posición de cada número.",
-    "inLanguage": "es-ES"
-  }
-  </script>
-  </head>
-  <body>
+</head>
+<body>
     <header class="site-header">
-      <div class="header-container">
-        <a href="index.html" class="logo">
-          <span class="logo-icon">📚</span> Educa y Juega
-        </a>
-        <button class="menu-toggle" aria-label="Menú">☰</button>
-                  <nav class="nav-menu">
-            <a href="index.html">🏠 Inicio</a>
-            <a href="hora-mundial.html">🕐 Hora Mundial</a>
-            <a href="dados.html">🎲 Dados</a>
-            <a href="ruleta.html">🎰 Ruleta</a>
-            <a href="ruleta-preguntas.html">❓ Ruleta Preguntas</a>
-            <a href="temporizador.html">⏱️ Temporizador</a>
-            <a href="cronometro.html">⏱ Cronómetro</a>
-            <a href="quiz.html">📝 Quiz</a>
-            <a href="vocabulario.html">📝 Vocabulario</a>
-            <a href="conjugador.html">📝 Conjugador</a>
-            <a href="ejercicios.html">➕ Ejercicios</a>
-            <a href="fracciones.html">🍕 Fracciones</a>
-            <a href="tablas.html">✖️ Tablas</a>
-            <a href="calculadora.html">🧮 Calculadora</a>
-            <a href="calculadora-areas.html">📐 Calcular Áreas</a>
-            <a href="geometria.html">📐 Geometría</a>
-            <a href="convertidor.html">🔄 Convertir</a>
-            <a href="recta-numerica.html">📏 Recta</a>
-            <a href="linea-tiempo.html">⏳ Línea Tiempo</a>
-            <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
-            <a href="sistema-solar.html">🌍 Sistema Solar</a>
-            <a href="ciclo-agua.html">💧 Ciclo Agua</a>
-            <a href="cuerpo-humano.html">🧍 Cuerpo Humano</a>
-            <a href="grupos.html">👥 Grupos</a>
-            <a href="selector.html">🎯 Selector</a>
-            <a href="asistencias.html">📋 Asistencias</a>
-            <a href="horario.html">📅 Horario</a>
-            <a href="normas-aula.html">📜 Normas</a>
-            <a href="pizarra.html">🖍️ Pizarra</a>
-            <a href="bolsa-premios.html">🎁 Premios</a>
-            <a href="puntos.html">🏆 Puntos</a>
-            <a href="aciertos.html">✅ Aciertos</a>
-            <a href="ajedrez.html">♟️ Ajedrez</a>
-            <a href="bingo.html">🎱 Bingo</a>
-            <a href="buscaminas.html">💣 Buscaminas</a>
-            <a href="crucigrama.html">✏️ Crucigrama</a>
-            <a href="damas.html">🟡 Damas</a>
-            <a href="laberinto.html">🌀 Laberinto</a>
-            <a href="memoria.html">🧠 Memoria</a>
-            <a href="piedra-papel.html">🪨 PPT</a>
-            <a href="sopa-letras.html">🔍 Sopa Letras</a>
-            <a href="sudoku.html">🔢 Sudoku</a>
-            <a href="tangram.html">🔺 Tangram</a>
-            <a href="tres-en-raya.html">⭕ Tres Raya</a>
-            <a href="contacto.html">📧 Contacto</a>
-            <a href="sobre-nosotros.html">ℹ️ Nosotros</a>
-            <a href="privacidad.html">🔒 Privacidad</a>
-          </nav>
-      </div>
+        <div class="header-container">
+            <a href="index.html" class="logo"><span class="logo-icon">📚</span> Recursos Educativos</a>
+            <button class="menu-toggle" aria-label="Menú">☰</button>
+            <nav class="nav-menu">
+                <a href="index.html">🏠 Inicio</a>
+                <a href="aciertos.html">✅ Contador de Aciertos</a>
+                <a href="bolsa-premios.html">🎁 Bolsa de Premios</a>
+                <a href="calculadora.html">🧮 Calculadora Científica</a>
+                <a href="calculadora-areas.html">📐 Calculadora de Áreas</a>
+                <a href="ciclo-agua.html">💧 Ciclo del Agua</a>
+                <a href="conjugador.html">📝 Conjugador de Verbos</a>
+                <a href="convertidor.html">🔄 Convertidor de Unidades</a>
+                <a href="cronometro.html">⏱ Cronómetro</a>
+                <a href="cuerpo-humano.html">🧍 El Cuerpo Humano</a>
+                <a href="dados.html">🎲 Dados Virtuales</a>
+                <a href="ejercicios.html">➕ Generador de Ejercicios</a>
+                <a href="fracciones.html">🍕 Fracciones</a>
+                <a href="geometria.html">📐 Geometría</a>
+                <a href="grupos.html">👥 Creador de Grupos</a>
+                <a href="horario.html">📅 Horario Escolar</a>
+                <a href="linea-tiempo.html">⏳ Línea de Tiempo</a>
+                <a href="normas-aula.html">📜 Normas del Aula</a>
+                <a href="pizarra.html">🖍️ Pizarra Virtual</a>
+                <a href="puntos.html">🏆 Contador de Puntos</a>
+                <a href="quiz.html">📋 Quiz Interactivo</a>
+                <a href="recta-numerica.html">📏 Recta Numérica</a>
+                <a href="ruleta.html">🎰 Ruleta de la Suerte</a>
+                <a href="ruleta-preguntas.html">❓ Ruleta de Preguntas</a>
+                <a href="selector.html">🎯 Selector Aleatorio</a>
+                <a href="sistema-solar.html">🌍 Sistema Solar</a>
+                <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
+                <a href="tablas.html">✖️ Tablas de Multiplicar</a>
+                <a href="temporizador.html">⏱️ Temporizador</a>
+                <a href="vocabulario.html">📝 Gestor de Vocabulario</a>
+                <a href="2048.html">🔢 Juego 2048</a>
+                <a href="ahorcado.html">🐍 Ahorcado</a>
+                <a href="ajedrez.html">♟️ Ajedrez</a>
+                <a href="bingo.html">🎱 Bingo</a>
+                <a href="buscaminas.html">💣 Buscaminas</a>
+                <a href="conecta4.html">🔴 Conecta 4</a>
+                <a href="crucigrama.html">✏️ Crucigrama</a>
+                <a href="damas.html">🟡 Damas</a>
+                <a href="diferencias.html">🔍 Diferencias</a>
+                <a href="laberinto.html">🌀 Laberinto</a>
+                <a href="memoria.html">🧠 Memoria</a>
+                <a href="piedra-papel.html">🪨 Piedra Papel Tijera</a>
+                <a href="serpientes.html">🐍 Serpientes y Escaleras</a>
+                <a href="sopa-letras.html">🔍 Sopa de Letras</a>
+                <a href="sudoku.html">🔢 Sudoku</a>
+                <a href="tangram.html">🔺 Tangram</a>
+                <a href="tres-en-raya.html">⭕ Tres en Raya</a>
+                <a href="contacto.html">📧 Contacto</a>
+                <a href="sobre-nosotros.html">ℹ️ Sobre Nosotros</a>
+                <a href="privacidad.html">🔒 Privacidad</a>
+            </nav>
+        </div>
     </header>
     <main>
-      <div class="tool-header">
-        <h1>📏 Recta Numérica</h1>
-        <p>Visualiza operaciones en la recta numérica</p>
-      </div>
-      <div class="tool-content">
-        <div class="operacion" id="operacion">0 + 0 = 0</div>
-        <div class="recta-container" id="recta"></div>
-        <div class="controles">
-          <button class="btn" onclick="generar()">🎲 Nueva Operación</button>
+        <div class="tool-header">
+            <h1>📏 Recta Numérica Interactiva</h1>
+            <p>Aprende y practica operaciones en la recta numérica</p>
         </div>
-      </div>
+        <div class="tool-content">
+            <div class="level-selector">
+                <button class="level-btn active" onclick="setLevel('facil')">🌱 Fácil</button>
+                <button class="level-btn" onclick="setLevel('medio')">🌧️ Medio</button>
+                <button class="level-btn" onclick="setLevel('dificil')">🌋 Difícil</button>
+                <button class="level-btn" onclick="setLevel('extremo')">🔥 Extremo</button>
+            </div>
+            <div class="mode-selector">
+                <button class="mode-btn active" onclick="setMode('practica')">📐 Práctica</button>
+                <button class="mode-btn" onclick="setMode('evaluacion')">🎯 Evaluación</button>
+            </div>
+            <div class="config-panel">
+                <div class="config-item"><label>Desde:</label><input type="number" id="cfg-desde" value="0"></div>
+                <div class="config-item"><label>Hasta:</label><input type="number" id="cfg-hasta" value="20"></div>
+                <button class="btn-nueva" onclick="aplicarConfig()" style="margin:0;font-size:0.85rem;padding:0.5rem 1rem;">Aplicar</button>
+            </div>
+            <div class="operacion-actual" id="operacion">0 + 0 = ?</div>
+            <div class="recta-wrapper">
+                <div class="zoom-controls">
+                    <button class="zoom-btn" onclick="zoom(+1)">+</button>
+                    <button class="zoom-btn" onclick="zoom(-1)">−</button>
+                </div>
+                <div id="recta-container">
+                    <div id="recta-scroll"></div>
+                </div>
+            </div>
+            <p class="instruccion">👉 Escribe tu respuesta en el recuadro y presiona Verificar</p>
+            <div class="respuesta-input">
+                <input type="number" id="input-respuesta" placeholder="Respuesta" autofocus>
+                <button class="btn-corregir verde" onclick="verificar()">✓ Verificar</button>
+            </div>
+            <div class="feedback" id="feedback"></div>
+            <button class="btn-nueva" onclick="nueva()">🎲 Nueva Operación</button>
+            <div class="stats-panel">
+                <div class="stat-card"><div class="stat-label">Puntos</div><div class="stat-value puntos" id="puntos">0</div></div>
+                <div class="stat-card"><div class="stat-label">Aciertos</div><div class="stat-value aciertos" id="aciertos">0/0</div></div>
+            </div>
+        </div>
     </main>
     <footer class="site-footer">
-      <div class="footer-container">
-        <div class="footer-links">
-          <a href="contacto.html">📧 Contacto</a>
-          <a href="privacidad.html">🔒 Política de Privacidad</a>
-          <a href="sobre-nosotros.html">ℹ️ Sobre Nosotros</a>
+        <div class="footer-container">
+            <div class="footer-links">
+                <a href="contacto.html">📧 Contacto</a>
+                <a href="privacidad.html">🔒 Privacidad</a>
+                <a href="sobre-nosotros.html">ℹ️ Sobre Nosotros</a>
+            </div>
+            <p class="footer-copy">&copy; 2026 Recursos Educativos</p>
         </div>
-        <p class="footer-copy">
-          &copy; 2026 Educa y Juega. Herramientas educativas gratuitas
-          para profesores.
-        </p>
-      </div>
     </footer>
     <script>
-      let a,
-        b,
-        rango = -10;
-      function generar() {
-        a = rand(-10, 10);
-        b = rand(-10, 10);
-        document.getElementById("operacion").textContent =
-          a + (b >= 0 ? "+" : "−") + Math.abs(b) + " = " + (a + b);
-        renderRecta();
-      }
-      function rand(m, M) {
-        return Math.floor(Math.random() * (M - m + 1)) + m;
-      }
-      function renderRecta() {
-        let html = '<div class="recta-line"></div>';
-        for (let i = rango; i <= Math.abs(rango); i++) {
-          let x = ((i - rango) / (Math.abs(rango) * 2)) * 80 + 10;
-          html += `<div class="numero" style="left:${x}%">${i}</div>`;
+        let nivel = 'facil';
+        let modo = 'practica';
+        let desde = 0, hasta = 20;
+        let a = 0, b = 0, resultado = 0, operacion = '+';
+        let zoomNivel = 1;
+        let puntos = 0, aciertos = 0, intentos = 0;
+        let esperando = false;
+
+        function setLevel(l) {
+            nivel = l;
+            document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+            const niveles = ['facil','medio','dificil','extremo'];
+            const idx = niveles.indexOf(l);
+            document.querySelectorAll('.level-btn')[idx].classList.add('active');
+            if (l === 'facil') { desde = 0; hasta = 20; }
+            else if (l === 'medio') { desde = -10; hasta = 20; }
+            else if (l === 'dificil') { desde = 0; hasta = 50; }
+            else { desde = 1; hasta = 100; }
+            document.getElementById('cfg-desde').value = desde;
+            document.getElementById('cfg-hasta').value = hasta;
+            nueva();
         }
-        document.getElementById("recta").innerHTML = html;
-      }
-      generar();
+
+        function setMode(m) {
+            modo = m;
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            const modos = ['practica', 'evaluacion'];
+            const idx = modos.indexOf(m);
+            document.querySelectorAll('.mode-btn')[idx].classList.add('active');
+            nueva();
+        }
+
+        function aplicarConfig() {
+            desde = parseInt(document.getElementById('cfg-desde').value);
+            hasta = parseInt(document.getElementById('cfg-hasta').value);
+            nueva();
+        }
+
+        function rnd(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+        function generar() {
+            if (nivel === 'facil') {
+                a = rnd(0, Math.min(15, hasta));
+                b = rnd(0, Math.min(10, hasta - a));
+                operacion = '+'; resultado = a + b;
+            } else if (nivel === 'medio') {
+                if (Math.random() > 0.5) {
+                    a = rnd(Math.max(0, desde), Math.min(15, hasta));
+                    b = rnd(1, Math.min(10, a));
+                    operacion = '-'; resultado = a - b;
+                } else {
+                    a = rnd(Math.max(0, desde), Math.min(10, hasta));
+                    b = rnd(1, Math.min(10, hasta - a));
+                    operacion = '+'; resultado = a + b;
+                }
+            } else if (nivel === 'dificil') {
+                const mult = [2, 5, 10][rnd(0, 2)];
+                a = rnd(1, 10);
+                b = mult;
+                operacion = '×'; resultado = a * b;
+            } else {
+                const div = [2, 5, 10][rnd(0, 2)];
+                resultado = rnd(1, 10);
+                a = div * resultado;
+                b = div;
+                operacion = '÷';
+            }
+        }
+
+        function nueva() {
+            esperando = false;
+            generar();
+            document.getElementById('operacion').textContent = a + ' ' + operacion + ' ' + b + ' = ?';
+            document.getElementById('feedback').className = 'feedback';
+            document.getElementById('feedback').textContent = '';
+            document.getElementById('input-respuesta').value = '';
+            document.getElementById('input-respuesta').focus();
+            renderRecta();
+            if (modo === 'practica') animar();
+        }
+
+        function verificar() {
+            if (esperando) return;
+            const val = parseInt(document.getElementById('input-respuesta').value);
+            if (isNaN(val)) { alert('Escribe un número'); return; }
+            intentos++;
+            if (val === resultado) {
+                puntos += 10; aciertos++;
+                document.getElementById('feedback').className = 'feedback ok';
+                document.getElementById('feedback').textContent = '✓ ¡Correcto! +10 puntos';
+            } else {
+                document.getElementById('feedback').className = 'feedback mal';
+                document.getElementById('feedback').textContent = '❌ La respuesta era ' + resultado;
+            }
+            document.getElementById('puntos').textContent = puntos;
+            document.getElementById('aciertos').textContent = aciertos + '/' + intentos;
+            esperando = true;
+            if (modo === 'evaluacion') setTimeout(nueva, 2000);
+        }
+
+        document.getElementById('input-respuesta').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') verificar();
+        });
+
+        function renderRecta() {
+            const scroll = document.getElementById('recta-scroll');
+            const num = hasta - desde + 1;
+            const sep = 55 * zoomNivel;
+            const total = num * sep;
+            
+            scroll.innerHTML = '';
+            scroll.style.width = total + 'px';
+            
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.style.cssText = 'position:absolute;top:50%;left:0;width:' + total + 'px;height:4px;transform:translateY(-50%)';
+            svg.innerHTML = '<line stroke="#1f2937" stroke-width="4" x1="0" y1="2" x2="' + total + '" y2="2"/>';
+            scroll.appendChild(svg);
+            
+            for (let i = desde; i <= hasta; i++) {
+                const x = (i - desde) * sep + sep / 2;
+                const div = document.createElement('div');
+                div.className = 'num-pos';
+                div.style.left = x + 'px';
+                div.innerHTML = '<div class="tick"></div><div class="label">' + i + '</div>';
+                scroll.appendChild(div);
+            }
+            
+            const bola = document.createElement('div');
+            bola.className = 'bola';
+            bola.id = 'bola-anim';
+            scroll.appendChild(bola);
+            
+            const c = document.getElementById('recta-container');
+            c.scrollLeft = 0;
+            setTimeout(function() { c.scrollLeft = Math.max(0, total / 2 - c.offsetWidth / 2); }, 50);
+        }
+
+        function animar() {
+            const bola = document.getElementById('bola-anim');
+            if (!bola) return;
+            const sep = 55 * zoomNivel;
+            const inicio = (a - desde) * sep + sep / 2;
+            const fin = (resultado - desde) * sep + sep / 2;
+            bola.style.left = inicio + 'px';
+            bola.classList.add('show');
+            let paso = 0, totalPasos = 30;
+            const delta = (fin - inicio) / totalPasos;
+            let x = inicio;
+            function mover() {
+                if (paso < totalPasos) { x += delta; bola.style.left = x + 'px'; paso++; requestAnimationFrame(mover); }
+                else bola.style.left = fin + 'px';
+            }
+            mover();
+        }
+
+        function zoom(d) {
+            zoomNivel = Math.max(0.5, Math.min(3, zoomNivel + d * 0.5));
+            renderRecta();
+        }
+
+        nueva();
     </script>
-    <script src="js/main.js"></script>
-  </body>
+</body>
 </html>
