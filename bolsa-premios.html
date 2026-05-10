@@ -1,184 +1,815 @@
-﻿<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bolsa de Premios | Educa y Juega</title>
-    <meta name="description" content="Bolsa de premios virtual para sorteos en el aula. Elige al azar premios y recompensas para tus estudiantes." />
-    <meta name="keywords" content="bolsa de premios, sorteo de premios, recompensas aula, motivación estudiantes" />
-    <link rel="canonical" href="https://educayjuega.com/bolsa-premios.html" />
-    <meta property="og:title" content="Bolsa de Premios | Educa y Juega" />
-    <meta property="og:description" content="Bolsa de premios virtual para sorteos en el aula. Elige al azar premios y recompensas para tus estudiantes." />
-    <meta property="og:url" content="https://educayjuega.com/bolsa-premios.html" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://educayjuega.com/favicon.svg" />
-    <meta property="og:locale" content="es_ES" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Bolsa de Premios | Educa y Juega" />
-    <meta name="twitter:description" content="Bolsa de premios virtual para sorteos en el aula. Elige al azar premios y recompensas para tus estudiantes." />
-
-        <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bolsa de Premios | RecursosEducativos</title>
+    <meta name="description" content="Sistema de gamificación con puntos y recompensas para el aula">
+    <link rel="stylesheet" href="css/styles.css">
     <style>
-      .tool-header h1 {
-        color: white;
-      }
-      .tool-header {
-        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-        color: white;
-        padding: 2rem;
-        text-align: center;
-      }
-      .premios-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 1rem;
-        margin: 2rem 0;
-      }
-      .premio {
-        background: white;
-        padding: 1rem;
-        border-radius: 0.5rem;
-        text-align: center;
-        box-shadow: var(--shadow);
-      }
-      .premio input {
-        width: 60px;
-        text-align: center;
-        margin: 0.5rem;
-      }
+        .tool-header { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 2rem; text-align: center; }
+        
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #e5e7eb;
+            background: white;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .tab-btn:hover {
+            border-color: #f59e0b;
+            color: #f59e0b;
+        }
+        
+        .tab-btn.active {
+            background: #f59e0b;
+            border-color: #f59e0b;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .panel {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+        }
+        
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .panel-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .two-cols {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .two-cols {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .student-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .student-item:last-child {
+            border-bottom: none;
+        }
+        
+        .student-name {
+            font-weight: 500;
+        }
+        
+        .student-points {
+            font-weight: bold;
+            color: #f59e0b;
+        }
+        
+        .point-btn {
+            padding: 0.25rem 0.5rem;
+            margin: 0 0.25rem;
+            border: 1px solid #e5e7eb;
+            background: white;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        
+        .point-btn:hover {
+            background: #f59e0b;
+            color: white;
+            border-color: #f59e0b;
+        }
+        
+        .point-btn.minus:hover {
+            background: #ef4444;
+            border-color: #ef4444;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .input-group input {
+            flex: 1;
+            padding: 0.5rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #f59e0b;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #d97706;
+        }
+        
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+        
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.85rem;
+        }
+        
+        .premio-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .premio-item:last-child {
+            border-bottom: none;
+        }
+        
+        .premio-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .premio-costo {
+            font-weight: bold;
+            color: #f59e0b;
+        }
+        
+        .ranking-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .ranking-item.top1 { background: #fef3c7; }
+        .ranking-item.top2 { background: #f3f4f6; }
+        .ranking-item.top3 { background: #fef3c7; }
+        
+        .ranking-pos {
+            font-size: 1.5rem;
+            width: 40px;
+            text-align: center;
+        }
+        
+        .ranking-pos.top1 { color: #fbbf24; }
+        .ranking-pos.top2 { color: #9ca3af; }
+        .ranking-pos.top3 { color: #d97706; }
+        
+        .historial-item {
+            padding: 0.75rem;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 0.9rem;
+        }
+        
+        .historial-empty {
+            text-align: center;
+            color: #9ca3af;
+            padding: 2rem;
+        }
+        
+        .canje-section {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .canje-select {
+            width: 100%;
+            max-width: 300px;
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .canje-result {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: #fef3c7;
+            border-radius: 0.75rem;
+            display: none;
+        }
+        
+        .canje-result.show {
+            display: block;
+            animation: pop 0.3s ease-out;
+        }
+        
+        @keyframes pop {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .empty-state {
+            text-align: center;
+            color: #9ca3af;
+            padding: 2rem;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .badge-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .start-section {
+            text-align: center;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+            border: 2px dashed #f59e0b;
+        }
+        
+        .btn-start {
+            background: #f59e0b;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        }
+        
+        .btn-start:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5);
+        }
+        
+        .mechanics {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-top: 2rem;
+            border-top: 4px solid #f59e0b;
+        }
+        
+        .mechanics h3 {
+            color: #1f2937;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .mechanics ol {
+            margin-left: 1.5rem;
+            color: #4b5563;
+            line-height: 1.8;
+        }
+        
+        .mechanics li {
+            margin-bottom: 0.5rem;
+        }
     </style>
-    <link rel="stylesheet" href="css/styles.css" />
-  
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Bolsa de Premios | Educa y Juega",
-    "url": "https://educayjuega.com/bolsa-premios.html",
-    "description": "Bolsa de premios virtual para sorteos en el aula. Elige al azar premios y recompensas para tus estudiantes.",
-    "inLanguage": "es-ES"
-  }
-  </script>
-  </head>
-  <body>
+</head>
+<body>
     <header class="site-header">
-      <div class="header-container">
-        <a href="index.html" class="logo">
-          <span class="logo-icon">📚</span> Educa y Juega
-        </a>
-        <button class="menu-toggle" aria-label="Menú">☰</button>
-                  <nav class="nav-menu">
-            <a href="index.html">🏠 Inicio</a>
-            <a href="hora-mundial.html">🕐 Hora Mundial</a>
-            <a href="dados.html">🎲 Dados</a>
-            <a href="ruleta.html">🎰 Ruleta</a>
-            <a href="ruleta-preguntas.html">❓ Ruleta Preguntas</a>
-            <a href="temporizador.html">⏱️ Temporizador</a>
-            <a href="cronometro.html">⏱ Cronómetro</a>
-            <a href="quiz.html">📝 Quiz</a>
-            <a href="vocabulario.html">📝 Vocabulario</a>
-            <a href="conjugador.html">📝 Conjugador</a>
-            <a href="ejercicios.html">➕ Ejercicios</a>
-            <a href="fracciones.html">🍕 Fracciones</a>
-            <a href="tablas.html">✖️ Tablas</a>
-            <a href="calculadora.html">🧮 Calculadora</a>
-            <a href="calculadora-areas.html">📐 Calcular Áreas</a>
-            <a href="geometria.html">📐 Geometría</a>
-            <a href="convertidor.html">🔄 Convertir</a>
-            <a href="recta-numerica.html">📏 Recta</a>
-            <a href="linea-tiempo.html">⏳ Línea Tiempo</a>
-            <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
-            <a href="sistema-solar.html">🌍 Sistema Solar</a>
-            <a href="ciclo-agua.html">💧 Ciclo Agua</a>
-            <a href="cuerpo-humano.html">🧍 Cuerpo Humano</a>
-            <a href="grupos.html">👥 Grupos</a>
-            <a href="selector.html">🎯 Selector</a>
-            <a href="asistencias.html">📋 Asistencias</a>
-            <a href="horario.html">📅 Horario</a>
-            <a href="normas-aula.html">📜 Normas</a>
-            <a href="pizarra.html">🖍️ Pizarra</a>
-            <a href="bolsa-premios.html">🎁 Premios</a>
-            <a href="puntos.html">🏆 Puntos</a>
-            <a href="aciertos.html">✅ Aciertos</a>
-            <a href="ajedrez.html">♟️ Ajedrez</a>
-            <a href="bingo.html">🎱 Bingo</a>
-            <a href="buscaminas.html">💣 Buscaminas</a>
-            <a href="crucigrama.html">✏️ Crucigrama</a>
-            <a href="damas.html">🟡 Damas</a>
-            <a href="laberinto.html">🌀 Laberinto</a>
-            <a href="memoria.html">🧠 Memoria</a>
-            <a href="piedra-papel.html">🪨 PPT</a>
-            <a href="sopa-letras.html">🔍 Sopa Letras</a>
-            <a href="sudoku.html">🔢 Sudoku</a>
-            <a href="tangram.html">🔺 Tangram</a>
-            <a href="tres-en-raya.html">⭕ Tres Raya</a>
-            <a href="contacto.html">📧 Contacto</a>
-            <a href="sobre-nosotros.html">ℹ️ Nosotros</a>
-            <a href="privacidad.html">🔒 Privacidad</a>
-          </nav>
-      </div>
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">📚</span>
+                Recursos Educativos
+            </a>
+            <button class="menu-toggle" aria-label="Menú">☰</button>
+            <nav class="nav-menu">
+                <a href="index.html">🏠 Inicio</a>
+                <a href="aciertos.html">✅ Contador de Aciertos</a>
+                <a href="asistencias.html">📋 Asistencias</a>
+                <a href="bolsa-premios.html">🎁 Bolsa de Premios</a>
+                <a href="calculadora.html">🧮 Calculadora Científica</a>
+                <a href="calculadora-areas.html">📐 Calculadora de Áreas</a>
+                <a href="ciclo-agua.html">💧 Ciclo del Agua</a>
+                <a href="conjugador.html">📝 Conjugador de Verbos</a>
+                <a href="convertidor.html">🔄 Convertidor de Unidades</a>
+                <a href="cronometro.html">⏱ Cronómetro</a>
+                <a href="cuerpo-humano.html">🧍 El Cuerpo Humano</a>
+                <a href="dados.html">🎲 Dados Virtuales</a>
+                <a href="ejercicios.html">➕ Generador de Ejercicios</a>
+                <a href="fracciones.html">🍕 Fracciones</a>
+                <a href="geometria.html">📐 Geometría</a>
+                <a href="grupos.html">👥 Creador de Grupos</a>
+                <a href="horario.html">📅 Horario Escolar</a>
+                <a href="linea-tiempo.html">⏳ Línea de Tiempo</a>
+                <a href="normas-aula.html">📜 Normas del Aula</a>
+                <a href="pizarra.html">🖍️ Pizarra Virtual</a>
+                <a href="puntos.html">🏆 Contador de Puntos</a>
+                <a href="quiz.html">📋 Quiz Interactivo</a>
+                <a href="recta-numerica.html">📏 Recta Numérica</a>
+                <a href="ruleta.html">🎰 Ruleta de la Suerte</a>
+                <a href="ruleta-preguntas.html">❓ Ruleta de Preguntas</a>
+                <a href="selector.html">🎯 Selector Aleatorio</a>
+                <a href="sistema-solar.html">🌍 Sistema Solar</a>
+                <a href="tabla-periodica.html">⚛️ Tabla Periódica</a>
+                <a href="tablas.html">✖️ Tablas de Multiplicar</a>
+                <a href="temporizador.html">⏱️ Temporizador</a>
+                <a href="vocabulario.html">📝 Gestor de Vocabulario</a>
+                <a href="2048.html">🔢 Juego 2048</a>
+                <a href="ahorcado.html">🐍 Ahorcado</a>
+                <a href="ajedrez.html">♟️ Ajedrez</a>
+                <a href="bingo.html">🎱 Bingo</a>
+                <a href="buscaminas.html">💣 Buscaminas</a>
+                <a href="conecta4.html">🔴 Conecta 4</a>
+                <a href="crucigrama.html">✏️ Crucigrama</a>
+                <a href="damas.html">🟡 Damas</a>
+                <a href="diferencias.html">🔍 Diferencias</a>
+                <a href="laberinto.html">🌀 Laberinto</a>
+                <a href="memoria.html">🧠 Memoria</a>
+                <a href="piedra-papel.html">🪨 Piedra Papel Tijera</a>
+                <a href="serpientes.html">🐍 Serpientes y Escaleras</a>
+                <a href="sopa-letras.html">🔍 Sopa de Letras</a>
+                <a href="sudoku.html">🔢 Sudoku</a>
+                <a href="tangram.html">🔺 Tangram</a>
+                <a href="tres-en-raya.html">⭕ Tres en Raya</a>
+                <a href="contacto.html">📧 Contacto</a>
+                <a href="sobre-nosotros.html">ℹ️ Sobre Nosotros</a>
+                <a href="privacidad.html">🔒 Privacidad</a>
+            </nav>
+        </div>
     </header>
     <main>
-      <div class="tool-header">
-        <h1>🎁 Bolsa de Premios</h1>
-        <p>Sistema de puntos y recompensas</p>
-      </div>
-      <div class="tool-content">
-        <div class="premios-grid" id="premios">
-          <div class="premio">
-            <span>⭐</span><br />Estrella<br /><input
-              type="number"
-              value="10"
-            />
-            pts
-          </div>
-          <div class="premio">
-            <span>🎖️</span><br />Insignia<br /><input
-              type="number"
-              value="50"
-            />
-            pts
-          </div>
-          <div class="premio">
-            <span>🎁</span><br />Premio<br /><input type="number" value="100" />
-            pts
-          </div>
-          <div class="premio">
-            <span>🍦</span><br />Dulce<br /><input type="number" value="25" />
-            pts
-          </div>
+        <div class="tool-header">
+            <h1>🎁 Bolsa de Premios</h1>
+            <p>Sistema de gamificación con puntos y recompensas</p>
         </div>
-        <div style="text-align: center">
-          <button class="btn" onclick="sortearPremio()">
-            🎲 Sortear Premio
-          </button>
-          <div
-            id="resultado"
-            style="margin-top: 1rem; font-size: 1.5rem; font-weight: bold"
-          ></div>
+        <div class="tool-content">
+            <div class="start-section">
+                <p style="margin-bottom: 1rem; color: #92400e; font-weight: 500;">¿Listo para comenzar? Limpia los datos de ejemplo y agrega tus estudiantes reales.</p>
+                <button class="btn-start" onclick="comenzar()">🚀 Comenzar</button>
+            </div>
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="estudiantes">📋 Estudiantes</button>
+                <button class="tab-btn" data-tab="premios">🎁 Premios</button>
+                <button class="tab-btn" data-tab="canjear">💰 Canjear</button>
+                <button class="tab-btn" data-tab="ranking">🏆 Ranking</button>
+                <button class="tab-btn" data-tab="historial">📜 Historial</button>
+            </div>
+            
+            <div id="tab-estudiantes" class="tab-content active">
+                <div class="two-cols">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <span class="panel-title">👥 Estudiantes</span>
+                        </div>
+                        <div class="input-group">
+                            <input type="text" id="new-student" placeholder="Nombre del estudiante">
+                            <button class="btn btn-primary" onclick="agregarEstudiante()">+ Agregar</button>
+                        </div>
+                        <div id="lista-estudiantes"></div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-header">
+                            <span class="panel-title">💰 Asignar Puntos</span>
+                        </div>
+                        <p style="color: #6b7280; margin-bottom: 1rem; font-size: 0.9rem;">Selecciona un estudiante para asignar puntos</p>
+                        <div id="asignar-puntos"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="tab-premios" class="tab-content">
+                <div class="panel">
+                    <div class="panel-header">
+                        <span class="panel-title">🎁 Catálogo de Premios</span>
+                        <button class="btn btn-primary btn-sm" onclick="mostrarFormularioPremio()">+ Nuevo Premio</button>
+                    </div>
+                    <div id="form-premio" style="display: none; margin-bottom: 1rem; padding: 1rem; background: #f9fafb; border-radius: 0.5rem;">
+                        <div class="input-group">
+                            <input type="text" id="premio-emoji" placeholder="Emoji" style="width: 60px; text-align: center;">
+                            <input type="text" id="premio-nombre" placeholder="Nombre del premio">
+                            <input type="number" id="premio-costo" placeholder="Puntos" style="width: 80px;">
+                            <button class="btn btn-primary" onclick="guardarPremio()">Guardar</button>
+                            <button class="btn" onclick="ocultarFormularioPremio()">Cancelar</button>
+                        </div>
+                    </div>
+                    <div id="lista-premios"></div>
+                </div>
+            </div>
+            
+            <div id="tab-canjear" class="tab-content">
+                <div class="panel canje-section">
+                    <div class="panel-header" style="justify-content: center;">
+                        <span class="panel-title">💰 Canjear Premio</span>
+                    </div>
+                    <select id="canje-estudiante" class="canje-select">
+                        <option value="">Seleccionar estudiante...</option>
+                    </select>
+                    <select id="canje-premio" class="canje-select">
+                        <option value="">Seleccionar premio...</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="canjearPremio()">🎁 Canjear</button>
+                    <div id="canje-result" class="canje-result">
+                        <p id="canje-mensaje"></p>
+                        <p id="canje-puntos" style="margin-top: 0.5rem; font-weight: bold;"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="tab-ranking" class="tab-content">
+                <div class="panel">
+                    <div class="panel-header">
+                        <span class="panel-title">🏆 Ranking de Puntos</span>
+                    </div>
+                    <div id="ranking-lista"></div>
+                </div>
+            </div>
+            
+            <div id="tab-historial" class="tab-content">
+                <div class="panel">
+                    <div class="panel-header">
+                        <span class="panel-title">📜 Historial de Canjes</span>
+                        <button class="btn btn-danger btn-sm" onclick="limpiarHistorial()">🗑️ Limpiar</button>
+                    </div>
+                    <div id="historial-lista"></div>
+                </div>
+            </div>
         </div>
-      </div>
+            <div class="mechanics">
+                <h3>📖 ¿Cómo funciona esta herramienta?</h3>
+                <ol>
+                    <li><strong>Pulsa "Comenzar"</strong> para limpiar los datos de ejemplo y empezar de cero.</li>
+                    <li><strong>Agrega tus estudiantes</strong> uno por uno en la pestaña "Estudiantes".</li>
+                    <li><strong>Asigna puntos</strong> según la participación, esfuerzo, buenas notas, comportamiento, etc.</li>
+                    <li><strong>Configura tus premios</strong> en la pestaña "Premios" (emoji, nombre y costo en puntos).</li>
+                    <li>Cuando un estudiante tenga suficientes puntos, <strong>puede canjearlos</strong> por un premio en "Canjear".</li>
+                    <li>Observa el <strong>ranking</strong> para ver quién va liderando y consulta el <strong>historial</strong> de canjes.</li>
+                </ol>
+                <p style="margin-top: 1rem; color: #6b7280; font-size: 0.9rem;"><strong>Consejo:</strong> Usa puntos para motivar positivas behaviors: participación, completar tareas, ayudar a compañeros, etc.</p>
+            </div>
+        </div>
     </main>
-    <script>
-      function sortearPremio() {
-        const p = ["⭐", "🎖️", "🎁", "🍦"];
-        const r = p[Math.floor(Math.random() * p.length)];
-        document.getElementById("resultado").innerHTML = `¡Premio: ${r}!`;
-      }
-    </script>
     <footer class="site-footer">
-      <div class="footer-container">
-        <div class="footer-links">
-          <a href="contacto.html">📧 Contacto</a>
-          <a href="privacidad.html">🔒 Política de Privacidad</a>
-          <a href="sobre-nosotros.html">ℹ️ Sobre Nosotros</a>
+        <div class="footer-container">
+            <div class="footer-links">
+                <a href="contacto.html">📧 Contacto</a>
+                <a href="privacidad.html">🔒 Política de Privacidad</a>
+                <a href="sobre-nosotros.html">ℹ️ Sobre Nosotros</a>
+            </div>
+            <p class="footer-copy">&copy; 2026 RecursosEducativos</p>
         </div>
-        <p class="footer-copy">
-          &copy; 2026 Educa y Juega. Herramientas educativas gratuitas
-          para profesores.
-        </p>
-      </div>
     </footer>
     <script src="js/main.js"></script>
-  </body>
+    <script>
+        let estudiantes = [];
+        let premios = [];
+        let historial = [];
+
+        function init() {
+            cargarDatos();
+            renderTodo();
+            setupTabs();
+        }
+
+        function cargarDatos() {
+            try {
+                estudiantes = JSON.parse(localStorage.getItem('bolsa-estudiantes')) || [];
+                premios = JSON.parse(localStorage.getItem('bolsa-premios')) || [];
+                historial = JSON.parse(localStorage.getItem('bolsa-historial')) || [];
+            } catch (e) {
+                estudiantes = [];
+                premios = [];
+                historial = [];
+            }
+        }
+
+        function guardarEstudiantes() {
+            localStorage.setItem('bolsa-estudiantes', JSON.stringify(estudiantes));
+        }
+
+        function guardarPremios() {
+            localStorage.setItem('bolsa-premios', JSON.stringify(premios));
+        }
+
+        function guardarHistorial() {
+            localStorage.setItem('bolsa-historial', JSON.stringify(historial));
+        }
+
+        function setupTabs() {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    btn.classList.add('active');
+                    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+                });
+            });
+        }
+
+        function renderTodo() {
+            renderEstudiantes();
+            renderAsignarPuntos();
+            renderPremios();
+            renderRanking();
+            renderHistorial();
+            actualizarSelectores();
+        }
+
+        function renderEstudiantes() {
+            const container = document.getElementById('lista-estudiantes');
+            if (estudiantes.length === 0) {
+                container.innerHTML = '<div class="empty-state">No hay estudiantes. Agrega uno para comenzar.</div>';
+                return;
+            }
+            container.innerHTML = estudiantes.map(e => `
+                <div class="student-item">
+                    <span class="student-name">${e.nombre}</span>
+                    <div>
+                        <span class="student-points">${e.puntos} pts</span>
+                        <button class="point-btn minus btn-sm" onclick="modificarPuntos(${e.id}, -10)">-10</button>
+                        <button class="point-btn btn-sm" onclick="modificarPuntos(${e.id}, 10)">+10</button>
+                        <button class="btn btn-danger btn-sm" onclick="eliminarEstudiante(${e.id})">✕</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderAsignarPuntos() {
+            const container = document.getElementById('asignar-puntos');
+            if (estudiantes.length === 0) {
+                container.innerHTML = '<div class="empty-state">Agrega estudiantes primero.</div>';
+                return;
+            }
+            container.innerHTML = `
+                <div class="input-group">
+                    <select id="select-estudiante-puntos" style="flex:1; padding:0.5rem; border:2px solid #e5e7eb; border-radius:0.5rem;">
+                        <option value="">Seleccionar estudiante...</option>
+                        ${estudiantes.map(e => `<option value="${e.id}">${e.nombre}</option>`).join('')}
+                    </select>
+                </div>
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                    <button class="point-btn" onclick="asignarPuntosRapido(5)">+5</button>
+                    <button class="point-btn" onclick="asignarPuntosRapido(10)">+10</button>
+                    <button class="point-btn" onclick="asignarPuntosRapido(20)">+20</button>
+                    <button class="point-btn" onclick="asignarPuntosRapido(50)">+50</button>
+                </div>
+            `;
+        }
+
+        function renderPremios() {
+            const container = document.getElementById('lista-premios');
+            if (premios.length === 0) {
+                container.innerHTML = '<div class="empty-state">No hay premios. Agrega uno para comenzar.</div>';
+                return;
+            }
+            container.innerHTML = premios.map(p => `
+                <div class="premio-item">
+                    <div class="premio-info">
+                        <span style="font-size:1.5rem;">${p.emoji}</span>
+                        <span>${p.nombre}</span>
+                    </div>
+                    <div>
+                        <span class="premio-costo">${p.costo} pts</span>
+                        <button class="btn btn-danger btn-sm" onclick="eliminarPremio(${p.id})">✕</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderRanking() {
+            const container = document.getElementById('ranking-lista');
+            const sorted = [...estudiantes].sort((a, b) => b.puntos - a.puntos);
+            if (sorted.length === 0) {
+                container.innerHTML = '<div class="empty-state">No hay estudiantes registrados.</div>';
+                return;
+            }
+            container.innerHTML = sorted.map((e, i) => {
+                let cls = 'ranking-item';
+                if (i === 0) cls += ' top1';
+                else if (i === 1) cls += ' top2';
+                else if (i === 2) cls += ' top3';
+                let pos = '';
+                if (i === 0) pos = '🥇';
+                else if (i === 1) pos = '🥈';
+                else if (i === 2) pos = '🥉';
+                else pos = (i + 1) + '.';
+                return `
+                    <div class="${cls}">
+                        <div style="display:flex; align-items:center; gap:0.75rem;">
+                            <span class="ranking-pos ${i < 3 ? 'top' + (i+1) : ''}">${pos}</span>
+                            <span class="student-name">${e.nombre}</span>
+                        </div>
+                        <span class="student-points">${e.puntos} pts</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderHistorial() {
+            const container = document.getElementById('historial-lista');
+            if (historial.length === 0) {
+                container.innerHTML = '<div class="historial-empty">No hay canjes registrados.</div>';
+                return;
+            }
+            const reversed = [...historial].reverse();
+            container.innerHTML = reversed.map(h => `
+                <div class="historial-item">
+                    <div style="display:flex; justify-content:space-between;">
+                        <strong>${h.estudiante}</strong>
+                        <span style="color:#6b7280;">${h.fecha}</span>
+                    </div>
+                    <div>Canjeó: ${h.emoji} ${h.premio} (-${h.puntos} pts)</div>
+                </div>
+            `).join('');
+        }
+
+        function actualizarSelectores() {
+            const selEst = document.getElementById('canje-estudiante');
+            const selPrem = document.getElementById('canje-premio');
+            selEst.innerHTML = '<option value="">Seleccionar estudiante...</option>' +
+                estudiantes.map(e => `<option value="${e.id}">${e.nombre} (${e.puntos} pts)</option>`).join('');
+            selPrem.innerHTML = '<option value="">Seleccionar premio...</option>' +
+                premios.map(p => `<option value="${p.id}">${p.emoji} ${p.nombre} (${p.costo} pts)</option>`).join('');
+        }
+
+        function agregarEstudiante() {
+            const input = document.getElementById('new-student');
+            const nombre = input.value.trim();
+            if (!nombre) return;
+            const id = Date.now();
+            estudiantes.push({ id, nombre, puntos: 0 });
+            guardarEstudiantes();
+            input.value = '';
+            renderTodo();
+        }
+
+        function eliminarEstudiante(id) {
+            estudiantes = estudiantes.filter(e => e.id !== id);
+            guardarEstudiantes();
+            renderTodo();
+        }
+
+        function modificarPuntos(id, cantidad) {
+            const e = estudiantes.find(x => x.id === id);
+            if (e) {
+                e.puntos = Math.max(0, e.puntos + cantidad);
+                guardarEstudiantes();
+                renderTodo();
+            }
+        }
+
+        function asignarPuntosRapido(cantidad) {
+            const select = document.getElementById('select-estudiante-puntos');
+            const id = parseInt(select.value);
+            if (id) {
+                modificarPuntos(id, cantidad);
+            }
+        }
+
+        function mostrarFormularioPremio() {
+            document.getElementById('form-premio').style.display = 'block';
+            document.getElementById('premio-emoji').value = '';
+            document.getElementById('premio-nombre').value = '';
+            document.getElementById('premio-costo').value = '';
+        }
+
+        function ocultarFormularioPremio() {
+            document.getElementById('form-premio').style.display = 'none';
+        }
+
+        function guardarPremio() {
+            const emoji = document.getElementById('premio-emoji').value.trim();
+            const nombre = document.getElementById('premio-nombre').value.trim();
+            const costo = parseInt(document.getElementById('premio-costo').value);
+            if (!emoji || !nombre || !costo) return;
+            const id = Date.now();
+            premios.push({ id, emoji, nombre, costo });
+            guardarPremios();
+            ocultarFormularioPremio();
+            renderTodo();
+        }
+
+        function eliminarPremio(id) {
+            premios = premios.filter(p => p.id !== id);
+            guardarPremios();
+            renderTodo();
+        }
+
+        function canjearPremio() {
+            const estId = parseInt(document.getElementById('canje-estudiante').value);
+            const premId = parseInt(document.getElementById('canje-premio').value);
+            if (!estId || !premId) return;
+            const estudiante = estudiantes.find(e => e.id === estId);
+            const premio = premios.find(p => p.id === premId);
+            if (!estudiante || !premio) return;
+            if (estudiante.puntos < premio.costo) {
+                document.getElementById('canje-result').classList.add('show');
+                document.getElementById('canje-mensaje').textContent = '❌ Puntos insuficientes';
+                document.getElementById('canje-mensaje').style.color = '#ef4444';
+                document.getElementById('canje-puntos').textContent = `${estudiante.nombre} tiene ${estudiante.puntos} pts, necesita ${premio.costo} pts`;
+                return;
+            }
+            estudiante.puntos -= premio.costo;
+            guardarEstudiantes();
+            historial.push({
+                fecha: new Date().toLocaleDateString('es-ES'),
+                estudiante: estudiante.nombre,
+                premio: premio.nombre,
+                emoji: premio.emoji,
+                puntos: premio.costo
+            });
+            guardarHistorial();
+            document.getElementById('canje-result').classList.add('show');
+            document.getElementById('canje-mensaje').textContent = `🎉 ¡${estudiante.nombre} canjeó ${premio.emoji} ${premio.nombre}!`;
+            document.getElementById('canje-mensaje').style.color = '#065f46';
+            document.getElementById('canje-puntos').textContent = `Puntos restantes: ${estudiante.puntos}`;
+            renderTodo();
+        }
+
+        function limpiarHistorial() {
+            if (confirm('¿Eliminar todo el historial?')) {
+                historial = [];
+                guardarHistorial();
+                renderHistorial();
+            }
+        }
+
+        function comenzar() {
+            if (confirm('¿Limpiar todo y comenzar de cero?\nSe eliminarán estudiantes, premios y historial.')) {
+                estudiantes = [];
+                premios = [];
+                historial = [];
+                localStorage.removeItem('bolsa-estudiantes');
+                localStorage.removeItem('bolsa-premios');
+                localStorage.removeItem('bolsa-historial');
+                renderTodo();
+                document.getElementById('new-student').focus();
+            }
+        }
+
+        init();
+    </script>
+</body>
 </html>
